@@ -1,0 +1,92 @@
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages
+#+AUTHOR: Prof. Dr. André Nachbin
+#+LATEX_HEADER:\usepackage{tikz}
+
+* Class 01 - Introduction and Map of Knowledge
+** TODO Hypothesis of continuity
+** Equation of continuity for a one-dimensional compressible flow
+ \begin{equation}
+   \begin{aligned}
+     \dfrac{\partial{\rho}}{\partial{t}} + \dfrac{\partial{\left( \rho{}v \right)}}{\partial{x}}=0
+   \end{aligned}
+ \end{equation}
+
+ For a dimension, the change in density in time is equal to the traffic flow change in a direction.
+** Solids vs Fluids (Models)
+*** Solid
+  The arrangements of particles are (virtually) constant.
+
+  #+ATTR_HTML: :width 500
+  [[file:img/solid1.jpg][file:~/PP/wlq/img/solid1.jpg]]
+  
+  #+ATTR_HTML: :width 500
+  [[file:img/solid1.jpg][file:~/PP/wlq/img/solid2.jpeg]]
+
+  #+ATTR_HTML: :width 500
+  [[file:img/solid1.jpg][file:~/PP/wlq/img/solid3.jpeg]]
+
+*** Fluid
+  The arrangements of particles are not constant under application of force.
+** Hook's Law for fluids and solids
+   An elasticity law which relates deformation-to-tension.  
+  #+ATTR_HTML: :width 500
+  [[file:img/solid1.jpg][file:~/PP/wlq/img/hook1.png]]
+
+*** Linear deformation
+    - Deformation (solid)
+    - Deformation/time (fluid)
+
+*** 1.1 Hypothesis
+    $\textrm{tension} \propto \textrm{deformation}$    
+
+*** TODO Tikz blocks
+    DEADLINE: <2021-08-06 Fri> SCHEDULED: <2021-07-30 Fri>
+
+#+HEADER: :file ../img/contour.svg :imagemagick yes
+#+HEADER: :results output silent :headers '("\\usepackage{tikz}")
+#+HEADER: :fit yes :imoutoptions -geometry 400 :iminoptions -density 600
+    #+begin_src latex :exports results 
+    \begin{tikzpicture}
+    \draw (0,0) -- (4,0) -- (4,4) -- (0,4) -- (0,0);
+    \end{tikzpicture}
+    #+end_src
+
+#+name: hello-world
+#+BEGIN_SRC latex
+\LaTeX
+#+END_SRC
+
+
+
+*** Fundamental Equation
+\begin{equation}
+\begin{aligned}
+\tau = - \mu \dfrac{\partial{}u}{\partial{}y}
+\end{aligned}
+\end{equation}
+
+In which, $\mu$ is the viscosity; $\dfrac{\partial{}u}{\partial{}y}$
+the deformation and $\tau$ our tension.
+
+** Kinematic viscosity (Intro)
+$\nu= \dfrac{\mu}{\rho}$,
+
+In which $\rho$ is the fluid density.
+The dimension being: $[\rho] = \dfrac{\left[M\right]}{\left[L^3\right]}$
+
+** Flow (Complex Analysis)
+*** Laminar Flow
+    - No discontinuities. 
+*** Middle condition
+    - Two vortexes.
+*** Turbulent Flow
+    - Wakes.
+
+* Class 02
+# \begin{equation}
+# \begin{aligned}
+
+# \end{aligned}
+# \end{equation}
+
