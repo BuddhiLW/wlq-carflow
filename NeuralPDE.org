@@ -1,0 +1,356 @@
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages
+
+
+* The equation to solve:
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+\label{eq:NS-n1}
+\left[\frac{\partial{v}}{\partial{t}} + v\frac{\partial{v}}{\partial{x}} \right] = \frac{1}{\rho{}}\dfrac{\partial \left(\mu \frac{\partial{v}}{\partial{x}} \right)}{\partial{x}} - \left(\frac{c_0^2}{\rho{}}\right)\dfrac{\partial{\rho}}{\partial{x}} + \frac{V(\rho) - v}{\tau} \\\\
+     \dfrac{\partial{\rho}}{\partial{t}} + \dfrac{\partial{\left( \rho{}v \right)}}{\partial{x}}=0
+\end{cases}
+   \end{aligned}
+ \end{equation}
+
+\begin{equation}
+\begin{aligned}
+q(x,t)=\rho(x,t)v(x,t)
+\end{aligned}
+\end{equation}
+
+* Boudary Conditions:
+\begin{equation}
+\begin{aligned}
+q(0,t) &= q(L,t)\\
+v(0,t) &= v(L,t),\quad \dfrac{\partial{v}}{\partial{x}}\biggr\rvert_0 = \dfrac{\partial{v}}{\partial{x}}\biggr\rvert_L  
+\end{aligned}
+\end{equation}
+
+From the definition of $q$ and the boundary condition (I),
+\begin{equation}
+\begin{aligned}
+&\rho(0,t)v(0,t) = \rho(L,t)v(L,t) \\
+&\implies \rho(0,t) = \rho(L,t)
+\end{aligned}
+\end{equation}
+
+* Examples from NeuralPDE.jl
+** System of PDEs
+
+#+begin_src julia :session main :result output
+using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
+using Quadrature,Cubature
+import ModelingToolkit: Interval, infimum, supremum
+
+@parameters t, x
+@variables u1(..), u2(..), u3(..)
+Dt = Differential(t)
+Dtt = Differential(t)^2
+Dx = Differential(x)
+Dxx = Differential(x)^2
+
+eqs = [Dtt(u1(t,x)) ~ Dxx(u1(t,x)) + u3(t,x)*sin(pi*x),
+       Dtt(u2(t,x)) ~ Dxx(u2(t,x)) + u3(t,x)*cos(pi*x),
+       0. ~ u1(t,x)*sin(pi*x) + u2(t,x)*cos(pi*x) - exp(-t)]
+
+bcs = [u1(0,x) ~ sin(pi*x),
+       u2(0,x) ~ cos(pi*x),
+       Dt(u1(0,x)) ~ -sin(pi*x),
+       Dt(u2(0,x)) ~ -cos(pi*x),
+       u1(t,0) ~ 0.,
+       u2(t,0) ~ exp(-t),
+       u1(t,1) ~ 0.,
+       u2(t,1) ~ -exp(-t)]
+
+
+# Space and time domains
+domains = [t ∈ Interval(0.0,1.0),
+           x ∈ Interval(0.0,1.0)]
+
+# Neural network
+input_ = length(domains)
+n = 15
+chain =[FastChain(FastDense(input_,n,Flux.σ),FastDense(n,n,Flux.σ),FastDense(n,1)) for _ in 1:3]
+initθ = map(c -> Float64.(c), DiffEqFlux.initial_params.(chain))
+
+_strategy = QuadratureTraining()
+discretization = PhysicsInformedNN(chain, _strategy, init_params= initθ)
+
+pde_system = PDESystem(eqs,bcs,domains,[t,x],[u1,u2,u3])
+prob = discretize(pde_system,discretization)
+sym_prob = symbolic_discretize(pde_system,discretization)
+
+pde_inner_loss_functions = prob.f.f.loss_function.pde_loss_function.pde_loss_functions.contents
+bcs_inner_loss_functions = prob.f.f.loss_function.bcs_loss_function.bc_loss_functions.contents
+
+cb = function (p,l)
+    println("loss: ", l )
+    println("pde_losses: ", map(l_ -> l_(p), pde_inner_loss_functions))
+    println("bcs_losses: ", map(l_ -> l_(p), bcs_inner_loss_functions))
+    return false
+end
+
+res = GalacticOptim.solve(prob,BFGS(); cb = cb, maxiters=5000)
+
+phi = discretization.phi
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+xs,ys = [infimum(domain):dx/10:domain.domain.upper for domain in domains]
+analytic_sol_func(x,y) = (sin(pi*x)*sin(pi*y))/(2pi^2)
+
+u_predict = reshape([first(phi([x,y],res.minimizer)) for x in xs for y in ys],(length(xs),length(ys)))
+u_real = reshape([analytic_sol_func(x,y) for x in xs for y in ys], (length(xs),length(ys)))
+diff_u = abs.(u_predict .- u_real)
+
+using Plots
+p1 = plot(xs, ys, u_real, linetype=:contourf,title = "analytic");
+p2 = plot(xs, ys, u_predict, linetype=:contourf,title = "predict");
+p3 = plot(xs, ys, diff_u,linetype=:contourf,title = "error");
+plot(p1,p2,p3)
+#+end_src
+
+#+RESULTS:
+
+** 1-D Burgers
+
+Let $V(\rho)=1.5*(1-p/\hat{p})^2$, so $p \to \hat{\rho} \implies V(\hat{\rho}) \to 0$.
+
+#+begin_src julia :session main :result output
+  using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
+  import ModelingToolkit: Interval, infimum, supremum
+  import Flux: flatten, params
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+  #V(ρ)=1.5*(1-ρ/2)²;
+  @parameters t, x, μ, c₀, τ, L, l
+  @variables v(..), ρ(..)
+  μ=0.3;
+  c₀= sqrt(5.5);
+  τ = 0.02;
+  l=0.08;
+  L = 100.0;
+  Dt = Differential(t)
+  Dx = Differential(x)
+  Dxx = Differential(x)^2
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+  #2D PDE
+  eqs  = [Dt(v(t,x)) + v(t,x)*Dx(v(t,x)) - (μ/ρ(t,x))*Dxx(v(t,x)) + (c₀^2/ρ(t,x))*Dx(ρ(t,x)) - (5.0461*(1+exp((ρ(t,x)-0.25)/0.06)^-1 - 3.72*10^-6) - v(t,x))/τ ~ 0,
+          Dt(ρ(t,x)) + Dx(ρ(t,x)*v(t,x)) ~ 0]
+  
+  # Initial and boundary conditions
+  bcs = [ρ(t,0) ~ ρ(L,0),
+         v(t,0) ~ v(t,L),
+         Dt(v(t,0)) ~ Dt(v(t,L)),
+         max(ρ(t,x)) ~ 5.0]
+  
+  # Space and time domains
+  domains = [t ∈ Interval(0.0,200.0),
+             x ∈ Interval(0.0,L)]
+  
+  # Discretization
+  dx = 0.05
+#+end_src
+
+#+RESULTS:
+: 0.05
+
+*** Workinng
+#+begin_src julia :session main :result output
+# Neural network
+  input_ = length(domains)
+  n = 15
+  # Neural network
+  dim = 2 # number of dimensions
+  chain = FastChain(FastDense(dim,16,Flux.σ),FastDense(16,16,Flux.σ),FastDense(16,1))
+#+end_src
+
+#+RESULTS:
+: FastChain{Tuple{FastDense{typeof(σ), DiffEqFlux.var"#initial_params#90"{Vector{Float32}}}, FastDense{typeof(σ), DiffEqFlux.var"#initial_params#90"{Vector{Float32}}}, FastDense{typeof(identity), DiffEqFlux.var"#initial_params#90"{Vector{Float32}}}}}((FastDense{typeof(σ), DiffEqFlux.var"#initial_params#90"{Vector{Float32}}}(16, 2, NNlib.σ, DiffEqFlux.var"#initial_params#90"{Vector{Float32}}(Float32[0.34810114, 0.5513788, -0.36048862, -0.18403612, -0.5672979, 0.27639446, 0.32935748, 0.120341964, 0.23137912, 0.4602983, -0.08631201, 0.14616364, -0.38484102, 0.149701, 0.48869708, -0.08250142, -0.1895858, 0.48285586, -0.055904627, -0.049777366, -0.345197, -0.15241657, 0.21945553, 0.33293062, -0.5471334, -0.012399054, 0.11971166, 0.30265883, -0.5471057, -0.26852274, 0.5000796, -0.077013, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]), true), FastDense{typeof(σ), DiffEqFlux.var"#initial_params#90"{Vector{Float32}}}(16, 16, NNlib.σ, DiffEqFlux.var"#initial_params#90"{Vector{Float32}}(Float32[0.12989812, -0.16103622, 0.07958401, -0.035435814, 0.3234803, -0.27449426, 0.33329165, -0.11580154, -0.27982125, -0.03229035, -0.2598463, 0.21512192, -0.14067237, -0.05450062, -0.3966374, 0.030172417, 0.23294374, -0.045728154, -0.36050382, -0.11985943, -0.16436276, -0.036310654, 0.015421939, -0.24340126, -0.18064281, -0.36363658, 0.029627113, -0.18077248, 0.06047316, 0.24990496, -0.14021584, -0.010017932, 0.24716182, -0.11708304, 0.030537881, 0.2520643, -0.3963436, -0.14805771, -0.27721614, -0.38809228, 0.3499953, -0.0029059509, 0.08345049, -0.24685262, -0.006468497, 0.02402396, -0.1335226, -0.2623137, 0.18889745, -0.15319857, 0.38279936, -0.23775175, -0.190787, -0.04097176, -0.28724027, -0.39410424, -0.17482431, -0.34806278, 0.22120792, 0.27801478, -0.19035795, 0.10029165, -0.3424049, -0.3754847, 0.05927167, -0.038324215, 0.101983614, -0.38463482, -0.20376281, 0.09885075, -0.31200206, -0.32814097, -0.10763292, -0.011331846, 0.16278549, -0.16059344, 0.19805685, -0.40702215, -0.15882836, -0.12550233, 0.11366916, -0.4301178, -0.37851167, -0.38237855, -0.3436838, 0.41836834, -0.29946458, -0.10105189, 0.32482073, -0.044844847, -0.013436048, -0.1518825, 0.38591343, 0.08708551, -0.03312596, -0.32827818, 0.13169838, 0.293067, -0.21785247, -0.4196708, 0.21651678, -0.02163905, 0.38708386, -0.06895542, -0.09050393, -0.15108736, 0.39072928, 0.40520588, 0.3112253, 0.21898334, -0.20909776, -0.2417094, -0.14140102, -0.25700155, 0.2879684, -0.38972396, -0.3911797, -0.21558093, 0.005507865, -0.15273245, -0.34768575, 0.028522566, -0.23112334, 0.120312646, -0.05010556, 0.21649767, -0.3023537, 0.4230026, -0.39131227, -0.15005445, -0.3181913, -0.022577591, 0.35566595, 0.000812382, 0.34154555, -0.2947432, 0.15390462, 0.24627654, -0.27726197, 0.28366035, 0.2737372, -0.23397942, 0.27492332, -0.31436488, -0.39005256, 0.2925944, -0.2634116, -0.3139328, -0.18783574, -0.20037103, 0.43183547, -0.1732267, 0.29828292, -0.38515183, -0.42097986, -0.065095656, -0.3643671, -0.1133934, 0.19722773, 0.36534423, 0.3986547, 0.086807795, -0.17909548, 0.20263505, 0.40010664, 0.35673448, -0.012590733, 0.27272773, -0.25555015, -0.40616, 0.09748914, 0.22333112, 0.22354306, 0.05990432, 0.26533392, -0.13706295, 0.18476637, -0.18575858, -0.009893323, 0.05917793, 0.34696814, -0.2621607, -0.13102548, -0.19777262, 0.31854975, 0.26865932, -0.16773246, -0.011848244, -0.23889057, 0.18705072, 0.105573215, -0.21521617, 0.049799148, 0.36930013, -0.19455169, 0.04851693, -0.08358831, 0.02993848, -0.4302488, -0.11505833, -0.00080783945, 0.26256073, 0.26399493, 0.40567395, -0.35451806, 0.25680447, -0.21800113, -0.19912536, 0.37119237, -0.122256204, -0.024439493, 0.41853127, 0.033222593, 0.23026584, -0.14427672, 0.234135, 0.2769314, 0.40450242, 0.15231785, 0.3271473, 0.22303131, 0.40612707, 0.010077501, -0.09717148, -0.083164416, 0.27479064, -0.3176236, -0.3771744, 0.053334337, 0.38043034, 0.27030846, 0.3635576, -0.35341743, -0.39900228, 0.01475884, 0.1448913, -0.3880741, 0.3828997, -0.24309908, 0.29825154, -0.21687791, 0.12674294, -0.33505073, 0.014106994, 0.08284561, 0.3125905, 0.19569269, -0.40823716, 0.07391612, -0.37146246, 0.05286078, 0.14785022, -0.10206342, 0.10328463, 0.18651676, 0.28113434, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]), true), FastDense{typeof(identity), DiffEqFlux.var"#initial_params#90"{Vector{Float32}}}(1, 16, identity, DiffEqFlux.var"#initial_params#90"{Vector{Float32}}(Float32[0.2929912, 0.51875967, 0.1330533, 0.3970629, 0.06742572, -0.28996813, 0.3110433, 0.037387896, -0.36618274, 0.55860263, -0.22687836, -0.38999072, 0.33448884, -0.58699644, 0.061234843, 0.06745249, 0.0]), true)))
+
+#+begin_src julia :session main :result output
+  discretization = PhysicsInformedNN(chain, QuadratureTraining()) 
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+#+begin_src julia :session main :result output
+  pde_system = PDESystem(eqs,bcs,domains,[t,x],[v,ρ])
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+  prob = discretize(pde_system,discretization)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output      
+  cb = function (p,l)
+      println("Current loss is: $l")
+      return false
+  end
+  
+  res = GalacticOptim.solve(prob, ADAM(0.1); cb = cb, maxiters=4000)
+  prob = remake(prob,u0=res.minimizer)
+  res = GalacticOptim.solve(prob, ADAM(0.01); cb = cb, maxiters=2000)
+  phi = discretization.phi
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+using Plots
+#+end_src
+
+#+begin_src julia :session main :result output
+  ts,xs = [infimum(d.domain):dx:supremum(d.domain) for d in domains]
+  v_predict_contourf = reshape([first(phi([t,x],res.minimizer)) for t in ts for x in xs] ,length(xs),length(ts))
+  plot(ts, xs, v_predict_contourf, linetype=:contourf,title = "predict")
+  
+  v_predict = [[first(phi([t,x],res.minimizer)) for x in xs] for t in ts ]
+  ρ_predict = [[second(phi([t,x],res.minimizer)) for x in xs] for t in ts ]
+  
+  p1= plot(xs, v_predict[3],title = "t = 0.1");
+  p2= plot(xs, v_predict[11],title = "t = 0.5");
+  p3= plot(xs, v_predict[end],title = "t = 1");
+  plot(p1,p2,p3)
+#+end_src
+
+#+RESULTS:
+
+*** Tests
+#+begin_src julia :session main :result output
+# Neural network
+  input_ = length(domains)
+  n = 15
+  chain =[FastChain(FastDense(input_,n,Flux.σ),FastDense(n,n,Flux.σ),FastDense(n,1)) for _ in 1:2]
+  initθ = map(c -> Float64.(c), DiffEqFlux.initial_params.(chain))
+  flat_initθ = reduce(vcat,initθ)
+  
+  eltypeθ = eltype(initθ[1])
+  parameterless_type_θ = DiffEqBase.parameterless_type(initθ[1])
+  phi = NeuralPDE.get_phi.(chain,parameterless_type_θ)
+  
+  map(phi_ -> phi_(rand(2,10), flat_initθ),phi)
+  
+  derivative = NeuralPDE.get_numeric_derivative()
+#+end_src
+
+#+RESULTS:
+: #262
+
+#+begin_src julia :session main :result output
+  indvars = [t,x]
+  depvars = [v,ρ]
+  dim = length(domains)
+  quadrature_strategy = NeuralPDE.QuadratureTraining()
+  
+  
+  _pde_loss_functions = [NeuralPDE.build_loss_function(eq,indvars,depvars,phi,derivative,
+                                                       chain,initθ,quadrature_strategy) for eq in  eqs]
+  
+  map(loss_f -> loss_f(rand(2,10), flat_initθ),_pde_loss_functions)
+  
+  bc_indvars = NeuralPDE.get_argument(bcs,indvars,depvars)
+  _bc_loss_functions = [NeuralPDE.build_loss_function(bc,indvars,depvars, phi, derivative,
+                                                      chain,initθ,quadrature_strategy,
+                                                      bc_indvars = bc_indvar) for (bc,bc_indvar) in zip(bcs,bc_indvars)]
+  map(loss_f -> loss_f(rand(1,10), flat_initθ),_bc_loss_functions)
+  
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+  # dx = 0.1
+  # train_sets = NeuralPDE.generate_training_sets(domains,dx,eqs,bcs,eltypeθ,indvars,depvars)
+  # pde_train_set,bcs_train_set = train_sets
+  pde_bounds, bcs_bounds = NeuralPDE.get_bounds(domains,eqs,bcs,eltypeθ,indvars,depvars,quadrature_strategy)
+  
+  plbs,pubs = pde_bounds
+  pde_loss_functions = [NeuralPDE.get_loss_function(_loss,
+                                                   lb,ub,
+                                                   eltypeθ, parameterless_type_θ,
+                                                   quadrature_strategy)
+                                                   for (_loss,lb,ub) in zip(_pde_loss_functions, plbs,pubs)]
+  
+  map(l->l(flat_initθ) ,pde_loss_functions)
+  
+  blbs,bubs = bcs_bounds
+  bc_loss_functions = [NeuralPDE.get_loss_function(_loss,lb,ub,
+                                                   eltypeθ, parameterless_type_θ,
+                                                   quadrature_strategy)
+                                                   for (_loss,lb,ub) in zip(_bc_loss_functions, blbs,bubs)]
+  
+  map(l->l(flat_initθ) ,bc_loss_functions)
+  
+  loss_functions =  [pde_loss_functions;bc_loss_functions]
+  
+  function loss_function(θ,p)
+      sum(map(l->l(θ) ,loss_functions))
+  end
+  
+  f_ = OptimizationFunction(loss_function, GalacticOptim.AutoZygote())
+  prob = GalacticOptim.OptimizationProblem(f_, flat_initθ)
+  
+  cb_ = function (p,l)
+      println("loss: ", l )
+      println("pde losses: ", map(l -> l(p), loss_functions[1:3]))
+      println("bcs losses: ", map(l -> l(p), loss_functions[4:end]))
+      return false
+  end
+  
+  res = GalacticOptim.solve(prob,Optim.BFGS(); cb = cb_, maxiters=5000)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+using Plots
+#+end_src
+
+#+RESULTS:
+: nothing
+
+#+begin_src julia :session main :result output
+ts,xs = [infimum(d.domain):0.01:supremum(d.domain) for d in domains]
+
+acum =  [0;accumulate(+, length.(initθ))]
+sep = [acum[i]+1 : acum[i+1] for i in 1:length(acum)-1]
+minimizers_ = [res.minimizer[s] for s in sep]
+
+# analytic_sol_func(t,x) = [exp(-t)*sin(pi*x), exp(-t)*cos(pi*x), (1+pi^2)*exp(-t)]
+# u_real  = [[analytic_sol_func(t,x)[i] for t in ts for x in xs] for i in 1:3]
+u_predict  = [[phi[i]([t,x],minimizers_[i])[1] for t in ts  for x in xs] for i in 1:2]
+#+end_src
+
+#+RESULTS:
+
+
+#+begin_src julia :session main :result output
+  for i in 1:2
+      # p1 = plot(ts, xs, u_real[i],linetype=:contourf,title = "u$i, analytic");
+      p1 = plot(ts, xs, u_predict[i],linetype=:contourf,title = "predict$i");
+      # p3 = plot(ts, xs, diff_u[i],linetype=:contourf,title = "error");
+      plot(p1)
+      savefig("sol_variable$i")
+  end
+#+end_src
+
+#+RESULTS:
+: nothing
+
+

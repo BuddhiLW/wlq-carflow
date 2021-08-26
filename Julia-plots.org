@@ -1,0 +1,44 @@
+* Surfaces
+#+begin_src julia :session main :result output
+using Plots
+using LinearAlgebra, ForwardDiff
+import PyPlot
+import Contour: contours, levels, level, lines, coordinates
+#+end_src
+
+#+begin_src julia :session main :result output
+using LinearAlgebra
+
+g(x,y) = x^2 - y^2
+g(x) = f(x...)
+xs = ys = range(-2, stop=2, length=10)
+
+ps = [[x,y] for x in xs, y in ys]
+vs = [ForwardDiff.gradient(g, p) for p in ps]
+
+# scale the vs
+m = maximum(norm.(vs))
+vs = 4/10/m * vs
+
+quiver(xs_ys(ps)..., quiver=xs_ys(vs))
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+h(x,y) = 2 - x^2 - y^2
+H(x,y,z) = z - f(x,y)
+H(x) = H(x...)
+p = [1/10, -1/10]
+p1 = vcat(p, h(p...)) # note F(p1) == 0
+n = ForwardDiff.gradient(H, p1)
+tl(x) = h(p) +  ForwardDiff.gradient(h, p) ⋅ (x - p)
+tl(x,y) = tl([x,y])
+
+xs = ys = range(-2, stop=2, length=100)
+surface(xs, ys, h)
+surface!(xs, ys, tl)
+arrow!(p1, 5n)
+#+end_src
+
+#+RESULTS:
