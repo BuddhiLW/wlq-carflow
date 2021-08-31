@@ -93,5 +93,62 @@ This will be the equation we will use to simulate
 
 - An equation of $(t,x,v,\rho)$.
 
-* Julia Simulation
+* Considerations on parameters
+
+** The total quantity of cars
+\begin{equation}
+\begin{aligned}
+N = \int_0^L{\rho(x,t)dx}=\rho_h L
+\end{aligned}
+\end{equation}
+
+In which $\rho_h$ is the density under homogeneous flow.
+
+** Car-flux in any place and time,
+\begin{equation}
+\begin{aligned}
+q(x,t) = \rho(x,t)v(x,t)
+\end{aligned}
+\end{equation}
+
+** Velocity in homogeneous flow
+In homogeneous flow, the $\dfrac{\partial{v}}{\partial{t}}=0$. Thus, $X=0$.
+
+This means $\dfrac{\rho(V(\rho)-v)}{\tau}=0 \implies V(\rho_h)=v_h,\, \forall (x,t)$.
+
+"If N an L are given, there is only one homogeneous state $\rho=\rho_h$, $v=v_h$ for this flow"
+
+*** Try to set variables so that we start by N and L
+In a close circuit, in homogeneous flow,
+$N = \rho_h L$
+
+Let, $V(\rho) = v_h * (e^{-\frac{(\rho - \rho_h)}{\tau}}) + \delta{v}$.
+**** Maximum density - all lanes occupied
+
+$\hat{\rho} = \frac{n}{a}$ in which $n$ is the number of lanes and $a$ the average car lengh in meters.
+
+Let's say a=4,5m and n=4. This implies, $\hat{\rho}=0.89$ .
+
+**** Code
+
+From, [[file:../NeuralPDE/NeuralPDE.org::*Kerner - Car Flow][Kerner - Car Flow]]
+#+begin_src julia :session main :result output
+  @parameters t, x, N, L, ρ_hat, μ, c₀, τ, L, l, 
+  @variables v(..), ρ(..)
+  ρ_hat=0.89;
+  μ=0.3; #choose as we like
+  τ = 0.1; #choose as we like 
+  l=sqrt(μ*τ/ρ_hat);
+  
+  N=50; # 50 carros
+  L=2π*100; # L=2πr=2π100km
+  ρₕ=N/L;
+  
+  c₀= 5*l/τ; 
+  Dt = Differential(t)
+  Dx = Differential(x)
+  Dxx = Differential(x)^2
+#+end_src
+
+#+RESULTS:
 

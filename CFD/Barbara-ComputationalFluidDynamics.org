@@ -1,18 +1,999 @@
+#+STARTUP: showall
+#+STARTUP: latexpreview
+#+STARTUP: imagepreview
+
 * Link to the course (youtube) - Computer Fluid Dynamics (CFD)
 Openware Boston University:
 https://www.youtube.com/watch?v=cDy5XGOokBY&list=PL30F4C5ABCE62CB61&ab_channel=BostonUniversity
+
 * Class 1
 ** Navier-Stokes Equations
 - General Equation:
-    \begin{equation}
-            \begin{aligned}
-            \dfrac{\partial{\vec{V}}}{\partial{t}} + \vec{V}.\nabla{\vec{V}} = - \dfrac{\nabla{p}}{\rho} + \nu{}\nabla^2{\vec{V}}
-            \end{aligned}
-    \end{equation}
+  \begin{equation}
+          \begin{aligned}
+          \dfrac{\partial{\vec{V}}}{\partial{t}} + \vec{V}.\nabla{\vec{V}} = - \dfrac{\nabla{p}}{\rho} + \nu{}\nabla^2{\vec{V}}
+          \end{aligned}
+  \end{equation}
 - Left-hand side represents acceleration terms.
   1) $\dfrac{\partial{\vec{V}}}{\partial{t}}$ represents unstady acceleration.
-  2) $\vec{V}.\nabla{\vec{V}}$represents convective acceleration.
+  2) $\vec{V}.\nabla{\vec{V}}$ represents convective acceleration.
 - Right-hand size represents action upon fluid
   1. $- \dfrac{\nabla{p}}{\rho}$ represents the pressure relevance on motion (Termodynamical pressure).
   2. $\nu{}\nabla^2{\vec{V}}$ Conservation of momentum - regarding a Newtonian Fluid.
-** 
+ 
+* Class 2
+\begin{equation}
+\begin{aligned}
+\dfrac{\partial{u}}{\partial{t}} + c \dfrac{\partial{u}}{\partial{x}}=0
+\end{aligned}
+\end{equation}
+
+Simulate the equation with,
+- Foward Difference (FD) in time
+- Backward Difference (BD) in space
+** Constants
+#+begin_src julia :session main :result output
+  nx= 50;
+  nt= 200;
+  delta_t = 0.01;
+  c=5;
+  delta_x = 15/(nx - 1)
+  x = range(0, stop=delta_x*(nx-1), length=nx) # Full range of spatial steps for wich a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.30612244897959184:15.0
+** Initial space
+#+begin_src julia :session main :results silent
+  # Init array of ones at initial timestep
+  u_zero = ones(nx) 
+  
+  # Set u₀ = 2 in the interval 0.5 ≤ x ≤ 1 as per our I.C.s
+  u_zero[0.5 .<= x .<= 3] .= 2  # Note use of . (dot) broadcasting syntax
+  
+  u_zero
+#+end_src
+
+** Now, for time
+#+begin_src julia :session main :result output
+  endTime = 2   # simulation end time
+  nt = 1000          # nt is the number of timesteps we want to calculate
+  delta_t = endTime/nt  # Δt is the amount of time each timestep covers
+  t = range(0, stop=endTime, length=nt) # Full range of time steps for which a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.002002002002002002:2.0
+
+** Simulate
+#+begin_src julia :session main :result output
+  # u[:,] = copy(u_zero) # Initialise arbitrary future timestep with inital condition, u_zero
+  u=zeros((nx,nt+1))
+  u[:,1]=copy(u_zero)
+  
+  for n in 1:nt       # loop over timesteps, n: nt times
+      u[:,n+1] = copy(u[:,n]) # copy the existing values of u^n into u^(n+1)
+      for i in 2:nx   # you can try commenting this line and...
+          #for i in 1:nx    # ... uncommenting this line and see what happens!
+          u[i,n+1] = u[i,n] - c * delta_t/delta_x * (u[i,n] - u[i-1,n])
+      end
+  end
+#+end_src
+
+#+RESULTS:
+: nothing
+
+#+begin_src julia :session main :result output
+  using Plots
+  using GR
+#+end_src
+
+#+RESULTS:
+
+
+#+BEGIN_SRC julia :results file graphics :file curve2.png :output-dir figs :session main
+  GR.plot(x,u_zero)
+#+end_src
+
+#+RESULTS:
+[[file:figs/curve2.png]]
+
+#+begin_src julia :session main :result output
+  plot(x,u_zero)
+#+end_src
+
+#+begin_src julia :session main :result output
+  anim = @animate for n in 1:10:nt
+      Plots.plot(x, u[:,n])
+  end
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+  gif(anim, "gif_ploting.gif", fps=60)
+#+end_src
+
+#+RESULTS:
+: Plots.AnimatedGif("/home/buddhilw/PP/Julia/CompFluidDynamics/gif_ploting.gif")
+
+* Class 4 - 1D Inviscid Burgers
+$$\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} = 0$$
+
+By Forward Euler
+
+$$\frac{u_i^{n+1}-u_i^n}{\Delta t} + u_i^n \frac{u_i^n-u_{i-1}^n}{\Delta x} = 0$$
+
+$$u_i^{n+1} = u_i^n - u_i^n \frac{\Delta t}{\Delta x} (u_i^n - u_{i-1}^n)$$
+
+** Program
+*** Parameters (space)
+#+begin_src julia :session main :result output
+  nx= 50;
+# c=5;
+  delta_x = 15/(nx - 1)
+  x = range(0, stop=delta_x*(nx-1), length=nx) # Full range of spatial steps for wich a solution is desired
+#+end_src
+
+#+RESULTS:
+
+*** Parameters (time)
+#+begin_src julia :session main :result output
+  endTime = 2   # simulation end time
+  nt = 1000          # nt is the number of timesteps we want to calculate
+  delta_t = endTime/nt  # Δt is the amount of time each timestep covers
+  t = range(0, stop=endTime, length=nt) # Full range of time steps for which a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.002002002002002002:2.0
+
+*** Initial conditions (space-time)
+#+begin_src julia :session main :result output
+  # Init array of ones at initial timestep
+  u_zero = ones(nx) 
+  
+  # Set u₀ = 2 in the interval 0.5 ≤ x ≤ 1 as per our I.C.s
+  u_zero[0.5 .<= x .<= 3] .= 2  # Note use of . (dot) broadcasting syntax
+  
+  u_zero
+#+end_src
+
+#+RESULTS:
+: [1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+*** Run the differential equation
+#+begin_src julia :session main :result output
+  # u[:,] = copy(u_zero) # Initialise arbitrary future timestep with inital condition, u_zero
+  u=zeros((nx,nt+1))
+  u[:,1]=copy(u_zero)
+  
+  for n in 1:nt       # loop over timesteps, n: nt times
+      u[:,n+1] = copy(u[:,n]) # copy the existing values of u^n into u^(n+1)
+      for i in 2:nx   # you can try commenting this line and...
+          #for i in 1:nx    # ... uncommenting this line and see what happens!
+          u[i,n+1] = u[i,n] - u[i,n] * delta_t/delta_x * (u[i,n] - u[i-1,n])
+      end
+  end
+#+end_src
+
+#+RESULTS:
+: nothing
+
+*** Plots
+#+begin_src julia :session main :result output
+  using Plots
+  gr()
+#+end_src
+
+#+RESULTS:
+: Plots.GRBackend()
+
+#+begin_src julia :session main :result output
+  GR.plot(x,u_zero)
+#+end_src
+
+#+RESULTS:
+: nothing
+
+#+begin_src julia :session main :result output
+  anim = @animate for n in 1:10:nt
+      Plots.plot(x, u[:,n])
+  end
+#+end_src
+
+#+RESULTS:
+: Animation("/tmp/jl_XN8RAs", ["000001.png", "000002.png", "000003.png", "000004.png", "000005.png", "000006.png", "000007.png", "000008.png", "000009.png", "000010.png", "000011.png", "000012.png", "000013.png", "000014.png", "000015.png", "000016.png", "000017.png", "000018.png", "000019.png", "000020.png", "000021.png", "000022.png", "000023.png", "000024.png", "000025.png", "000026.png", "000027.png", "000028.png", "000029.png", "000030.png", "000031.png", "000032.png", "000033.png", "000034.png", "000035.png", "000036.png", "000037.png", "000038.png", "000039.png", "000040.png", "000041.png", "000042.png", "000043.png", "000044.png", "000045.png", "000046.png", "000047.png", "000048.png", "000049.png", "000050.png", "000051.png", "000052.png", "000053.png", "000054.png", "000055.png", "000056.png", "000057.png", "000058.png", "000059.png", "000060.png", "000061.png", "000062.png", "000063.png", "000064.png", "000065.png", "000066.png", "000067.png", "000068.png", "000069.png", "000070.png", "000071.png", "000072.png", "000073.png", "000074.png", "000075.png", "000076.png", "000077.png", "000078.png", "000079.png", "000080.png", "000081.png", "000082.png", "000083.png", "000084.png", "000085.png", "000086.png", "000087.png", "000088.png", "000089.png", "000090.png", "000091.png", "000092.png", "000093.png", "000094.png", "000095.png", "000096.png", "000097.png", "000098.png", "000099.png", "000100.png"])
+
+*** Gif
+#+begin_src julia :session main :result output
+  gif(anim, "gif_ploting.gif", fps=60)
+#+end_src
+
+#+RESULTS:
+: Plots.AnimatedGif("/home/buddhilw/PP/wlq/gif_ploting.gif")
+
+* Class 4 - Second order derivatives
+Differences of two points derivatives.
+** Central Difference 2nd order
+By Taylor Expansion
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+u_{i+1} &= u_{i} + \Delta{x}\dfrac{\partial{u}}{\partial{x}}\biggr\rvert_i + \dfrac{\Delta{x^2}}{2!}\dfrac{\partial^2{u}}{\partial{x^2}} + \ldots \\
+u_{i-1} &= u_{i} - \Delta{x}\dfrac{\partial{u}}{\partial{x}}\biggr\rvert_i + \dfrac{\Delta{x^2}}{2!}\dfrac{\partial^2{u}}{\partial{x^2}} + \ldots 
+\end{cases}\\
+\sim
+\begin{cases}
+u_{i+1} &= u_{i} + \sum_{n=1}^{M}{\dfrac{(\Delta{x})^n}{n!}\dfrac{\partial^n{u(x)}}{\partial{x^n}}\biggr\rvert_i}\\
+u_{i-1} &= u_{i} + \sum_{n=1}^{M}{(-1)^n\dfrac{(\Delta{x})^n}{n!}\dfrac{\partial^n{u(x)}}{\partial{x^n}}\biggr\rvert_i}
+\end{cases}
+\end{aligned}
+\end{equation}
+
+Summing both terms and and isolating $\dfrac{\partial^2{u}}{\partial{x^2}}\biggr\rvert_i$, we have:
+\begin{equation}
+\begin{aligned}
+\dfrac{\partial^2{u}}{\partial{x^2}}\biggr\rvert_i = \dfrac{u_{i+1}-2u_i+u_{i-1}}{\Delta{x^2}} - O(\Delta{x^2})
+\end{aligned}
+\end{equation}
+
+** 1D diffusion
+\begin{equation}
+\begin{aligned}
+\dfrac{\partial{u}}{\partial{t}} = \nu{}\dfrac{\partial^2{u}}{\partial{x^2}}
+\end{aligned}
+\end{equation}
+*** Program
+**** Parameters (space)
+#+begin_src julia :session main :result output
+  nx= 50;
+  nu=0.5;
+  # c=5;
+  delta_x = 15/(nx - 1)
+  x = range(0, stop=delta_x*(nx-1), length=nx) # Full range of spatial steps for wich a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.30612244897959184:15.0
+
+**** Parameters (time)
+#+begin_src julia :session main :result output
+  endTime = 100   # simulation end time
+  nt = 1000          # nt is the number of timesteps we want to calculate
+  delta_t = endTime/nt  # Δt is the amount of time each timestep covers
+  t = range(0, stop=endTime, length=nt) # Full range of time steps for which a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.1001001001001001:100.0
+
+**** Initial conditions (space-time)
+#+begin_src julia :session main :result output
+  # Init array of ones at initial timestep
+  u_zero = ones(nx) 
+  
+  # Set u₀ = 2 in the interval 0.5 ≤ x ≤ 1 as per our I.C.s
+  u_zero[0.5 .<= x .<= 3] .= 2  # Note use of . (dot) broadcasting syntax
+  
+  u_zero
+#+end_src
+
+#+RESULTS:
+: [1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+**** Run the differential equation
+#+begin_src julia :session main :result output
+  # u[:,] = copy(u_zero) # Initialise arbitrary future timestep with inital condition, u_zero
+  u=zeros((nx,nt+1))
+  u[:,1]=copy(u_zero)
+  
+  for n in 1:nt       # loop over timesteps, n: nt times
+      u[:,n+1] = copy(u[:,n]) # copy the existing values of u^n into u^(n+1)
+      for i in 2:nx-1   # you can try commenting this line and...
+          #for i in 1:nx    # ... uncommenting this line and see what happens!
+          u[i,n+1] = u[i,n] + nu * delta_t/(delta_x)^2 *
+              (u[i+1,n] - 2* u[i,n] + u[i-1,n])/2
+      end
+  end
+#+end_src
+
+#+RESULTS:
+: nothing
+
+**** Plots
+#+begin_src julia :session main :result output
+  using Plots
+  gr()
+#+end_src
+
+#+RESULTS:
+: Plots.GRBackend()
+
+#+begin_src julia :session main :result output
+  GR.plot(x,u_zero)
+#+end_src
+
+#+RESULTS:
+: nothing
+
+#+begin_src julia :session main :result output
+  anim = @animate for n in 1:10:nt
+      Plots.plot(x, u[:,n])
+  end
+#+end_src
+
+#+RESULTS:
+
+**** Gif
+#+begin_src julia :session main :result output
+  gif(anim, "gif_ploting_viscosity.gif", fps=60)
+#+end_src
+
+#+RESULTS:
+: Plots.AnimatedGif("/home/buddhilw/PP/wlq/gif_ploting_viscosity.gif")
+
+** 1D Burgers' equation
+\begin{equation}
+\begin{aligned}
+\dfrac{\partial{u}}{\partial{t}} + u \dfrac{\partial{u}}{\partial{x}} = \nu \dfrac{\partial^2{u}}{\partial{x^2}}
+\end{aligned}
+\end{equation}
+
+Discretize:
+\begin{equation}
+\begin{aligned}
+\dfrac{u^{n+1}_i-u^{n}_i}{\Delta{t}} + u^n_i \dfrac{u^{n}_i-u^{n}_{i-1}}{\Delta{x}}=\nu\dfrac{u_{i+1}-2u_i+u_{i-1}}{\Delta{x^2}}
+\end{aligned}
+\end{equation}
+
+Transpose:
+\begin{equation}
+\begin{aligned}
+u_i^{n+1} = u_i^n - u_i^n \frac{\Delta t}{\Delta x} (u_i^n - u_{i-1}^n) + \nu \dfrac{\Delta{t}}{\Delta{x^2}}(u_{i+1}-2u_i+u_{i-1})
+\end{aligned}
+\end{equation}
+*** Program
+#+begin_src julia :session main :result :tangle ./1D-Burgers.jl
+  using Pkg;
+  Pkg.add("Symbolics")
+  Pkg.add("Gaston")
+  Pkg.add("SpecialFunctions")
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result :tangle ./1D-Burgers.jl
+  using Symbolics
+# using Plots
+  using Gaston, SpecialFunctions
+  # using GR
+#+end_src
+
+#+RESULTS:
+
+#+BEGIN_SRC julia :results file graphics :file bessel.png ::tangle ./1D-Burgers.jl-dir figs :session main
+  x = y = 0:0.075:10
+  plot(x, besselj0(1)*x.^2,
+       lc=:turquoise,
+       marker="ecircle",
+       pn=7,
+       ms=1.5,
+       lw=3,
+       grid = :on,
+       w=:lp,
+       legend = :Bessel_function)
+  save(term="png", :tangle ./1D-Burgers.jl="./figs/bessel.png", size="800,800", linewidth=1, background="white")
+#+end_src
+
+#+RESULTS:
+[[file:figs/bessel.png]]
+
+**** Parameters (space)
+#+begin_src julia :session main :result :tangle ./1D-Burgers.jl
+  nx= 50;
+  ν=0.4;
+  # c=5;
+  δx = 15/(nx - 1);
+  x_range = range(0, stop=δx*(nx-1), length=nx) # Full range of spatial steps for wich a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.30612244897959184:15.0
+
+**** Parameters (time)
+#+begin_src julia :session main :result :tangle ./1D-Burgers.jl
+  endTime = 100   # simulation end time
+  nt = 1000          # nt is the number of timesteps we want to calculate
+  δt = endTime/nt  # Δt is the amount of time each timestep covers
+  t = range(0, stop=endTime, length=nt) # Full range of time steps for which a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.1001001001001001:100.0
+
+**** Initial conditions (space-time)
+***** Given equation
+\begin{equation}
+\begin{aligned}
+u(x) &= -2\nu \left(\dfrac{\frac{\partial{\phi}}{\partial{x}}}{\phi}\right) + 4 \\
+\phi(x) &= e^{(\frac{-x^2}{4\nu})} + e^{(\frac{-(x-2\pi)^2}{4\nu})}
+\end{aligned}
+\end{equation}
+
+#+begin_src julia :session main :result :tangle ./1D-Burgers.jl
+  ϕ(x) = exp(-x^2/4*ν) + exp(-(x-2*π)^2/4*ν) 
+#+end_src
+
+#+RESULTS:
+: ϕ
+
+#+begin_src julia :session main :result :tangle ./1D-Burgers.jl
+  ϕ(1)
+#+end_src
+
+#+RESULTS:
+: 0.9661846824283896
+
+***** Two ways of representing differentiation (analytical or computational symbolics)
+
+Let's define de spatial derivative of $\phi$ using =Symbolics.jl=
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  @variables x
+  Dx=Differential(x)
+#+end_src
+
+#+RESULTS:
+: Differential(x)
+
+See that it doenst work straight away with functions.
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  expand_derivatives(Dx(ϕ))
+#+end_src
+
+#+RESULTS:
+: 0
+
+Let's create an expression of the function
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  ν=0.4
+  ϕe = exp(-x^2/4*ν) + exp(-(x-2*π)^2/4*ν)
+  #+end_src
+
+  #+RESULTS:
+
+*RESULTS:*
+ exp(-0.1((x - 6.283185307179586)^2))*(1.2566370614359172 - (0.2x)) - (0.2x*exp(-0.1(x^2)))
+ 
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+d(x)=exp(-0.1((x - 6.283185307179586)^2))*(1.2566370614359172 - (0.2x)) - (0.2x*exp(-0.1(x^2)))
+#+end_src
+
+#+RESULTS:
+: d
+
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+(expand_derivatives(Dx(ϕe)))
+#+end_src
+
+#+RESULTS:
+: exp(-0.1((x - 6.283185307179586)^2))*(1.2566370614359172 - (0.2x)) - (0.2x*exp(-0.1(x^2)))
+ 
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+first(substitute.(expand_derivatives(Dx(ϕe)), (Dict(x => 1),)))
+#+end_src
+
+#+RESULTS:
+: -0.11614569043244224
+
+In this next line of code defining =dϕ=, it's important that =x= be the =@variable x= and not
+#+begin_example
+x = range(0, stop=delta_x*(nx-1), length=nx)
+#+end_example
+
+So, let's proceed
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  dϕ(ξ) = first(substitute.(expand_derivatives(Dx(ϕe)), (Dict(x => ξ),)))
+#+end_src
+
+#+RESULTS:
+: dϕ
+
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  dϕ(1.78)
+#+end_src
+
+#+RESULTS:
+: -0.14078912126906912
+
+***** Map of x values trough u
+
+ #+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+   u_zero(x) = -2ν*(dϕ(x)/ϕ(x)) + 4 
+ #+end_src
+
+ #+RESULTS:
+ : u_zero
+
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  u_zero_values = map(ζ->u_zero(ζ), x_range)
+#+end_src
+
+#+RESULTS:
+: Num[3.980968478494486, 4.021265551641415, 4.057762942632713, 4.088971794393986, 4.112999207414404, 4.12761555504857, 4.130513311527929, 4.119851797258409, 4.09509071484386, 4.057881669964728, 4.012502004754109, 3.965295677968593, 3.923105256888872, 3.8914360911049144, 3.8733182210562016, 3.869265518698103, 3.878003429614568, 3.897381345558525, 3.925080103628664, 3.9590119307214446, 3.9974753019077967, 4.039165691921941, 4.0831215752159045, 4.128652422325733, 4.175270859064887, 4.222636893375231, 4.270515211891061, 4.318743819489495, 4.367211598935096, 4.415842519257336, 4.464584644026264, 4.513402536082191, 4.562272034743842, 4.611176676196335, 4.660105245525236, 4.709050105156696, 4.7580060546192415, 4.806969553279969, 4.855938190758105, 4.904910326208277, 4.953884842679356, 5.002860979862313, 5.051838220223076, 5.100816211485801, 5.149794713864693, 5.198773564144103, 5.2477526512279935, 5.296731899496773, 5.345711257478645, 5.394690690138464]
+
+*** =u= equation
+ 
+**** TODO Plot =u=
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  Nx = 20
+  Lx = 1.0
+
+  deltax = Lx / Nx
+  
+  xs = deltax/2:deltax:Lx
+#+end_src
+
+#+RESULTS:
+: 0.025:0.05:0.975
+
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl 
+  deltax = xs[2] - xs[1]
+  
+  p2 = Plots.plot(0:0.001:Lx, u_zero, label="u₀", lw=1, ls=:dash)
+  Plots.scatter!(xs, u_zero.(xs), label="sampled")
+  Plots.scatter!(xs, zero.(xs), label="x nodes", alpha=0.5, ms=3, lw=2)
+  
+  for i in 1:length(xs)
+      plot!([ (xs[i] - deltax/2, u_zero(xs[i])), (xs[i] + deltax/2, u_zero(xs[i])) ], c=:green, lw=4, lab=false)
+  
+      plot!([ (xs[i] - deltax/2, 0), (xs[i] - deltax/2, u_zero(xs[i])), (xs[i] + deltax/2, u_zero(xs[i])), (xs[i] + deltax/2, 0)], c=:green, lw=1, lab=false, ls=:dash, alpha=0.3)
+  end
+  xlabel!("x")
+  ylabel!("u₀(x)")
+  Plots.savefig("./u0-burguer.png")
+#+end_src
+
+#+RESULTS:
+
+**** Differential equation method for time
+The =burguers= function will develope the function in one time step. Actually, it will act as a method (of how to develop in time). This is a different approach of what we have been doing.
+
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  # u[:,] = copy(u_zero) # Initialise arbitrary future timestep with inital condition, u_zero_values
+  
+  function burgers(u,δt,δx,ν)
+      # u=zeros((nx,nt+1))
+      N = length(u_zero_values)
+      ul=copy(u) # start the u in a new time step.
+  
+      for i in 2:N-1
+          ul[i] = u[i] + ν * δt/(δx)^2 *
+              (u[i+1] - 2* u[i] + u[i-1])/2
+      end
+  
+      # Bondary condition
+      # https://www.youtube.com/watch?v=uf4g_U8Ok3c&list=PLP8iPy9hna6Q2Kr16aWPOKE0dz9OnsnIJ&index=50&t=10m14s
+      ul[N] = u[N] + ν * δt/(δx)^2 *
+          (u[1] - 2 * u[N] + u[N-1])/2
+  
+      ul[1] = u[1] + ν * δt/(δx)^2 *
+          (u[2] - 2 * u[1] + u[N])/2
+  
+      return ul
+  end 
+#+end_src
+
+#+RESULTS:
+: burgers
+
+Test the time-step with the initial condition,
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  burgers(u_zero_values,nt,nx,0.4)
+#+end_src
+
+#+RESULTS:
+: Num[4.097290021277758, 4.020961577068964, 4.057339859494311, 4.088397279294718, 4.112246322183504, 4.126678067756186, 4.129428569868019, 4.118723831806807, 4.094094877846693, 4.057228020338209, 4.012355871828117, 3.9656969504250568, 3.923946957312533, 3.892520194763734, 3.8744434344714507, 3.8702887677600684, 3.8788546300167672, 3.8980470129286195, 3.9255787491504757, 3.9593744542489304, 3.99773346341402, 4.039346931384326, 4.083247572321174, 4.128739429496079, 4.1753306668705825, 4.22267787611167, 4.270543235017669, 4.318762953237269, 4.367224650205228, 4.415851415613071, 4.464590705409224, 4.513406664610649, 4.562274846167109, 4.611178590426448, 4.660106548749441, 4.709050992343183, 4.758006658555096, 4.806969964385361, 4.855938470595868, 4.90491051668995, 4.953884972336306, 5.0028610681165375, 5.051838280295233, 5.100816252375095, 5.149794741696734, 5.198773583088461, 5.2477526641227845, 5.296731908273821, 5.345711263452881, 5.2776745585941605]
+
+**** Differential equation for space
+=evolution= funtion:
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  function evolve(method, xs, δt, ν, t_final=10.0, f₀=u_zero)
+  
+      T = f₀.(xs)  
+      δx = xs[2] - xs[1]
+  
+      t = 0.0
+      ts = [t]
+  
+      results = [T]
+  
+      while t < t_final
+          Tl = method(T, δt, δx, ν)  # new
+          push!(results, Tl)
+          T = copy(Tl)
+  
+          t += δt
+          push!(ts, t)
+      end
+  
+      return ts, results
+  end
+#+end_src
+
+#+RESULTS:
+: evolve
+
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  ts, results = evolve(burguers, x_range, δt, ν)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+
+**** Plots
+
+
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  cc = "w l lc 'turquoise' lw 3 notitle"
+  F=plot(x_range, results[1], curveconf=cc);
+  for n in 1:10:nt
+      wave = plot(x_range, results[n],
+               lc=:turquoise,
+               marker="ecircle",
+               pn=7,
+               ms=1.5,
+               lw=3,
+               grid = :on,
+               w=:lp,
+               legend = :Bessel_function)
+      push!(F,wave)
+  end
+  save(term="gif", saveopts = "animate size 600,400 delay 1", output="./burguers.gif", handle=1)
+#+end_src
+
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  cc = "w l lc 'turquoise' lw 3 notitle"
+  F=plot(x_range, results[1], curveconf=cc);
+  for n in 1:10:nt
+      wave = plot(x_range, results[n],
+               lc=:turquoise,
+               marker="ecircle",
+               pn=7,
+               ms=1.5,
+               lw=3,
+               grid = :on,
+               w=:lp,
+               legend = :Bessel_function)
+      push!(F,wave)
+  end
+  save(term="gif", saveopts = "animate size 600,400 delay 1", output="./burguers.gif", handle=1)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+z=0:0.1:10pi;
+step = 5;
+cc = "w l lc 'turquoise' lw 3 notitle"
+ac = Axes(zrange = (0,30), xrange = (-1.2, 1.2), yrange = (-1.2, 1.2),
+          tics = :off,
+          xlabel = :x, ylabel = :y, zlabel = :z)
+F = scatter3(cos.(z[1:step]), sin.(z[1:step]), z[1:step], curveconf = cc, ac);
+for i = 2:60
+    pi = scatter3(cos.(z[1:i*step]), sin.(z[1:i*step]), z[1:i*step],
+                  curveconf = cc, ac, handle = 2);
+    push!(F, pi)
+end
+for i = 60:-1:1
+    pi = scatter3(cos.(z[1:i*step]), sin.(z[1:i*step]), z[1:i*step],
+                  curveconf = cc, ac, handle = 2);
+    push!(F, pi)
+end
+save(term="gif", saveopts = "animate size 600,400 delay 1", output="anim3d.gif", handle=1)
+#+end_src
+
+#+RESULTS:
+
+:tangle ./src/sicmutils_org/sicmutils1.clj
+**** Gif
+#+begin_src julia :session main :result output :tangle 1D-Burguer.jl
+  gif(anim, "gif_ploting_burguer.gif", fps=60)
+#+end_src
+
+#+RESULTS:
+
+
+
+* 12 Steps (program)
+** Intro
+raw:
+Text provided under a Creative Commons Attribution license, CC-BY, Copyright (c) 2020, Cysor.  All code is made available under the FSF-approved BSD-3 license. Adapted from CFDPython Copyright (c) Barba group - https://github.com/barbagroup/CFDPython
+
+markdown:
+12 steps to Navier–Stokes
+======
+***
+
+markdown:
+Hello! Welcome to the 12 steps to Navier–Stokes. This is a practical module that is used in the beginning of an interactive Computational Fluid Dynamics (CFD) course taught by Prof. Lorena Barba since Spring 2009 at Boston University. The course assumes only basic programming knowledge (in any language) and of course some foundation in partial differential equations and fluid mechanics. The practical module was inspired by the ideas of Dr. Rio Yokota, who was a post-doc in Barba's lab, and has been refined by Prof. Barba and her students over several semesters teaching the course. The course is taught entirely using Julia and students who don't know Julia just learn as we work through the module.
+
+This Jupyter notebook will lead you through the first step of programming your own Navier–Stokes solver in Python from the ground up. We're going to dive right in. Don't worry if you don't understand everything that's happening at first, we'll cover it in detail as we move forward and you can support your learning with the videos of Prof. Barba's lectures on YouTube.
+
+For best results, after you follow this notebook, prepare your own code for Step 1, either as a Julia script or in a clean Jupyter notebook.
+
+To execute this Notebook, we assume you have invoked the notebook server using: jupyter notebook.
+
+markdown:
+** Step 1: 1-D Linear Convection
+-----
+***
+
+markdown:
+The 1-D Linear Convection equation is the simplest, most basic model that can be used to learn something about CFD. It is surprising that this little equation can teach us so much! Here it is:
+
+$$\frac{\partial u}{\partial t} + c \frac{\partial u}{\partial x} = 0$$
+
+With given initial conditions (understood as a *wave*), the equation represents the propagation of that initial *wave* with speed $c$, without change of shape. Let the initial condition be $u(x,0)=u_0(x)$. Then the exact solution of the equation is $u(x,t)=u_0(x-ct)$.
+
+We discretize this equation in both space and time, using the Forward Difference scheme for the time derivative and the Backward Difference scheme for the space derivative. Consider discretizing the spatial coordinate $x$ into points that we index from $i=0$ to $N$, and stepping in discrete time intervals of size $\Delta t$.
+
+From the definition of a derivative (and simply removing the limit), we know that:
+
+$$\frac{\partial u}{\partial x}\approx \frac{u(x+\Delta x)-u(x)}{\Delta x}$$
+
+Our discrete equation, then, is:
+
+$$\frac{u_i^{n+1}-u_i^n}{\Delta t} + c \frac{u_i^n - u_{i-1}^n}{\Delta x} = 0 $$
+
+Where $n$ and $n+1$ are two consecutive steps in time, while $i-1$ and $i$ are two neighboring points of the discretized $x$ coordinate. If there are given initial conditions, then the only unknown in this discretization is $u_i^{n+1}$.  We can solve for our unknown to get an equation that allows us to advance in time, as follows:
+
+$$u_i^{n+1} = u_i^n - c \frac{\Delta t}{\Delta x}(u_i^n-u_{i-1}^n)$$
+
+Now let's try implementing this in Julia.  
+
+We'll start by importing a few libraries to help us out.
+
+#+NAME: 1e870f15-0800-4fe5-9a4c-a6dbb818cdc6
+#+begin_src julia-vterm :session localhost :result output
+  # Remember: comments in Julia are denoted by the pound sign
+  using GR
+#+end_src
+
+#+RESULTS: 1e870f15-0800-4fe5-9a4c-a6dbb818cdc6
+: nothing
+
+Now let's define a few variables; we want to define an evenly spaced grid of points within a spatial domain that is 2 units of length wide, i.e., $x_i\in(0,2)$.  We'll define a variable `nx`, which will be the number of grid points we want and `Δx` will be the distance between any pair of adjacent grid points.  
+
+#+NAME: 49df800d-6fb9-4642-b3e6-37efcd1675c3
+#+begin_src julia-vterm :session localhost :result output
+  nx = 1000          # try changing this number from 40 to 80 and Run All ... what happens?
+  delta_x = 2 / (nx-1)  # Δx is the amount of space between each spatial point
+  x = range(0, stop=delta_x*(nx-1), length=nx) # Full range of spatial steps for wich a solution is desired
+  
+  endTime = .625   # simulation end time
+  nt = 25          # nt is the number of timesteps we want to calculate
+  delta_t = endTime/nt  # Δt is the amount of time each timestep covers
+  t = range(0, stop=endTime, length=nt) # Full range of time steps for which a solution is desired
+  
+  c = 1            # assume wavespeed of c = 1
+  
+  delta_t
+#+end_src
+
+#+RESULTS: 49df800d-6fb9-4642-b3e6-37efcd1675c3
+: 0.025
+
+We also need to set up our initial conditions. The initial velocity $u_0$ is given.
+
+\begin{equation}
+\begin{aligned}
+u(x)=
+\begin{cases}
+u(x) = 2, \, D_1: \, 0.5 \leq x \leq 1\\
+u(x) = 1,  \, D_2: \, \left(0 < x < 0.5 \right) \, \cup \, \left( 1 < x < 2 \right)
+\end{cases}
+\end{aligned}
+\end{equation}
+
+Here, we use the function `ones()` defining a array which is `nx` elements long with every value equal to 1.
+#+NAME: d681b770-b2c8-417b-81ee-8f3f4ed8e376
+#+begin_src julia-vterm :session localhost :results silent
+  # Init array of ones at initial timestep
+  u_zero = ones(nx) 
+  
+  # Set u₀ = 2 in the interval 0.5 ≤ x ≤ 1 as per our I.C.s
+  u_zero[0.5 .<= x .<= 1] .= 2  # Note use of . (dot) broadcasting syntax
+  
+  u_zero
+#+end_src
+
+Now let's take a look at those initial conditions using a plot.  We're
+using Plots.jl and the plotting function is called via `plot`. To
+learn about the myriad possibilities of Plots.jl, explore the
+[Gallery](https://goropikari.github.io/PlotsGallery.jl/) of example
+plots.
+
+Here, we use the syntax for a simple 2D plot: `plot(x,y)`, where the
+`x` values are evenly distributed grid points:
+
+#+NAME: f350edd9-3439-4c19-93d5-ddd29ec8b3b0
+#+begin_src julia-vterm :session localhost :result output
+  GR.plot(range(0, stop=2, length=nx), u_zero)
+#+end_src
+
+#+RESULTS: f350edd9-3439-4c19-93d5-ddd29ec8b3b0
+: nothing
+
+Why doesn't the hat function have perfectly straight sides? Think for a bit.
+
+markdown:
+Now it's time to implement the discretization of the convection equation using a finite-difference scheme.  
+
+For every element of our array `u`, we need to perform the operation $u_i^{n+1} = u_i^n - c \frac{\Delta t}{\Delta x}(u_i^n-u_{i-1}^n)$
+
+We'll store the result in a new (temporary) array `uⁿ⁺¹`, which will be the solution $u$ for the next time-step.  We will repeat this operation for as many time-steps as we specify and then we can see how far the wave has convected.  
+
+We first initialize our placeholder array `uⁿ⁺¹` to hold the values we calculate for the $n+1$ timestep, using the `ones()` function. 
+
+Note that in julia we can have unicode variable names to improve readability. Using tab completion unicode characters can quickly and easily be added. See the julia documentation for more information: [Unicode Input](https://docs.julialang.org/en/v1/manual/unicode-input/index.html).
+
+Then, we may think we have two iterative operations: one in space and one in time (we'll learn differently later), so we'll start by nesting one loop inside the other. When we write: `for i in 2:nx` we will iterate through the `uⁿ` array, but we'll be skipping the first element. *Why?*
+
+Note, Like MATLAB Julia array indexing starts at 1.
+
+#+begin_src julia-vterm :session main :result output
+  u = copy(u_zero)^(-(n+1)) # Initialise arbitrary future timestep with inital condition, u_zero
+  
+  for n in 1:nt       # loop over timesteps, n, from timestep 1 to nt, so it will run nt times
+      u^n = copy(u^(n+1)) # copy the existing values of u^n into u^(n+1)
+      for i in 2:nx   # you can try commenting this line and...
+          #for i in 1:nx    # ... uncommenting this line and see what happens!
+          u[i]^(n+1) = u[i]^(n) - c * delta_t/delta_x * (u[i]^n - u[i-1]^n)
+      end
+  end
+  
+  u = u^(n+1); # Assign u^(n+1) to u as no further timesteps will be computed. Semi-colon suppresses output.
+#+end_src
+
+#+RESULTS:
+
+
+markdown:
+**Note**—We will learn later that the code as written above is quite inefficient, and there are better ways to write this in julia, but let's carry on.
+
+Now let's try plotting our `u` array after advancing in time.
+
+** Step 2: Nonlinear Convection
+-----
+***
+
+markdown:
+Now we're going to implement nonlinear convection using the same methods as in step 1.  The 1D convection equation is:
+
+$$\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} = 0$$
+
+Instead of a constant factor $c$ multiplying the second term, now we have the solution $u$ multiplying it. Thus, the second term of the equation is now *nonlinear*. We're going to use the same discretization as in Step 1 — forward difference in time and backward difference in space. Here is the discretized equation.
+
+$$\frac{u_i^{n+1}-u_i^n}{\Delta t} + u_i^n \frac{u_i^n-u_{i-1}^n}{\Delta x} = 0$$
+
+Solving for the only unknown term, $u_i^{n+1}$, yields:
+
+$$u_i^{n+1} = u_i^n - u_i^n \frac{\Delta t}{\Delta x} (u_i^n - u_{i-1}^n)$$
+
+markdown:
+As before, the Julia code starts by loading the necessary libraries. Then, we declare some variables that determine the discretization in space and time (you should experiment by changing these parameters to see what happens). Then, we create the initial condition $u_0$ by initializing the array for the solution using $u_0 = 2\ @\ 0.5 \leq x \leq 1$  and $u_0 = 1$ everywhere else in $(0,2)$ (i.e., a hat function).
+
+#+begin_src julia-vterm :session localhost :result output
+  # Spatial Steps
+  nx = 41
+  delta_x = 2 / (nx - 1)
+  x = range(0, stop=delta_x*(nx-1), length=nx)
+  
+  # Time Steps
+  nt = 20
+  delta_t = 0.025
+  t = range(0, stop=delta_t*nt, length=nt)
+  
+  # Inital Condition
+  U_zero = ones(nx)          # Initalise u with ones
+  U_zero[0.5 .<= x .<= 1] .= 2 # Set u₀ = 2 in the interval 0.5 ≤ x ≤ 1 as per our I.C.s
+  
+  u = copy(u_zero)^(t+1); # Initialise arbitrary future timestep with inital condition, u₀
+#+end_src
+
+#+RESULTS:
+
+
+markdown:
+The code snippet below is *unfinished*. We have copied over the line from [Step 1](./01_Step_1.ipynb) that executes the time-stepping update. Can you edit this code to execute the nonlinear convection instead?
+
+#+begin_src julia-vterm :session main :result output
+  2^(3+1)
+#+end_src
+
+#+RESULTS:
+: 16
+
+
+#+begin_src julia-vterm :session localhost :result output
+  for n in 1:nt  #iterate through time
+      u^n = copy(u^(n+1)) ##copy the existing values of u into un
+      for i in 2:nx  ##now we'll iterate through the u array
+          ###This is the line from Step 1, copied exactly.  Edit it for our new equation.
+          ###then uncomment it and run the cell to evaluate Step 2       
+          u[i] = (u^n[i] - u^n[i] * delta_t/delta_x * (u^n[i] - u^n[i-1]))^(-n-1)
+      end
+  end
+  
+  u=u^(nt+1)
+  GR.plot(x, u) ##Plot the results
+#+end_src
+
+#+RESULTS:
+
+* Some notes from MIT
+#+begin_src julia :session main :result output
+  using Plots
+  using Gadfly
+ #plot(y=[1,2,3])
+  # using Plotly
+#+end_src
+
+#+RESULTS:
+: nothing
+
+
+#+begin_src julia :session main :result output
+T0(x) = sin(2π * x)
+#+end_src
+
+#+RESULTS:
+: T0
+
+#+begin_src julia :session main :result output
+  ν=0.4
+  ϕ2(x) = exp(-x^2/4*ν) + exp(-(x-2*π)^2/4*ν) 
+#+end_src
+
+#+RESULTS:
+: ϕ2
+
+#+begin_src julia :session main :result output
+  Nx = 20
+  Lx = 1.0
+
+  deltax = Lx / Nx
+  
+  xs = deltax/2:deltax:Lx
+#+end_src
+
+#+RESULTS:
+: 0.025:0.05:0.975
+
+#+begin_src julia :session main :result output 
+  deltax = xs[2] - xs[1]
+  
+  p = Plots.plot(0:0.001:Lx, ϕ, label="T₀", lw=1, ls=:dash)
+  scatter!(xs, ϕ2.(xs), label="sampled")
+  scatter!(xs, zero.(xs), label="x nodes", alpha=0.5, ms=3, lw=2)
+  
+  for i in 1:length(xs)
+      plot!([ (xs[i] - deltax/2, ϕ(xs[i])), (xs[i] + deltax/2, ϕ(xs[i])) ], c=:green, lw=4, lab=false)
+  
+      plot!([ (xs[i] - deltax/2, 0), (xs[i] - deltax/2, ϕ(xs[i])), (xs[i] + deltax/2, ϕ(xs[i])), (xs[i] + deltax/2, 0)], c=:green, lw=1, lab=false, ls=:dash, alpha=0.3)
+  end
+  
+  xlabel!("x")
+  ylabel!("ϕ₀(x)")
+  savefig("./figs/plot2.png")
+#+end_src
+
+#+RESULTS:
+: nothing
+
+#+ATTR_HTML: :width 300px
+[[file:figs/plot2.png][file:~/PP/Julia/CompFluidDynamics/CFDJulia/figs/plot2.png]]
+
+
