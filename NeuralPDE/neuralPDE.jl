@@ -4,11 +4,11 @@ import Flux: flatten, params
 
 @parameters t, x, N, L, ρ_hat, μ, c₀, τ, L, l,vₕ, k,m
 @variables v(..), ρ(..)
-ρ_hat=0.89;
+# ρ_hat=0.89;
 m=1;
 μ=1; #choose as we like
 τ=1; #choose as we like 
-l=sqrt(μ*τ/ρ_hat);
+# l=sqrt(μ*τ/ρ_hat);
 
 N = 168; 
 ρₕ = 0.168;
@@ -17,25 +17,25 @@ L=N/ρₕ;
 vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6);
 
 # ρₕ=N/L;
-k=2π*3/L;
+k=2π/L;
 
 c₀= 1.8634; 
 Dt = Differential(t)
 Dx = Differential(x)
 Dxx = Differential(x)^2
 
-δρₛ(x) = δρ₀*exp(complex(0,1)*k*x);
+# δρₛ(x) = δρ₀*exp(complex(0,1)*k*x);
 
 #2D PDE
-eqs  = [Dt(v(t,x)) + v(t,x)*Dx(v(t,x)) - (μ/ρ(t,x))*Dxx(v(t,x)) + (c₀^2/ρ(t,x))*Dx(ρ(t,x)) - (vₕ*((1+exp((ρ(t,x)-ρₕ)/τ))^-1 - 3.72*10^-6) - v(t,x))/τ ~ 0,
+eqs  = [Dt(v(t,x)) + v(t,x)*Dx(v(t,x)) - (μ/ρ(t,x))*Dxx(v(t,x)) + (c₀^2/ρ(t,x))*Dx(ρ(t,x)) - (5.0461*((1+exp((ρ(t,x)-0.25)/0.06))^-1 - 3.72*10^-6) - v(t,x))/τ ~ 0,
         Dt(ρ(t,x)) + Dx(ρ(t,x)*v(t,x)) ~ 0]
 
 # Initial and boundary conditions
-bcs = [ρ(t,0) ~ ρ(L,0),
+bcs = [ρ(t,0) ~ ρ(t,L),
        v(t,0) ~ v(t,L),
        Dt(v(t,0)) ~ Dt(v(t,L)),
-       max(ρ(t,x)) ~ ρₕ,
-       ρ(0,x) ~ ρₕ +  0.02,
+       # max(ρ(t,x)) ~ ρₕ,
+       ρ(0,x) ~ ρₕ +  0.005,
        v(0,x) ~ vₕ]
 
 # Space and time domains
@@ -63,9 +63,9 @@ cb = function (p,l)
     return false
 end
 
-res = GalacticOptim.solve(prob, ADAM(0.1); cb = cb, maxiters=100)
+res = GalacticOptim.solve(prob, ADAM(0.1); cb = cb, maxiters=200)
 prob = remake(prob,u0=res.minimizer)
-res = GalacticOptim.solve(prob, ADAM(0.1); cb = cb, maxiters=100)
+res = GalacticOptim.solve(prob, ADAM(0.1); cb = cb, maxiters=200)
 phi = discretization.phi
 
 using Plots
@@ -141,9 +141,9 @@ cb_ = function (p,l)
     return false
 end
 
-res = GalacticOptim.solve(prob,Optim.BFGS(); cb = cb_, maxiters=5)
+res = GalacticOptim.solve(prob,Optim.BFGS(); cb = cb_, maxiters=20)
 
-using Plots
+# using Plots
 
 ts,xs = [infimum(d.domain):1:supremum(d.domain) for d in domains]
 
@@ -151,10 +151,11 @@ acum =  [0;accumulate(+, length.(initθ))]
 sep = [acum[i]+1 : acum[i+1] for i in 1:length(acum)-1]
 minimizers_ = [res.minimizer[s] for s in sep]
 
-u_predict  = [[phi[i]([t,x],minimizers_[i])[1] for t in ts  for x in xs] for i in 1:2]
+u_predict  = [[phi[i]([t,x],minimizers_[i])[1] for t in ts for x in xs] for i in 1:2]
+# u_predict = [first(Array(phi([t, x], res.minimizer))) for t in ts for x in xs] 
 
 for i in 1:2
     p1 = plot(ts, xs, u_predict[i],linetype=:contourf,title = "predict$i");
     plot(p1)
-    savefig("sol_variablee$i")
+    savefig("sol_variable_corrected_bcs2$i")
 end
