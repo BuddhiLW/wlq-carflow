@@ -2,7 +2,7 @@ using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
 import ModelingToolkit: Interval, infimum, supremum
 import Flux: flatten, params
 
-@parameters t, x, N, L, ρ_hat, μ, c₀, τ, L, l,vₕ, k,m
+@parameters t, x, N, L, ρ_hat, μ, c₀, τ, L, l,vₕ, k, m, ω, λ, γ
 @variables v(..), ρ(..)
 # ρ_hat=0.89;
 m=1;
@@ -14,7 +14,13 @@ N = 168;
 ρₕ = 0.168;
 L=N/ρₕ; 
 δρ₀ = 0.02;
+δv₀ = 0.01;
 vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6);
+
+# vhat(ρ)= 5.0461*((1+exp((ρ-0.25)/0.06))^-1 - 3.72*10^-6);
+# using Roots
+# find_zero(vhat, (-5,5))
+# 1.0001069901803379
 
 # ρₕ=N/L;
 k=2π/L;
@@ -25,6 +31,13 @@ Dx = Differential(x)
 Dxx = Differential(x)^2
 
 # δρₛ(x) = δρ₀*exp(complex(0,1)*k*x);
+λ=k^2*c₀^2/100
+ω=k*(vₕ+c₀)
+γ=complex(λ,ω)
+
+δρ(t,x)=δρ₀*exp(complex(0,k*x))*exp(-γ*t)
+δv(t,x)=δv₀*exp(complex(0,k*x))*exp(-γ*t)
+
 
 #2D PDE
 eqs  = [Dt(v(t,x)) + v(t,x)*Dx(v(t,x)) - (μ/ρ(t,x))*Dxx(v(t,x)) + (c₀^2/ρ(t,x))*Dx(ρ(t,x)) - (5.0461*((1+exp((ρ(t,x)-0.25)/0.06))^-1 - 3.72*10^-6) - v(t,x))/τ ~ 0,
@@ -35,7 +48,7 @@ bcs = [ρ(t,0) ~ ρ(t,L),
        v(t,0) ~ v(t,L),
        Dt(v(t,0)) ~ Dt(v(t,L)),
        # max(ρ(t,x)) ~ ρₕ,
-       ρ(0,x) ~ ρₕ +  0.005,
+       ρ(0,x) ~ ρₕ + real(δρ(0,x)),
        v(0,x) ~ vₕ]
 
 # Space and time domains
@@ -157,5 +170,5 @@ u_predict  = [[phi[i]([t,x],minimizers_[i])[1] for t in ts for x in xs] for i in
 for i in 1:2
     p1 = plot(ts, xs, u_predict[i],linetype=:contourf,title = "predict$i");
     plot(p1)
-    savefig("sol_variable_corrected_bcs2$i")
+    savefig("sol_variable_corrected_bcs3$i")
 end
