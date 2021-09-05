@@ -49,7 +49,7 @@ bcs = [ρ(t,0) ~ ρ(t,L),
        Dt(v(t,0)) ~ Dt(v(t,L)),
        # max(ρ(t,x)) ~ ρₕ,
        ρ(0,x) ~ ρₕ + real(δρ(0,x)),
-       v(0,x) ~ vₕ]
+       v(0,x) ~ vₕ + real(δv(0,x))]
 
 # Space and time domains
 domains = [t ∈ Interval(0.0,3000.0),
