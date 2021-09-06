@@ -1,4 +1,4 @@
-using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux, Plots
+using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
 import ModelingToolkit: Interval, infimum, supremum
 import Flux: flatten, params
 
@@ -12,7 +12,7 @@ m=1;
 
 N = 168; 
 ρₕ = 0.168;
-L=1000; 
+L=N/ρₕ; 
 δρ₀ = 0.02;
 δv₀ = 0.01;
 vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6);
@@ -35,12 +35,9 @@ Dxx = Differential(x)^2
 ω=k*(vₕ+c₀)
 γ=complex(λ,ω)
 
-# Complete complex term
 δρ(t,x)=δρ₀*exp(complex(0,k*x))*exp(-γ*t)
 δv(t,x)=δv₀*exp(complex(0,k*x))*exp(-γ*t)
-# Only real part
-δρᵣ(t,x)=δρ₀*cos(k*x)*cos(ω*t)exp(-λ*t)
-δvᵣ(t,x)=δv₀*cos(k*x)*cos(ω*t)exp(-λ*t)
+
 
 #2D PDE
 eqs  = [Dt(v(t,x)) + v(t,x)*Dx(v(t,x)) - (μ/ρ(t,x))*Dxx(v(t,x)) + (c₀^2/ρ(t,x))*Dx(ρ(t,x)) - (5.0461*((1+exp((ρ(t,x)-0.25)/0.06))^-1 - 3.72*10^-6) - v(t,x))/τ ~ 0,
@@ -51,24 +48,22 @@ bcs = [ρ(t,0) ~ ρ(t,L),
        v(t,0) ~ v(t,L),
        Dt(v(t,0)) ~ Dt(v(t,L)),
        # max(ρ(t,x)) ~ ρₕ,
-       ρ(0,x) ~ ρₕ + δρᵣ(0,x),
-       v(0,x) ~ vₕ + δvᵣ(0,x)]
+       ρ(0,x) ~ ρₕ + real(δρ(0,x)),
+       v(0,x) ~ vₕ + real(δv(0,x))]
 
 # Space and time domains
-domains = [t ∈ Interval(0.0,999.0),
+domains = [t ∈ Interval(0.0,3000.0),
            x ∈ Interval(0.0,L)]
 
 # Discretization
 dx = 0.1
-
-import Flux: flatten, params
 
 # Neural network
 input_ = length(domains)
 n = 15
 # Neural network
 dim = 2 # number of dimensions
-chain = FastChain(FastDense(dim,4,Flux.σ),FastDense(4,4,Flux.σ),FastDense(4,1))
+chain = FastChain(FastDense(dim,16,Flux.σ),FastDense(16,16,Flux.σ),FastDense(16,1))
 
 discretization = PhysicsInformedNN(chain, QuadratureTraining())
 
@@ -81,10 +76,12 @@ cb = function (p,l)
     return false
 end
 
-res = GalacticOptim.solve(prob, ADAM(0.1); cb = cb, maxiters=30)
+res = GalacticOptim.solve(prob, ADAM(0.1); cb = cb, maxiters=200)
 prob = remake(prob,u0=res.minimizer)
-res = GalacticOptim.solve(prob, ADAM(0.1); cb = cb, maxiters=30)
+res = GalacticOptim.solve(prob, ADAM(0.1); cb = cb, maxiters=200)
 phi = discretization.phi
+
+using Plots
 
 # Neural network
 input_ = length(domains)
@@ -117,7 +114,7 @@ bc_indvars = NeuralPDE.get_argument(bcs,indvars,depvars)
 _bc_loss_functions = [NeuralPDE.build_loss_function(bc,indvars,depvars, phi, derivative,
                                                     chain,initθ,quadrature_strategy,
                                                     bc_indvars = bc_indvar) for (bc,bc_indvar) in zip(bcs,bc_indvars)]
-map(loss_f -> loss_f(rand(1,10), flat_initθ),_bc_loss_functions)
+map(loss_f -> loss_f(rand(2,10), flat_initθ),_bc_loss_functions)
 
 # dx = 0.1
 # train_sets = NeuralPDE.generate_training_sets(domains,dx,eqs,bcs,eltypeθ,indvars,depvars)
@@ -157,35 +154,21 @@ cb_ = function (p,l)
     return false
 end
 
-res = GalacticOptim.solve(prob,Optim.BFGS(); cb = cb_, maxiters=5)
+res = GalacticOptim.solve(prob,Optim.BFGS(); cb = cb_, maxiters=20)
 
-ts, xs = [infimum(d.domain):1:supremum(d.domain) for d in domains]
+# using Plots
+
+ts,xs = [infimum(d.domain):1:supremum(d.domain) for d in domains]
 
 acum =  [0;accumulate(+, length.(initθ))]
 sep = [acum[i]+1 : acum[i+1] for i in 1:length(acum)-1]
 minimizers_ = [res.minimizer[s] for s in sep]
 
-u_predict1  = [phi[1]([t,x],minimizers_[1])[1] for t in ts for x in xs]
-u_predict2  = [phi[2]([t,x],minimizers_[2])[1] for t in ts for x in xs]
+u_predict  = [[phi[i]([t,x],minimizers_[i])[1] for t in ts for x in xs] for i in 1:2]
+# u_predict = [first(Array(phi([t, x], res.minimizer))) for t in ts for x in xs] 
 
-u_predict1_m=reshape([Array(phi[1]([t, x], minimizers_[1]))[1] for t in ts for x in xs], length(ts), length(xs))
-u_predict2_m=reshape([Array(phi[2]([t, x], minimizers_[2]))[1] for t in ts for x in xs], length(ts), length(xs))
-
-
-# for i in 1:2
-p1 = plot(ts, xs, u_predict1,linetype=:contourf,title = "velocity");
-plot(p1)
-savefig("./sol3_v")
-
-p2 = plot(ts, xs, u_predict2,linetype=:contourf,title = "density");
-plot(p2)
-savefig("./xs_rho_ts1")
-# end
-
-p3 = plot(ts, xs, u_predict1_m,linetype=:surface,title = "velocity");
-plot(p3)
-savefig("./sol3_v_3d")
-
-p4 = plot(ts, xs, u_predict2_m, linetype=:surface,title = "density");
-plot(p3)
-savefig("./xs_rho_ts1_3d")
+for i in 1:2
+    p1 = plot(ts, xs, u_predict[i],linetype=:contourf,title = "predict$i");
+    plot(p1)
+    savefig("sol_variable_corrected_bcs3$i")
+end
