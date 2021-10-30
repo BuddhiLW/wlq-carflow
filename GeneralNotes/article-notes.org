@@ -152,3 +152,7 @@ From, [[file:../NeuralPDE/NeuralPDE.org::*Kerner - Car Flow][Kerner - Car Flow]]
 
 #+RESULTS:
 
+* Discretization
+
+
+

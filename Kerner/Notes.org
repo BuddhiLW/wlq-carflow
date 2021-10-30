@@ -1,0 +1,412 @@
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages
+
+* Equations
+** The equation to solve:
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+\label{eq:NS-n1}
+\left[\frac{\partial{v}}{\partial{t}} + v\frac{\partial{v}}{\partial{x}} \right] = \frac{1}{\rho{}}\dfrac{\partial \left(\mu \frac{\partial{v}}{\partial{x}} \right)}{\partial{x}} - \left(\frac{c_0^2}{\rho{}}\right)\dfrac{\partial{\rho}}{\partial{x}} + \frac{V(\rho) - v}{\tau} \\\\
+     \dfrac{\partial{\rho}}{\partial{t}} + \dfrac{\partial{\left( \rho{}v \right)}}{\partial{x}}=0
+\end{cases}
+   \end{aligned}
+ \end{equation}
+
+\begin{equation}
+\begin{aligned}
+q(x,t)=\rho(x,t)v(x,t)
+\end{aligned}
+\end{equation}
+
+** Boundary Conditions:
+\begin{equation}
+\begin{aligned}
+q(0,t) &= q(L,t)\\
+v(0,t) &= v(L,t),\quad \dfrac{\partial{v}}{\partial{x}}\biggr\rvert_0 = \dfrac{\partial{v}}{\partial{x}}\biggr\rvert_L  
+\end{aligned}
+\end{equation}
+
+From the definition of $q$ and the boundary condition (I),
+\begin{equation}
+\begin{aligned}
+&\rho(0,t)v(0,t) = \rho(L,t)v(L,t) \\
+&\implies \rho(0,t) = \rho(L,t)
+\end{aligned}
+\end{equation}
+
+* The discretization
+** Conventions
+First, some convetions,
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+(\Delta{}_n)^2\textrm{u} &= u^{n+1}_i - 2.u^{n}_i + u^{n-1}_i \\
+(\Delta{}_n)\textrm{uv} &=  u^{n+1}_i v^{n}_i + v^{n+1}_i u^{n}_i - 2 v^{n}_i u^{n}_i\\
+\Delta{}_nu &= u^{n+1}_i - u^{n}_i
+\end{cases}
+\end{aligned}
+\end{equation}
+
+The same convention is valid to $i$.
+** We have
+
+\begin{equation}
+  \begin{aligned}
+    \begin{cases}
+      v^n_{i+1}=v^n_i + [\frac{\mu}{\rho^n_i}\frac{\Delta{t}}{\Delta{x^2}}](\Delta_n)^2v_n + [\frac{c_0^2}{\rho^n_i}\frac{\Delta{t}}{\Delta{x}}](\Delta_n\rho) + [\frac{\Delta{t}}{\tau}](V(\rho^n_i) - v^n_i)\\
+      \rho^n_{i+1} = \rho^n_i - [\frac{\Delta{t}}{\Delta{x}}]((\Delta_n)\textrm{v}\rho)
+    \end{cases}
+  \end{aligned}
+\end{equation}
+
+
+#+begin_src julia :session main :result output
+  v = zeros(100,100)
+  ρ = zeros(100,100)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+** Auxiliatory functions
+#+begin_src julia :session main :result output
+  function dif(v, n, i, arg=n)
+      if arg == n
+          return v[n+1,i] - v[n,i]
+      else
+          return v[n,i+i] - v[n,i]
+      end
+  end
+
+  function dif2(v, n, i, arg=n)
+      if arg == n
+          return v[n+1,i] - 2*v[n,i] + v[n-1,i]
+      else
+          return v[n,i+1] - 2*v[n,i] + v[n,i+1]
+      end
+  end
+
+  function mdif(u,v, n=n, i=i, arg=n)
+      if arg == n
+          return u[n+1,i]*v[n,i] + v[n+1,i]*u[n,i] - 2*v[n,i]*u[n,i]
+      else
+          return u[n,i+1]*v[n,i] + v[n,i+1]*u[n,i] - 2*v[n,i]*u[n,i]
+      end
+  end
+#+end_src
+
+#+RESULTS:
+: mdif
+*** Tests of the aux func
+#+begin_src julia :session main :result output
+pt = [(i+j)*t for i=1:2:20, j=1:1:10, t=1:1:20]
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[2 3 4 5 6 7 8 9 10 11; 4 5 6 7 8 9 10 11 12 13; 6 7 8 9 10 11 12 13 14 15; 8 9 10 11 12 13 14 15 16 17; 10 11 12 13 14 15 16 17 18 19; 12 13 14 15 16 17 18 19 20 21; 14 15 16 17 18 19 20 21 22 23; 16 17 18 19 20 21 22 23 24 25; 18 19 20 21 22 23 24 25 26 27; 20 21 22 23 24 25 26 27 28 29]
+
+[4 6 8 10 12 14 16 18 20 22; 8 10 12 14 16 18 20 22 24 26; 12 14 16 18 20 22 24 26 28 30; 16 18 20 22 24 26 28 30 32 34; 20 22 24 26 28 30 32 34 36 38; 24 26 28 30 32 34 36 38 40 42; 28 30 32 34 36 38 40 42 44 46; 32 34 36 38 40 42 44 46 48 50; 36 38 40 42 44 46 48 50 52 54; 40 42 44 46 48 50 52 54 56 58]
+
+[6 9 12 15 18 21 24 27 30 33; 12 15 18 21 24 27 30 33 36 39; 18 21 24 27 30 33 36 39 42 45; 24 27 30 33 36 39 42 45 48 51; 30 33 36 39 42 45 48 51 54 57; 36 39 42 45 48 51 54 57 60 63; 42 45 48 51 54 57 60 63 66 69; 48 51 54 57 60 63 66 69 72 75; 54 57 60 63 66 69 72 75 78 81; 60 63 66 69 72 75 78 81 84 87]
+
+[8 12 16 20 24 28 32 36 40 44; 16 20 24 28 32 36 40 44 48 52; 24 28 32 36 40 44 48 52 56 60; 32 36 40 44 48 52 56 60 64 68; 40 44 48 52 56 60 64 68 72 76; 48 52 56 60 64 68 72 76 80 84; 56 60 64 68 72 76 80 84 88 92; 64 68 72 76 80 84 88 92 96 100; 72 76 80 84 88 92 96 100 104 108; 80 84 88 92 96 100 104 108 112 116]
+
+[10 15 20 25 30 35 40 45 50 55; 20 25 30 35 40 45 50 55 60 65; 30 35 40 45 50 55 60 65 70 75; 40 45 50 55 60 65 70 75 80 85; 50 55 60 65 70 75 80 85 90 95; 60 65 70 75 80 85 90 95 100 105; 70 75 80 85 90 95 100 105 110 115; 80 85 90 95 100 105 110 115 120 125; 90 95 100 105 110 115 120 125 130 135; 100 105 110 115 120 125 130 135 140 145]
+
+[12 18 24 30 36 42 48 54 60 66; 24 30 36 42 48 54 60 66 72 78; 36 42 48 54 60 66 72 78 84 90; 48 54 60 66 72 78 84 90 96 102; 60 66 72 78 84 90 96 102 108 114; 72 78 84 90 96 102 108 114 120 126; 84 90 96 102 108 114 120 126 132 138; 96 102 108 114 120 126 132 138 144 150; 108 114 120 126 132 138 144 150 156 162; 120 126 132 138 144 150 156 162 168 174]
+
+[14 21 28 35 42 49 56 63 70 77; 28 35 42 49 56 63 70 77 84 91; 42 49 56 63 70 77 84 91 98 105; 56 63 70 77 84 91 98 105 112 119; 70 77 84 91 98 105 112 119 126 133; 84 91 98 105 112 119 126 133 140 147; 98 105 112 119 126 133 140 147 154 161; 112 119 126 133 140 147 154 161 168 175; 126 133 140 147 154 161 168 175 182 189; 140 147 154 161 168 175 182 189 196 203]
+
+[16 24 32 40 48 56 64 72 80 88; 32 40 48 56 64 72 80 88 96 104; 48 56 64 72 80 88 96 104 112 120; 64 72 80 88 96 104 112 120 128 136; 80 88 96 104 112 120 128 136 144 152; 96 104 112 120 128 136 144 152 160 168; 112 120 128 136 144 152 160 168 176 184; 128 136 144 152 160 168 176 184 192 200; 144 152 160 168 176 184 192 200 208 216; 160 168 176 184 192 200 208 216 224 232]
+
+[18 27 36 45 54 63 72 81 90 99; 36 45 54 63 72 81 90 99 108 117; 54 63 72 81 90 99 108 117 126 135; 72 81 90 99 108 117 126 135 144 153; 90 99 108 117 126 135 144 153 162 171; 108 117 126 135 144 153 162 171 180 189; 126 135 144 153 162 171 180 189 198 207; 144 153 162 171 180 189 198 207 216 225; 162 171 180 189 198 207 216 225 234 243; 180 189 198 207 216 225 234 243 252 261]
+
+[20 30 40 50 60 70 80 90 100 110; 40 50 60 70 80 90 100 110 120 130; 60 70 80 90 100 110 120 130 140 150; 80 90 100 110 120 130 140 150 160 170; 100 110 120 130 140 150 160 170 180 190; 120 130 140 150 160 170 180 190 200 210; 140 150 160 170 180 190 200 210 220 230; 160 170 180 190 200 210 220 230 240 250; 180 190 200 210 220 230 240 250 260 270; 200 210 220 230 240 250 260 270 280 290]
+
+[22 33 44 55 66 77 88 99 110 121; 44 55 66 77 88 99 110 121 132 143; 66 77 88 99 110 121 132 143 154 165; 88 99 110 121 132 143 154 165 176 187; 110 121 132 143 154 165 176 187 198 209; 132 143 154 165 176 187 198 209 220 231; 154 165 176 187 198 209 220 231 242 253; 176 187 198 209 220 231 242 253 264 275; 198 209 220 231 242 253 264 275 286 297; 220 231 242 253 264 275 286 297 308 319]
+
+[24 36 48 60 72 84 96 108 120 132; 48 60 72 84 96 108 120 132 144 156; 72 84 96 108 120 132 144 156 168 180; 96 108 120 132 144 156 168 180 192 204; 120 132 144 156 168 180 192 204 216 228; 144 156 168 180 192 204 216 228 240 252; 168 180 192 204 216 228 240 252 264 276; 192 204 216 228 240 252 264 276 288 300; 216 228 240 252 264 276 288 300 312 324; 240 252 264 276 288 300 312 324 336 348]
+
+[26 39 52 65 78 91 104 117 130 143; 52 65 78 91 104 117 130 143 156 169; 78 91 104 117 130 143 156 169 182 195; 104 117 130 143 156 169 182 195 208 221; 130 143 156 169 182 195 208 221 234 247; 156 169 182 195 208 221 234 247 260 273; 182 195 208 221 234 247 260 273 286 299; 208 221 234 247 260 273 286 299 312 325; 234 247 260 273 286 299 312 325 338 351; 260 273 286 299 312 325 338 351 364 377]
+
+[28 42 56 70 84 98 112 126 140 154; 56 70 84 98 112 126 140 154 168 182; 84 98 112 126 140 154 168 182 196 210; 112 126 140 154 168 182 196 210 224 238; 140 154 168 182 196 210 224 238 252 266; 168 182 196 210 224 238 252 266 280 294; 196 210 224 238 252 266 280 294 308 322; 224 238 252 266 280 294 308 322 336 350; 252 266 280 294 308 322 336 350 364 378; 280 294 308 322 336 350 364 378 392 406]
+
+[30 45 60 75 90 105 120 135 150 165; 60 75 90 105 120 135 150 165 180 195; 90 105 120 135 150 165 180 195 210 225; 120 135 150 165 180 195 210 225 240 255; 150 165 180 195 210 225 240 255 270 285; 180 195 210 225 240 255 270 285 300 315; 210 225 240 255 270 285 300 315 330 345; 240 255 270 285 300 315 330 345 360 375; 270 285 300 315 330 345 360 375 390 405; 300 315 330 345 360 375 390 405 420 435]
+
+[32 48 64 80 96 112 128 144 160 176; 64 80 96 112 128 144 160 176 192 208; 96 112 128 144 160 176 192 208 224 240; 128 144 160 176 192 208 224 240 256 272; 160 176 192 208 224 240 256 272 288 304; 192 208 224 240 256 272 288 304 320 336; 224 240 256 272 288 304 320 336 352 368; 256 272 288 304 320 336 352 368 384 400; 288 304 320 336 352 368 384 400 416 432; 320 336 352 368 384 400 416 432 448 464]
+
+[34 51 68 85 102 119 136 153 170 187; 68 85 102 119 136 153 170 187 204 221; 102 119 136 153 170 187 204 221 238 255; 136 153 170 187 204 221 238 255 272 289; 170 187 204 221 238 255 272 289 306 323; 204 221 238 255 272 289 306 323 340 357; 238 255 272 289 306 323 340 357 374 391; 272 289 306 323 340 357 374 391 408 425; 306 323 340 357 374 391 408 425 442 459; 340 357 374 391 408 425 442 459 476 493]
+
+[36 54 72 90 108 126 144 162 180 198; 72 90 108 126 144 162 180 198 216 234; 108 126 144 162 180 198 216 234 252 270; 144 162 180 198 216 234 252 270 288 306; 180 198 216 234 252 270 288 306 324 342; 216 234 252 270 288 306 324 342 360 378; 252 270 288 306 324 342 360 378 396 414; 288 306 324 342 360 378 396 414 432 450; 324 342 360 378 396 414 432 450 468 486; 360 378 396 414 432 450 468 486 504 522]
+
+[38 57 76 95 114 133 152 171 190 209; 76 95 114 133 152 171 190 209 228 247; 114 133 152 171 190 209 228 247 266 285; 152 171 190 209 228 247 266 285 304 323; 190 209 228 247 266 285 304 323 342 361; 228 247 266 285 304 323 342 361 380 399; 266 285 304 323 342 361 380 399 418 437; 304 323 342 361 380 399 418 437 456 475; 342 361 380 399 418 437 456 475 494 513; 380 399 418 437 456 475 494 513 532 551]
+
+[40 60 80 100 120 140 160 180 200 220; 80 100 120 140 160 180 200 220 240 260; 120 140 160 180 200 220 240 260 280 300; 160 180 200 220 240 260 280 300 320 340; 200 220 240 260 280 300 320 340 360 380; 240 260 280 300 320 340 360 380 400 420; 280 300 320 340 360 380 400 420 440 460; 320 340 360 380 400 420 440 460 480 500; 360 380 400 420 440 460 480 500 520 540; 400 420 440 460 480 500 520 540 560 580]
+#+end_example
+
+#+begin_src julia :session main :result output
+p = [(i+j) for i=1:2:20, j=1:1:10]
+#+end_src
+
+#+RESULTS:
+: [2 3 4 5 6 7 8 9 10 11; 4 5 6 7 8 9 10 11 12 13; 6 7 8 9 10 11 12 13 14 15; 8 9 10 11 12 13 14 15 16 17; 10 11 12 13 14 15 16 17 18 19; 12 13 14 15 16 17 18 19 20 21; 14 15 16 17 18 19 20 21 22 23; 16 17 18 19 20 21 22 23 24 25; 18 19 20 21 22 23 24 25 26 27; 20 21 22 23 24 25 26 27 28 29]
+
+#+begin_src julia :session main :result output
+p[2,1,:]
+#+end_src
+
+#+RESULTS:
+: [4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64, 68, 72, 76, 80]
+
+
+#+begin_src julia :session main :result output
+dif2(p,4,2)
+#+end_src
+
+#+RESULTS:
+: 0
+
+** Initial conditions
+#+begin_src julia :session main :result output :tangle neuralPDE.jl
+  m=1;
+  μ=1; #choose as we like
+  τ=1; #choose as we like 
+  # l=sqrt(μ*τ/ρ_hat);
+
+  N = 168; 
+  ρₕ = 0.168;
+  L=N/ρₕ; 
+  δρ₀ = 0.02;
+  δv₀ = 0.01;
+  vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6);
+
+  k=2π/L;
+
+  c₀= 1.8634; 
+  # δρₛ(x) = δρ₀*exp(complex(0,1)*k*x);
+  λ=k^2*c₀^2/100
+  ω=k*(vₕ+c₀)
+  γ=complex(λ,ω)
+#+end_src
+
+#+RESULTS:
+: 1.370793129404024e-6 + 0.036972278932846527im
+
+Work out analytically only the real part,
+\begin{equation}
+  \begin{aligned}
+    \Re(\delta{\rho})=&\Re(\delta{\rho_0}.e^{ikx}.e^{-\gamma{t}}) \\
+    \Leftrightarrow &\delta{\rho_0}.cos(kx).\Re(e^{-\gamma{t}})\\
+    \Leftrightarrow &\delta{\rho_0}.cos(kx).\Re(e^{-(\lambda+i\omega)t})\\
+    \Leftrightarrow &\delta{\rho_0}.cos(kx).\Re(e^{-(\lambda{t})}.e^{-(i\omega)t})\\
+    \Leftrightarrow &\delta{\rho_0}.cos(kx).e^{-(\lambda{t})}.\cos{\omega{t}}\\
+  \end{aligned}
+\end{equation}
+
+#+begin_src julia :session main :result output :tangle neuralPDE.jl
+  # Complete complex term
+  δρ(x,t)=δρ₀*exp(complex(0,k*x))*exp(-γ*t)
+  δv(x,t)=δv₀*exp(complex(0,k*x))*exp(-γ*t)
+  # Only real part
+  δρᵣ(x,t)=δρ₀*cos(k*x)*cos(ω*t)exp(-λ*t)
+  δvᵣ(x,t)=δv₀*cos(k*x)*cos(ω*t)exp(-λ*t)
+#+end_src
+
+#+RESULTS:
+: δvᵣ
+
+** Discretization time-forward
+Time forward one step, given the discretization,
+#+begin_src julia :session main :result output
+  v[n, i+1] = v[n,i] + μ*Δt/ρ[n,i](Δx)^2*(diff2(v,n,i)) + (c₀^2*Δt/ρ[n,i]*Δx)*(diff(ρ,n,i)) + (Δt/τ)*(V(ρ[n,i])-v[n,i])
+#+end_src
+
+#+begin_src julia :session main :result output
+  ρ[n, i+1] = p[n,i] - (Δt/Δx)*(mdif(v,ρ))
+#+end_src
+
+** The boundary conditions
+*** From earlier work,
+#+begin_src julia :session main :result output
+  # Initial and boundary conditions
+  bcs = [ρ(t,0) ~ ρ(t,L),
+         v(t,0) ~ v(t,L),
+         Dt(v(t,0)) ~ Dt(v(t,L)),
+         # max(ρ(t,x)) ~ ρₕ,
+         ρ(0,x) ~ ρₕ + δρᵣ(0,x),
+         v(0,x) ~ vₕ + δvᵣ(0,x)]
+
+  # Space and time domains
+  domains = [t ∈ Interval(0.0,2000.0),
+             x ∈ Interval(0.0,L)]
+
+  # Discretization
+  dx = 0.1
+#+end_src
+
+*** Translation to our discretization scheme
+
+#+begin_src julia :session main :result output
+  ρ[0,i] = ρ[length(ρ),i]
+  v[0,i] = v[length(v),i]
+  dif(v,0,i,arg=i) = dif(v,length(v),i,arg=i)
+  ρ[n,0] = ρₕ + δρᵣ(n,0)
+  ρ[n,0] = vₕ + δvᵣ(n,0)
+#+end_src
+
+* Function for increasing values in space-time
+
+#+begin_src julia :session main :result output
+  v = ones(100,100)
+  ρ = ones(100,100)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+#+begin_src julia :session main :result output
+  for i in 1:length(v)
+      v[:,i+1] = copy(v[:,i])
+      ρ[:,i+1] = copy(ρ[:,i])
+      for n in 2:length(v)-1
+          ρ[n, i+1] = p[n,i] - (Δt/Δx)*(mdif(v,ρ))
+          v[n, i+1] = v[n,i] + μ*Δt/ρ[n,i](Δx)^2*(diff2(v,n,i)) + (c₀^2*Δt/ρ[n,i]*Δx)*(diff(ρ,n,i)) + (Δt/τ)*(V(ρ[n,i])-v[n,i])
+
+          # boundary condition in space
+          ρ[n,0] = ρₕ + δρᵣ(n,0)
+          ρ[n,0] = vₕ + δvᵣ(n,0)
+      end
+
+      # boundary condition in time
+      ρ[0,i] = ρ[length(ρ),i]
+      v[0,i] = v[length(v),i]
+      #dif(v,0,i,arg=i) = dif(v,length(v),i,arg=i)
+      v[0,i] = dif(v,0,i,arg=i)
+      v[length(v),i] = v[0,i]
+  end
+#+end_src
+
+#+RESULTS:
+
+
+#+begin_src julia :session main :result output
+v[1:10,1:10]
+#+end_src
+
+#+RESULTS:
+: [1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0]
+
+
+* Function for increasing values in space-time
+
+*** Program
+**** Parameters common to (velocity and density)
+#+begin_src julia :session main :result output
+  N = 168; 
+  ρₕ = 0.168;
+  L=N/ρₕ; 
+#+end_src
+
+#+RESULTS:
+: 999.9999999999999
+
+**** Parameters (velocity)
+#+begin_src julia :session main :result output
+  nv=0.168;
+  # c=5;
+  delta_v = 168/(nv - 1)
+  v₀ = range(0, stop=delta_v*(nv-1), length=nv) # Full range of spatial steps for wich a solution is desired
+#+end_src
+
+#+RESULTS:
+
+**** Parameters (density)
+#+begin_src julia :session main :result output
+  nρ=0.168;
+  # c=5;
+  delta_ρ = 168/(nρ - 1)
+  ρ₀ = range(0, stop=delta_ρ*(nρ-1), length=nρ) # Full range of spatial steps for wich a solution is desired
+#+end_src
+
+#+RESULTS:
+
+**** Parameters (time)
+#+begin_src julia :session main :result output
+  endTime = 100   # simulation end time
+  nt = 1000          # nt is the number of timesteps we want to calculate
+  delta_t = endTime/nt  # Δt is the amount of time each timestep covers
+  t = range(0, stop=endTime, length=nt) # Full range of time steps for which a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.1001001001001001:100.0
+
+**** Initial conditions (space-time)
+#+begin_src julia :session main :result output
+  # Init array of ones at initial timestep
+  u_zero = ones(nx) 
+  
+  # Set u₀ = 2 in the interval 0.5 ≤ x ≤ 1 as per our I.C.s
+  u_zero[0.5 .<= x .<= 3] .= 2  # Note use of . (dot) broadcasting syntax
+  
+  u_zero
+#+end_src
+
+#+RESULTS:
+: [1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+**** Run the differential equation
+#+begin_src julia :session main :result output
+  # u[:,] = copy(u_zero) # Initialize arbitrary future timestep with inital condition, u_zero
+  u=zeros((nx,nt+1))
+  u[:,1]=copy(u_zero)
+  
+  for n in 1:nt       # loop over timesteps, n: nt times
+      u[:,n+1] = copy(u[:,n]) # copy the existing values of u^n into u^(n+1)
+      for i in 2:nx-1   # you can try commenting this line and...
+          #for i in 1:nx    # ... uncommenting this line and see what happens!
+          u[i,n+1] = u[i,n] + nu * delta_t/(delta_x)^2 *
+              (u[i+1,n] - 2* u[i,n] + u[i-1,n])/2
+      end
+  end
+#+end_src
+
+#+RESULTS:
+: nothing
+
+**** Plots
+#+begin_src julia :session main :result output
+  using Plots
+  gr()
+#+end_src
+
+#+RESULTS:
+: Plots.GRBackend()
+
+#+begin_src julia :session main :result output
+  GR.plot(x,u_zero)
+#+end_src
+
+#+RESULTS:
+: nothing
+
+#+begin_src julia :session main :result output
+  anim = @animate for n in 1:10:nt
+      Plots.plot(x, u[:,n])
+  end
+#+end_src
+
+#+RESULTS:
+
+**** Gif
+#+begin_src julia :session main :result output
+  gif(anim, "gif_ploting_viscosity.gif", fps=60)
+#+end_src
+
+#+RESULTS:
+: Plots.AnimatedGif("/home/buddhilw/PP/wlq/gif_ploting_viscosity.gif")
+
+
+

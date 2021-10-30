@@ -1,0 +1,6 @@
+* Definition - Stationary point
+
+#+begin_quote
+"we say that a /function has "stationary value" at a certain point if the rate of change of the function in every possible direction from that point vanishes./"
+#+end_quote
+p.37, The Variational Principle of Mechanics - The General Nature of Extremum Problems 

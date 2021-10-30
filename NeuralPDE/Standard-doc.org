@@ -1,0 +1,291 @@
+* 2D Poisson
+  #+begin_src julia :session main :result output
+    using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
+    import ModelingToolkit: Interval, infimum, supremum
+
+    @parameters x y
+    @variables u(..)
+    Dxx = Differential(x)^2
+    Dyy = Differential(y)^2
+
+    # 2D PDE
+    eq  = Dxx(u(x,y)) + Dyy(u(x,y)) ~ -sin(pi*x)*sin(pi*y)
+
+    # Boundary conditions
+    bcs = [u(0,y) ~ 0.0, u(1,y) ~ -sin(pi*1)*sin(pi*y),
+	   u(x,0) ~ 0.0, u(x,1) ~ -sin(pi*x)*sin(pi*1)]
+    # Space and time domains
+    domains = [x ∈ Interval(0.0,1.0),
+	       y ∈ Interval(0.0,1.0)]
+
+    # Neural network
+    dim = 2 # number of dimensions
+    chain = FastChain(FastDense(dim,16,Flux.σ),FastDense(16,16,Flux.σ),FastDense(16,1))
+    # Initial parameters of Neural network
+    initθ = Float64.(DiffEqFlux.initial_params(chain))
+
+    # Discretization
+    dx = 0.05
+    discretization = PhysicsInformedNN(chain,GridTraining(dx),init_params =initθ)
+
+    @named pde_system = PDESystem(eq,bcs,domains,[x,y],[u(x, y)])
+    prob = discretize(pde_system,discretization)
+
+    #Optimizer
+    opt = Optim.BFGS()
+
+    #Callback function
+    cb = function (p,l)
+	println("Current loss is: $l")
+	return false
+    end
+
+    res = GalacticOptim.solve(prob, opt, cb = cb, maxiters=1000)
+    phi = discretization.phi
+
+    using Plots
+
+    xs,ys = [infimum(d.domain):dx/10:supremum(d.domain) for d in domains]
+    analytic_sol_func(x,y) = (sin(pi*x)*sin(pi*y))/(2pi^2)
+
+    u_predict = reshape([first(phi([x,y],res.minimizer)) for x in xs for y in ys],(length(xs),length(ys)))
+    u_real = reshape([analytic_sol_func(x,y) for x in xs for y in ys], (length(xs),length(ys)))
+    diff_u = abs.(u_predict .- u_real)
+
+    p1 = plot(xs, ys, u_real, linetype=:contourf,title = "analytic");
+    p2 = plot(xs, ys, u_predict, linetype=:contourf,title = "predict");
+    p3 = plot(xs, ys, diff_u,linetype=:contourf,title = "error");
+    plot(p1,p2,p3)
+  #+end_src
+
+  #+RESULTS:
+
+  #+begin_src julia :session main :result output
+    xs,ys = [domain.domain.lower:dx/10:domain.domain.upper for domain in domains]
+    analytic_sol_func(x,y) = (sin(pi*x)*sin(pi*y))/(2pi^2)
+
+    u_predict = reshape([first(phi([x,y],res.minimizer)) for x in xs for y in ys],(length(xs),length(ys)))
+    u_real = reshape([analytic_sol_func(x,y) for x in xs for y in ys], (length(xs),length(ys)))
+    diff_u = abs.(u_predict .- u_real)
+
+    using Plots
+    p1 = plot(xs, ys, u_real, linetype=:contourf,title = "analytic");
+    p2 = plot(xs, ys, u_predict, linetype=:contourf,title = "predict");
+    p3 = plot(xs, ys, diff_u,linetype=:contourf,title = "error");
+    plot(p1,p2,p3)
+  #+end_src
+
+  #+RESULTS:
+* 2D GPU
+  #+begin_src julia :session main :result output :tangle juliaGPU.jl
+    using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
+    using Quadrature, Cuba, CUDA, QuasiMonteCarlo
+    import ModelingToolkit: Interval, infimum, supremum
+    using Plots
+    using Printf
+  #+end_src
+
+  #+RESULTS:
+
+  #+begin_src julia :session main :result output :tangle juliaGPU.jl
+    @parameters t x y
+    @variables u(..)
+    Dxx = Differential(x)^2
+    Dyy = Differential(y)^2
+    Dt = Differential(t)
+    t_min= 0.
+    t_max = 2.0
+    x_min = 0.
+    x_max = 2.
+    y_min = 0.
+    y_max = 2.
+
+    # 2D PDE
+    eq  = Dt(u(t,x,y)) ~ Dxx(u(t,x,y)) + Dyy(u(t,x,y))
+
+    analytic_sol_func(t,x,y) = exp(x+y)*cos(x+y+4t)
+    # Initial and boundary conditions
+    bcs = [u(t_min,x,y) ~ analytic_sol_func(t_min,x,y),
+	   u(t,x_min,y) ~ analytic_sol_func(t,x_min,y),
+	   u(t,x_max,y) ~ analytic_sol_func(t,x_max,y),
+	   u(t,x,y_min) ~ analytic_sol_func(t,x,y_min),
+	   u(t,x,y_max) ~ analytic_sol_func(t,x,y_max)]
+
+    # Space and time domains
+    domains = [t ∈ Interval(t_min,t_max),
+	       x ∈ Interval(x_min,x_max),
+	       y ∈ Interval(y_min,y_max)]
+
+    # Neural network
+    inner = 25
+    chain = FastChain(FastDense(3,inner,Flux.σ),
+		      FastDense(inner,inner,Flux.σ),
+		      FastDense(inner,inner,Flux.σ),
+		      FastDense(inner,inner,Flux.σ),
+		      FastDense(inner,1))
+
+    initθ = CuArray(Float64.(DiffEqFlux.initial_params(chain)))
+
+    strategy = GridTraining(0.05)
+    discretization = PhysicsInformedNN(chain,
+				       strategy;
+				       init_params = initθ)
+
+    @named pde_system = PDESystem(eq,bcs,domains,[t,x,y],[u(t, x, y)])
+    prob = discretize(pde_system,discretization)
+    symprob = symbolic_discretize(pde_system,discretization)
+
+    cb = function (p,l)
+	println("Current loss is: $l")
+	return false
+    end
+
+    res = GalacticOptim.solve(prob,ADAM(0.1);cb=cb,maxiters=10)
+  #+end_src
+
+  #+RESULTS:
+
+** Animation
+   #+begin_src julia :session main :result output :tangle juliaGPU.jl
+      prob = remake(prob,u0=res.minimizer)
+      res = GalacticOptim.solve(prob,ADAM(0.1);cb=cb,maxiters=10)
+
+      phi = discretization.phi
+      ts,xs,ys = [infimum(d.domain):0.1:supremum(d.domain) for d in domains]
+      u_real = [analytic_sol_func(t,x,y) for t in ts for x in xs for y in ys]
+      u_predict = [first(Array(phi([t, x, y], res.minimizer))) for t in ts for x in xs for y in ys]
+
+      function plot_(res)
+	  # Animate
+	  anim = @animate for (i, t) in enumerate(0:0.05:t_max)
+	      @info "Animating frame $i..."
+	      u_real = reshape([analytic_sol_func(t,x,y) for x in xs for y in ys], (length(xs),length(ys)))
+	      u_predict = reshape([Array(phi([t, x, y], res.minimizer))[1] for x in xs for y in ys], length(xs), length(ys))
+	      u_error = abs.(u_predict .- u_real)
+	      title = @sprintf("predict, t = %.3f", t)
+	      p1 = plot(xs, ys, u_predict,st=:surface, label="", title=title)
+	      title = @sprintf("real")
+	      p2 = plot(xs, ys, u_real,st=:surface, label="", title=title)
+	      title = @sprintf("error")
+	      p3 = plot(xs, ys, u_error, st=:contourf,label="", title=title)
+	      plot(p1,p2,p3)
+	  end
+	  return anim
+      end
+
+      # gif(anim,"./3pde.gif", fps=10)
+      # plot_(res)
+   #+end_src
+
+   #+RESULTS:
+* 1D-Burguer
+  #+begin_src julia :session main :result output
+    using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
+    import ModelingToolkit: Interval, infimum, supremum
+
+    @parameters t, x
+    @variables u(..)
+    Dt = Differential(t)
+    Dx = Differential(x)
+    Dxx = Differential(x)^2
+
+    #2D PDE
+    eq  = Dt(u(t,x)) + u(t,x)*Dx(u(t,x)) - (0.01/pi)*Dxx(u(t,x)) ~ 0
+
+    # Initial and boundary conditions
+    bcs = [u(0,x) ~ -sin(pi*x),
+	   u(t,-1) ~ 0.,
+	   u(t,1) ~ 0.,
+	   u(t,-1) ~ u(t,1)]
+
+    # Space and time domains
+    domains = [t ∈ Interval(0.0,1.0),
+	       x ∈ Interval(-1.0,1.0)]
+    # Discretization
+    dx = 0.05
+    # Neural network
+    chain = FastChain(FastDense(2,16,Flux.σ),FastDense(16,16,Flux.σ),FastDense(16,1))
+    initθ = Float64.(DiffEqFlux.initial_params(chain))
+    eltypeθ = eltype(initθ)
+    parameterless_type_θ = DiffEqBase.parameterless_type(initθ)
+    strategy = NeuralPDE.GridTraining(dx)
+
+    phi = NeuralPDE.get_phi(chain,parameterless_type_θ)
+    derivative = NeuralPDE.get_numeric_derivative()
+
+
+    indvars = [t,x]
+    depvars = [u]
+
+    _pde_loss_function = NeuralPDE.build_loss_function(eq,indvars,depvars,
+						       phi,derivative,chain,initθ,strategy)
+
+    bc_indvars = NeuralPDE.get_variables(bcs,indvars,depvars)
+    _bc_loss_functions = [NeuralPDE.build_loss_function(bc,indvars,depvars,
+							phi,derivative,chain,initθ,strategy,
+							bc_indvars = bc_indvar) for (bc,bc_indvar) in zip(bcs,bc_indvars)]
+
+    train_sets = NeuralPDE.generate_training_sets(domains,dx,[eq],bcs,eltypeθ,indvars,depvars)
+    train_domain_set, train_bound_set = train_sets
+
+
+    pde_loss_function = NeuralPDE.get_loss_function(_pde_loss_function,
+						    train_domain_set[1],
+						    eltypeθ,parameterless_type_θ,
+						    strategy)
+
+    bc_loss_functions = [NeuralPDE.get_loss_function(loss,set,
+						     eltypeθ, parameterless_type_θ,
+						     strategy) for (loss, set) in zip(_bc_loss_functions,train_bound_set)]
+
+
+    loss_functions = [pde_loss_function; bc_loss_functions]
+    loss_function__ = θ -> sum(map(l->l(θ) ,loss_functions))
+
+    function loss_function_(θ,p)
+	return loss_function__(θ)
+    end
+
+    f = OptimizationFunction(loss_function_, GalacticOptim.AutoZygote())
+    prob = GalacticOptim.OptimizationProblem(f, initθ)
+
+    cb_ = function (p,l)
+	println("loss: ", l , "losses: ", map(l -> l(p), loss_functions))
+	return false
+    end
+
+    # optimizer
+    opt = BFGS()
+    res = GalacticOptim.solve(prob, opt; cb = cb_, maxiters=2000)
+  #+end_src
+  
+* Modelingtoolkit 
+#+begin_src julia :session main :result output
+  using ModelingToolkit
+
+  @parameters x
+  @variables t u(..)
+  Dxx = Differential(x)^2
+  Dtt = Differential(t)^2
+  Dt = Differential(t)
+
+  #2D PDE
+  C=1
+  eq  = Dtt(u(t,x)) ~ C^2*Dxx(u(t,x))
+
+  # Initial and boundary conditions
+  bcs = [u(t,0) ~ 0.,# for all t > 0
+	 u(t,1) ~ 0.,# for all t > 0
+	 u(0,x) ~ x*(1. - x), #for all 0 < x < 1
+	 Dt(u(0,x)) ~ 0. ] #for all  0 < x < 1]
+
+  # Space and time domains
+  domains = [t ∈ (0.0,1.0),
+	     x ∈ (0.0,1.0)]
+
+  @named pde_system = PDESystem(eq,bcs,domains,[t,x],[u])
+#+end_src
+
+#+RESULTS:
+: PDESystem(Differential(t)(Differential(t)(u(t, x))) ~ Differential(x)(Differential(x)(u(t, x))), Equation[u(t, 0) ~ 0.0, u(t, 1) ~ 0.0, u(0, x) ~ x*(1.0 - x), Differential(t)(u(0, x)) ~ 0.0], Symbolics.VarDomainPairing[Symbolics.VarDomainPairing(t, 0.0..1.0), Symbolics.VarDomainPairing(x, 0.0..1.0)], Num[t, x], Symbolics.CallWithMetadata{SymbolicUtils.FnType{Tuple, Real}, Base.ImmutableDict{DataType, Any}}[u⋆], SciMLBase.NullParameters(), Dict{Any, Any}(), nothing, :pde_system)
+

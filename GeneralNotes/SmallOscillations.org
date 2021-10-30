@@ -1,0 +1,57 @@
+* Small oscillations on a Lagrangian(q,$\dot{q}$)
+
+Let there be a $L(q,\dot{q})$ and $\rho = q - q_0$ who describe the =System's motion= and  the deviation from an =equilibrium point= ($q_0$), respectively.
+
+Let the equation of motion of the system be written in the form,
+
+\begin{equation}
+\begin{aligned}
+\ddot{q} = f(q,\dot{q}) \, \land \, f(q, \dot{q})=g(L(q,\dot{q}))
+\end{aligned}
+\end{equation}
+
+Let us take $q = \rho + q_0$,
+
+\begin{equation}
+\begin{aligned}
+\implies \ddot{\rho} = f(\rho + q_0, \dot{\rho})
+\end{aligned}
+\end{equation}
+
+Because $q_0$ is constant and vanishes in the derivatives.
+
+Now, taking the power expansion and neglecting second-order terms and
+higher, due to $(\rho, \dot{\rho}, \ddot{\rho})$ being as
+small as we want. Furthermore, we will consider the particular
+instance in which $\rho=0$. That would be
+the case without perturbations, in which $\left(\rho=0 \Leftrightarrow
+q=q_0 \right) \, \land \, \left(\dot{q}=0 \land \ddot{q}=0\right)$.
+
+\begin{equation}
+\begin{aligned}
+\ddot{\rho} = f(q_0, 0) + \rho \dfrac{\partial{f}}{\partial{\rho}}(q_0, 0) + \dot{\rho}\dfrac{\partial{f}}{\partial{\dot{\rho}}}(q_0, 0)
+\end{aligned}
+\end{equation}
+
+But, this condition $(q,\dot{q},\ddot{q})=(q_0,0,0)$ is part of the
+stationary regiment. So, $\ddot{q} = 0 \, \land \, f(q_0,0)=0$.
+
+For this $q$, the perturbation's equations of motion are thus
+described as:
+
+\begin{equation}
+\begin{aligned}
+\ddot{\rho} + \text{a} \dot{\rho} + \text{b} \rho = 0
+\end{aligned}
+\end{equation}
+
+in which,
+
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+a = \dfrac{\partial{f}}{\partial{\dot{\rho}}}(q_0, 0)\\
+b = \dfrac{\partial{f}}{\partial{\rho}}(q_0, 0)
+\end{cases}
+\end{aligned}
+\end{equation}

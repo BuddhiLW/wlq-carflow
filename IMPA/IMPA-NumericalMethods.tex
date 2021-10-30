@@ -1,0 +1,88 @@
+% Created 2021-10-26 Tue 09:02
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 27.2 (Org mode 9.4.4)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+
+
+\section{Doctor's program}
+\label{sec:orgf8bc38e}
+\url{https://www.youtube.com/playlist?list=PLo4jXE-LdDTQbSErI2ftYD4PLJjVMaiox}
+\subsection{Numerical problems}
+\label{sec:org134914c}
+\subsubsection{ODE}
+\label{sec:org0bd1a8c}
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+\dfrac{dy}{dt} = f(y(t),t)\\
+y(1) = y_0
+\end{cases}
+\end{aligned}
+\end{equation}
+
+\subsubsection{Integral}
+\label{sec:org83c15b8}
+\(y(t) = y(t_0) + \int_{t_{0}}^t{f(y(s),s)}\text{d}s\)
+\subsection{Consequences of choice in method}
+\label{sec:org1ee5dfb}
+
+\begin{itemize}
+\item \(\overline{Y(t_n)}\) EDO solution in \(t=t_n\) (function)
+\item \(y_n\) discrate solution (numerical method) (vector)
+\end{itemize}
+
+\subsubsection{Using Taylor's series}
+\label{sec:org2239bd0}
+\begin{equation}
+\begin{aligned}
+\overline{Y}(t_n+1) &= \overline{Y_n}+\Delta{t}.\overline{Y}'(t_n) + O(\Delta{t}^2) \\
+\implies \overline{Y}(t_n+1) &= \overline{Y_n}+\Delta{t}.f(\overline{Y}(t_n), t_n)  + \biggr\rvert_{\text{cut}} O(\Delta{t}^2)
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+y_{n+1}&=y_n + \Delta{t}.f(y_n, t_n) \\
+&= y_n + \Delta{t}.\Delta{f_n}
+\end{aligned}
+\end{equation}
+
+\begin{enumerate}
+\item Euler Explicit method
+\label{sec:orgb87f552}
+\end{enumerate}
+
+\section{Euler Implicit}
+\label{sec:orgf49520e}
+Use
+\(y_{n+1} = y_n - \Delta{}t.f(y_{n+1},t_{n+1})\)
+
+\begin{minted}[frame=lines,fontsize=\scriptsize,linenos]{julia}
+using Pkg;
+Pkg.add("")
+\end{minted}
+\end{document}

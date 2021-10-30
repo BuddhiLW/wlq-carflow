@@ -422,6 +422,7 @@ u(x) &= -2\nu \left(\dfrac{\frac{\partial{\phi}}{\partial{x}}}{\phi}\right) + 4 
 \end{equation}
 
 #+begin_src julia :session main :result :tangle ./1D-Burgers.jl
+  ν=0.4;
   ϕ(x) = exp(-x^2/4*ν) + exp(-(x-2*π)^2/4*ν) 
 #+end_src
 
@@ -429,11 +430,11 @@ u(x) &= -2\nu \left(\dfrac{\frac{\partial{\phi}}{\partial{x}}}{\phi}\right) + 4 
 : ϕ
 
 #+begin_src julia :session main :result :tangle ./1D-Burgers.jl
-  ϕ(1)
+  ϕ(1.1)
 #+end_src
 
 #+RESULTS:
-: 0.9661846824283896
+: 0.9541501061760458
 
 ***** Two ways of representing differentiation (analytical or computational symbolics)
 
@@ -444,7 +445,6 @@ Let's define de spatial derivative of $\phi$ using =Symbolics.jl=
 #+end_src
 
 #+RESULTS:
-: Differential(x)
 
 See that it doenst work straight away with functions.
 #+begin_src julia :session main :result output :tangle 1D-Burguer.jl
@@ -452,7 +452,6 @@ See that it doenst work straight away with functions.
 #+end_src
 
 #+RESULTS:
-: 0
 
 Let's create an expression of the function
 #+begin_src julia :session main :result output :tangle 1D-Burguer.jl

@@ -1,0 +1,8 @@
+* Dynamical Equation
+
+\begin{equation}
+\begin{aligned}
+\ddot{x_n}=a \left\{V(\Delta{x_n}) - \dot{x_n}\right\} \, \land \, \Delta{x_n} = x_{n+1} - x_n
+\end{aligned}
+\end{equation}
+

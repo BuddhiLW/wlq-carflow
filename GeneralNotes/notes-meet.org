@@ -1,0 +1,9 @@
+* lowest possible stable orbit
+* Rugge-Kutta
+time
+* Interpolation
+space
+* Leap frog
+time-space
+* How does backward and forward methods relate to Rugge-Kutta
+
