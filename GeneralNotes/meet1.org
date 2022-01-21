@@ -1,0 +1,6 @@
+* First meeting
+** Equations related to traffic and fluid
+** Numerical recipe (book)
+*** Partial diff eq
+** TODO What are the necessery conditions to understand the problem
+

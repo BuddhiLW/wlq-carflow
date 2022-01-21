@@ -1,0 +1,35 @@
+\contentsline {section}{\numberline {1}Abstract}{3}{section.1}%
+\contentsline {section}{\numberline {2}Introduction}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Analytical standpoint}{3}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Definition}{3}{subsubsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.2}Numerical standpoint}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Methods studied}{4}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Ordinary Differential Equation}{4}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Nth-order methods for partial differentiation}{4}{subsubsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.4}Analytical theory on perturbations}{5}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Bibliography Review}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Development of the field}{5}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}The dawn of numerical methods}{5}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Modern methods and Computing}{5}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Physics Informed Neural Networks}{5}{subsubsection.3.1.3}%
+\contentsline {subsubsection}{\numberline {3.1.4}Numerical Instability}{6}{subsubsection.3.1.4}%
+\contentsline {subsubsection}{\numberline {3.1.5}Grouping of methods and types of PDEs}{6}{subsubsection.3.1.5}%
+\contentsline {subsection}{\numberline {3.2}Mathematical categorization of PDEs}{6}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Order of equations and systems}{6}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Linearity, quasi-linearity and non-linearity}{6}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Elliptic, hyperbolic and parabolic PDEs}{7}{subsubsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.3}Numerical Methods implemented in Julia}{8}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}{\bfseries \sffamily TODO} PINN}{8}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Materials and Methods}{8}{section.4}%
+\contentsline {subsection}{\numberline {4.1}{\bfseries \sffamily TODO} Version Control}{9}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}{\bfseries \sffamily TODO} Julia language}{9}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}{\bfseries \sffamily TODO} PINNs}{9}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}{\bfseries \sffamily TODO} Developed code}{9}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}{\bfseries \sffamily TODO} Stability Regions}{9}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Results and Discussion}{9}{section.5}%
+\contentsline {subsection}{\numberline {5.1}{\bfseries \sffamily TODO} Kerner's reproduction through PINNs}{9}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}{\bfseries \sffamily TODO} Steps to derive the Stability Region}{10}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}{\bfseries \sffamily TODO} Stiffness}{10}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Nth-order approximation}{10}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}Third-order approximation of second-order differential equation}{10}{subsubsection.5.4.1}%
+\contentsline {section}{\numberline {6}Conclusion}{11}{section.6}%

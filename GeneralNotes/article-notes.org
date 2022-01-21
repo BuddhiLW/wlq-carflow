@@ -1,0 +1,158 @@
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages
+
+bibliography:article-notes.bib
+
+* Equation of continuity
+ \begin{equation}
+   \begin{aligned}
+     \dfrac{\partial{\rho}}{\partial{t}} + \dfrac{\partial{\left( \rho{}v \right)}}{\partial{x}}=0
+   \end{aligned}
+ \end{equation}
+
+* Navier-Stokes one-dimensional
+Cited cite:schlichting2016boundary abud cite:Kerner_1993 
+
+\begin{equation}
+\begin{aligned}
+\label{eq:NS-n1}
+\rho{}\left[\frac{\partial{v}}{\partial{t}} + v\frac{\partial{v}}{\partial{x}} \right] = \dfrac{\partial \left(\mu \frac{\partial{v}}{x} \right)}{\partial{x}} - \dfrac{\partial{p}}{\partial{x}} + X
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+\rho : \textrm{Car density}\\
+p: \textrm{Local car pressure}
+v{}: \textrm{Car instant velocity}\\
+\mu{}: \textrm{Viscosity}\\
+X: \textrm{Sum of all inner particle interaction forces}
+\end{cases}
+\end{aligned}
+\end{equation}
+
+* Mathematical meanings of $X$ and $p$
+** Relaxation process meaning
+- If the perception is that current velocity $v$ is too slow compared
+  to what can be safely achieved, then X is positive.
+  - If the perception is that current velocity $v$ is too fast and
+  dangerous compared to the traffic condition, then X is negative.
+- Oscillatory behavior can appear.
+  
+** Consider the time independent homogeneous condition
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+\label{eq:considerations}
+&\langle\frac{\partial{v}}{\partial{x}}\rangle=0 \quad \textrm{(Time independent)} \\
+&\langle\dfrac{\partial \left(\mu \frac{\partial{v}}{\partial{x}} \right)}{\partial{x}}\rangle=0 \quad \textrm{(Time independent and Homogeneous)} \\
+\\
+\quad \because \langle\dfrac{\partial \left(\mu \frac{\partial{v}}{\partial{x}} \right)}{\partial{x}}\rangle &=
+\langle\dfrac{\partial \mu}{\partial{x}} \left( \frac{\partial{v}}{\partial{x}}\right)}\rangle +
+\langle \mu \left( \dfrac{\partial^2{v}}{\partial^2{x}}\right)}\rangle \\
+
+&\left((\langle\dfrac{\partial \mu}{\partial{x}}\rangle = 0  \quad \textrm{Homogeneous}) \,\land\, (\langle\dfrac{\partial^2{v}}{\partial^2{x}} \rangle = 0 \quad \textrm{Time independent and Homogeneous})\right)\\
+&=0\\
+\\
+&\langle\frac{\partial{p}}{\partial{x}}\rangle=0 \quad \textrm{(Time independent)}
+\end{cases}
+\end{aligned}
+\end{equation}
+
+** X and acceleration; considerations of instant velocity
+According to  [[ref:eq:NS-n1][ref:eq:NS-n1]] and X definition, under [[ref:eq:considerations][ref:eq:considerations]], we will have:
+\begin{equation}
+\begin{aligned}
+\label{eq:NS-n1}
+&(\rho{}\left[\frac{\partial{v}}{\partial{t}} + v\frac{\partial{v}}{\partial{x}} \right] = \dfrac{\partial \left(\mu \frac{\partial{v}}{\partial{x}} \right)}{\partial{x}} - \dfrac{\partial{p}}{\partial{x}} + X) \,\land\, (X = \rho{}. \dfrac{ (V(\rho) - v)}{\tau})\\
+&\implies \frac{\textrm{d}v}{\textrm{d}t}=\frac{V(\rho) - v}{\tau}
+
+\end{aligned}
+\end{equation}
+
+** $p$ pressure
+\begin{equation}
+\begin{aligned}
+p = \rho{} c_0^2
+\end{aligned}
+\end{equation}
+in which
+- $\rho$ is the density.
+- $c_0^2$ is the velocity variance. 
+
+* Substitution of $(X,\, p)$ in terms of $\rho{},\,v,\,c_0$
+
+This will be the equation we will use to simulate
+\begin{equation}
+\begin{aligned}
+\label{eq:NS-n1}
+\left[\frac{\partial{v}}{\partial{t}} + v\frac{\partial{v}}{\partial{x}} \right] = \frac{1}{\rho{}}\dfrac{\partial \left(\mu \frac{\partial{v}}{\partial{x}} \right)}{\partial{x}} - \left(\frac{c_0^2}{\rho{}}\right)\dfrac{\partial{\rho}}{\partial{x}} + \frac{V(\rho) - v}{\tau}
+\end{aligned}
+\end{equation}
+
+- An equation of $(t,x,v,\rho)$.
+
+* Considerations on parameters
+
+** The total quantity of cars
+\begin{equation}
+\begin{aligned}
+N = \int_0^L{\rho(x,t)dx}=\rho_h L
+\end{aligned}
+\end{equation}
+
+In which $\rho_h$ is the density under homogeneous flow.
+
+** Car-flux in any place and time,
+\begin{equation}
+\begin{aligned}
+q(x,t) = \rho(x,t)v(x,t)
+\end{aligned}
+\end{equation}
+
+** Velocity in homogeneous flow
+In homogeneous flow, the $\dfrac{\partial{v}}{\partial{t}}=0$. Thus, $X=0$.
+
+This means $\dfrac{\rho(V(\rho)-v)}{\tau}=0 \implies V(\rho_h)=v_h,\, \forall (x,t)$.
+
+"If N an L are given, there is only one homogeneous state $\rho=\rho_h$, $v=v_h$ for this flow"
+
+*** Try to set variables so that we start by N and L
+In a close circuit, in homogeneous flow,
+$N = \rho_h L$
+
+Let, $V(\rho) = v_h * (e^{-\frac{(\rho - \rho_h)}{\tau}}) + \delta{v}$.
+**** Maximum density - all lanes occupied
+
+$\hat{\rho} = \frac{n}{a}$ in which $n$ is the number of lanes and $a$ the average car lengh in meters.
+
+Let's say a=4,5m and n=4. This implies, $\hat{\rho}=0.89$ .
+
+**** Code
+
+From, [[file:../NeuralPDE/NeuralPDE.org::*Kerner - Car Flow][Kerner - Car Flow]]
+#+begin_src julia :session main :result output
+  @parameters t, x, N, L, ρ_hat, μ, c₀, τ, L, l, 
+  @variables v(..), ρ(..)
+  ρ_hat=0.89;
+  μ=0.3; #choose as we like
+  τ = 0.1; #choose as we like 
+  l=sqrt(μ*τ/ρ_hat);
+  
+  N=50; # 50 carros
+  L=2π*100; # L=2πr=2π100km
+  ρₕ=N/L;
+  
+  c₀= 5*l/τ; 
+  Dt = Differential(t)
+  Dx = Differential(x)
+  Dxx = Differential(x)^2
+#+end_src
+
+#+RESULTS:
+
+* Discretization
+
+
+

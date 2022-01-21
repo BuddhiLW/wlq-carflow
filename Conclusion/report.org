@@ -1,0 +1,398 @@
+#+startup: latexpreview
+#+startup: imagepreview
+#+AUTHOR: Pedro G. Branquinho, Wei-Liang Qian (\ch{钱卫良})
+#+DATE: 17 December 2021
+#+TITLE: Simulation and Modeling of Traffic Congestion.
+# Simulação e modelagem de tráfego e congestionamento.
+
+#+LATEX_HEADER: \usepackage{abntex2cite}
+#+LATEX_HEADER: \usepackage[T1]{fontenc}		% Selecao de codigos de fonte.
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}		% Codificacao do documento (conversão automática dos acentos)
+# #+LATEX_HEADER: \usepackage{graphicx}			% Inclusão de gráficos
+#+LATEX_HEADER: \usepackage{microtype} 			% para melhorias de
+# # #+LATEX_HEADER: \bibliographystyle{abnt-num}
+#+LATEX_HEADER: \RequireXeTeX %Force XeTeX check
+#+LATEX_HEADER: \usepackage{xltxtra}
+#+LATEX_HEADER: \usepackage{fontspec} %Font package
+#+LATEX_HEADER: \newfontfamily\ch[Mapping=tex-text]{Noto Serif CJK TC}
+# # HAN NOM A
+#+LATEX_HEADER: \DeclareTextFontCommand{\unifont}{\ch}
+
+#+BIBLIOGRAPHY: ~/Bibliography/collection.bib
+# bibliography: [[file:~/Bibliography/collection.bib][file:~/Bibliography/collection.bib]]
+
+
+#+LATEX:\clearpage
+* COMMENT PDF viewer setup
+#+begin_src emacs-lisp
+(setq eaf-pdf-dark-mode nil)
+#+end_src
+
+#+RESULTS:
+* COMMENT Notes available
+- [[file:~/PP/wlq/Kerner/Notes.org][Kerner]]
+  + [[file:~/PP/wlq/GeneralNotes/article-notes.org][More on Kerners]]
+- [[file:~/PP/wlq/GeneralNotes/simulations.org][Numerical Recipes]]
+- [[file:~/PP/wlq/NeuralPDE/NeuralPDE.org][NeuralPDE (PINN)]]
+- [[file:~/PP/wlq/Pertubations/notes.org][Pertubations]]
+  + [[file:~/PP/wlq/GeneralNotes/SmallOscillations.org][Small pertubations]]
+- [[file:~/PP/wlq/wiki/notes.org][Wiki]]
+- [[file:~/PP/wlq/CFD/Barbara-ComputationalFluidDynamics.org][Barbara Texas Comp Fluid Dynamic]]
+- [[file:~/PP/wlq/IMPA/IMPA-FluidDynamics.org][PDE IMPA]]
+- [[file:~/PP/wlq/IMPA/IMPA-NumericalMethods.org][PDE Numerical IMPA]]
+- [[file:~/PP/wlq/Cronogram.org][Cronogram]]
+
+* Abstract
+
+We reproduced numerical method algorithms in this research. The initial
+aim was at studying partial differential equations and to
+recreate the simulations of a well known work on /Traffic Flow/ [[cite:&kerner1993]]. Although the end goal was not achieved, the
+research provided knowledge on the topics of /Numerical Stiffness/ and
+the limitations of /Physics Informed Neural Network/ (PINN).
+
+* Introduction
+
+Throughout the research, we used a =Version Control System= to keep a backup and
+to track the progress; git and GitHub. The language chosen to model and compute
+the PDEs was =Julia= ref:sec:num-julia.
+
+The numerical methods explored consisted of Numerical
+Analysis (von Neumman) [[cite:&press1986numerical]], Forward methods, and =Physics
+Informed Neural Network= (PINN) [[cite:&zubov2021neuralpde]].
+
+When the PINN method wasn't sufficient to solve the problem, a study about
+=Numerical Stiffness= and the analytical numerical analysis became the focus of
+the study. At this point, one of the programs developed dialed with simulating
+=Stability Regions= of numerical methods [fn:1].
+
+The equations we intended to simulate are a =non-linear system= ref:sec:non-linear.
+
+** Analytical standpoint
+From a /Analytical/ point of view, Partial Differential Equations
+(PDEs) differs from Ordinary Differential Equations (ODEs) in the
+number of free variables. This means, in the case of PDEs the model depends on a
+relationship of many variables and ODEs of only one.
+
+*** Definition
+A =partial differential equation= means a relation, for a given function
+=u(x,y,...)= [[cite:&john1978partial]],
+\begin{equation}
+\label{eq:PDE}
+\begin{aligned}
+F(x,y,\ldots ,u,u_{x}, u_{y}, \ldots, u_{xx}, u_{xy}, \ldots{})=0
+\end{aligned}
+\end{equation}
+
+If more than one partial differential equation is needed to describe a model,
+then these PDEs are called a =system=.
+
+If substituted an $u(\mathbf{x})$ which satisfies
+$F(\mathbf{x},\mathbf{u(x)})=0$. Then, =u= is a solution of the =PDE= or the
+=system=.
+
+** Numerical standpoint
+The similarity between ODEs and PDEs, from a /Numerical/ point of view, is
+that different approximation methods will result in different errors,
+in relation to the exact, analytical, solution of the equations.
+
+The need for numerical methods also unite both types of
+equation. Since, even with ODEs as simple as the one derived from the
+/Simple Pendulum/ do not have an analytical solution, without making simplifying
+hypothesis [[cite:&brauer1989qualitative]].
+
+** Methods studied
+
+*** Ordinary Differential Equation
+Euler Forward, Backward and Adams-Moulton (trapezoidal) methods have been
+studied with the standard test equation,
+
+\begin{equation}
+\begin{aligned}
+y'(t)=e^{- \lambda{}t}
+\end{aligned}
+\end{equation}
+
+This was done in other to both get used implementing numerical methods, and get
+a better empirical sense of how different methods affect the accuracy of the
+model.
+
+Different variations of this system was simulated, in order to understand the
+concepts of =Stiffness=, =A-stability= and =L-stability=.
+
+*** Nth-order methods for partial differentiation
+The numerical methods were further explored using the analytical derivation of
+higher order numerical formulas. These derivations consisting in using Taylor
+Series and arrive at a formula considering =n= points to calculate a step. E.g.,
+for the second order partial differential of the third order
+
+\begin{equation}
+\begin{aligned}
+\dfrac{\partial^2{u}}{\partial{x^2}}\biggr\rvert_i = \dfrac{u_{i+1}-2u_i+u_{i-1}}{\Delta{x^2}} - O(\Delta{x^2})
+\end{aligned}
+\end{equation}
+
+** Analytical theory on perturbations
+On Kerner's paper, he uses perturbation theory to developed the analytical
+formulas that implies the existence of a clustering effect - traffic jams - even
+with extremely initial small perturbations [[cite:&kerner1993]].
+
+In order to better understand these derivations, material has been studied on
+the topic [[cite:&tremblay2017phy]], and a derivation of the spring-mass equations for a small pertubation
+was derived.
+
+* Bibliography Review
+** Development of the field
+*** The dawn of numerical methods
+Numerical analysis dawn can be dated to
+1820 B.C. [[cite:&smith1930rhind][\cite{smith1930rhind}]], with Egyptian's methods for
+calculating roots.
+
+Although, modern methods for solving ODEs and PDEs were mainly
+developed after the discovery of /Calculus/, in the 17th century.
+
+*** Modern methods and Computing
+Currently, even though sophisticated mathematics has been
+developed to accurately simulate virtually any ODE, the mathematics
+for solving PDEs is still a open field. This is due to the nature of
+PDEs which do not have a general method or procedure that is
+efficient, when simulating them.
+
+*** Physics Informed Neural Networks
+There exists methods aimed at using the computational power available in computers
+to abstract the theoretical knowledge of Numerical Stability away from
+the problem. /Physics Informed Neural Network/
+(PINN) is one of these methods. The shortcoming of the method is the loss of the
+possibility of making small adjustments to the resulting /Numerical
+Method/, as will be discussed further on the results.
+
+*** Numerical Instability
+Each equation, and it's constant parameters, will have specific method
+or a coupling of methods suited to the simulation of a PDE.
+
+*** Grouping of methods and types of PDEs
+Broadly, methods are associated with the kind of partial differential
+equation one is studying. These equations can be either =Hyperbolic=,
+=Parabolic= or =Elliptic=. Also, equations can be mixed, e.g., =Mixed
+Parabolic-Hyperbolic=, etc.
+
+** Mathematical categorization of PDEs
+*** Order of equations and systems
+"The order of the system is the order of the highest derivative that occurs."
+[[cite:&john1978partial]]. In which, irrespective of the free variable, we count the
+total number of derivatives. E.g., a sixth order equation, with mixed variables.
+
+\begin{equation}
+\label{eq:sixth-order}
+\begin{aligned}
+F(\mathbf{x},\mathbf{u(x)}) = 0 \, \land \,
+F(\mathbf{x}) = \dfrac{\partial{}^6 \mathbf{u}}{(\partial{x})^2(\partial{y})^2(\partial{z})} + \dfrac{\partial^3{} \mathbf{u}}{(\partial{x})^3}
+\end{aligned}
+\end{equation}
+
+*** Linearity, quasi-linearity and non-linearity
+**** Linearity
+
+Linearity is defined as not having any term in the eqref:eq:PDE, such that it's
+a result of a multiplication of two independent terms. The independent terms
+being $\mathbf{x}$, $u(\mathbf{x})$ and all partial derivatives of
+$u(\mathbf{x})$.
+
+For example, the second order linear equation with constant
+coefficients, =Kolmogorov's equation= [[cite:&evans1998partial]],
+\begin{equation}
+\begin{aligned}
+u_{t} - \sum_{i,j=1}^{n}{a^{ij}u_{x_{i}x_{j}}} + \sum_{i}^{n}{b^{i}u_{x_{i}}} = 0
+\end{aligned}
+\end{equation}
+
+We see there is no non-linear terms, as the product $u_{x_{i}}*u_{x_{j}}$, etc.
+
+**** Non-linear equations
+\label{sec:non-linear}
+
+The physical model we are interested deals with an equation similar to the
+=Navier-Stokes= equation [[cite:&kerner1993]]. The =Navier-Stokes= equations are a
+nonlinear system [[cite:&john1978partial]] [[cite:&kerner1993]].
+E.i.,
+
+\begin{equation}
+\label{eq:NavEstEQ}
+\begin{aligned}
+\begin{cases}
+&\mathbf{u}_t + \mathbf{u} \cdot{} D\mathbf{u} - \nabla \mathbf{u} = - Dp \\
+&\text{div}(\mathbf{u}) = 0
+\end{cases}
+\end{aligned}
+\end{equation}
+
+**** Quasi-linear equations
+
+A special kind of equations that follow under the category of non-linear
+equations are the quasi-linear equations. These have the non-linear terms which
+are of a lesser order than the order of the equation. E.g., the =Korteweg-de
+Vries= equation [[cite:&john1978partial]],
+
+\begin{equation}
+\begin{aligned}
+u_t + c uu_{x} + u_{xxx} = 0
+\end{aligned}
+\end{equation}
+
+*** Elliptic, hyperbolic and parabolic PDEs
+Given the general quasi-linear equation for a function =u=,
+
+\begin{equation}
+\label{eq:general-2th-order}
+\begin{aligned}
+au_{xx} + 2bu_{xy} + cu_{yy} = d
+\end{aligned}
+\end{equation}
+
+where $a$, $b$, $c$ and $d$ are of the form $f(x,y,u,u_x,u_y)$.
+
+We can develop an analysis of how the solution would behave. /A priori/, the
+solution $\gamma$ is contained on the xy-plane.
+
+From this consideration, if carried an analysis on the curve itself, we
+ultimately arise at the condition:
+
+\begin{equation}
+\begin{aligned}
+\dfrac{dy}{dx} = \dfrac{b \pm \sqrt{b^2 -ac}}{a}
+\end{aligned}
+\end{equation}
+
+# If the solution equation is given by an implicit function,
+# $\phi(x,y)=\text{const.}$, and we restrict $(a,b,c)$ to function of the type
+# $g(x,y)$, then d can be expressed by:
+
+# \begin{equation}
+# \begin{aligned}
+# d=G(x,y)-2A(x,y)u_{x}-2B(x,y)u_{y}-C(x,y)u
+# \end{aligned}
+# \end{equation}
+
+Then, if $ac-b^2>0$ it's =elliptic=; else, if $ac-b^2<0$ it's called
+=hyperbolic=. Finally, if $ac-b^2=0$ we call it =parabolic=.
+
+These categories help understand the expected behavior of the solution. But, in
+nonlinear cases the PDE do not characterize the solution behavior in these
+categories; and in some linear cases, different regions will have different
+types of behaviors, regarding the =elliptic=, =hyperbolic= and =parabolic=
+characterization [[cite:&john1978partial]].
+
+** Numerical Methods implemented in Julia
+\label{sec:num-julia}
+
+There exists a variety of libraries on /numerical methods/
+available in modern languages. Most of them with ports of libraries
+written in C and FORTRAN. To list a few, from the =Julia=
+documentation on available methods:
+
+- General PDE approximation methods.
+- Transform methods.
+- Finite difference methods.
+- Finite element methods.
+- Finite volume methods.
+- Spectral element methods.
+- Boundary element, Boundary integral methods.
+- Mesh free methods and particle methods.
+- Virtual element methods.
+- Multi-method packages.
+- Non-classical methods.
+  
+  *Source:* https://github.com/JuliaPDE/SurveyofPDEPackages
+** TODO PINN
+
+Physics Informed Neural Networks
+
+* Materials and Methods
+
+The materials used were:
+- Git
+- GitHub
+- Julia language
+- Org-mode
+
+=Git= is a tool to manage versions of programs in the =GitHub= versioning
+system. =Julia= is a high performance programming language. And, =Org-mode= is a
+literate programming environment suited to computer programming research and
+documentation.
+
+** TODO Version Control
+The research was stored and gradually updated on GitHub, available at https://github.com/BuddhiLW/wlq-carflow
+** TODO Julia language
+** TODO PINNs
+** TODO Developed code
+** TODO Stability Regions
+* Results and Discussion
+** TODO Kerner's reproduction through PINNs
+
+#+begin_export latex
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:sim1} Reproduction try, using PINN. Source: The authors}
+  \includegraphics[width=0.45\linewidth]{../img/sol_variable_corrected_bcs31.png}
+  \includegraphics[width=0.45\linewidth]{../img/sol_variable_corrected_bcs32.png}
+  \\ %\legend{}
+\end{figure}
+\clearpage
+#+end_export
+
+#+begin_export latex
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:sim2} Original simulation. Source: Image from Kerner and Konhäuser \cite{kerner1993}}
+  \includegraphics[width=0.4\linewidth]{./resources/kerner.png}
+  \\  %\legend{Fonte: Imagem de Kerner e Konhäuser \cite{kerner1993cluster}}
+\end{figure}
+#+end_export
+** TODO Steps to derive the Stability Region
+** TODO Stiffness
+** Nth-order approximation
+*** Third-order approximation of second-order differential equation
+
+By Taylor Expansion
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+u_{i+1} &= u_{i} + \Delta{x}\dfrac{\partial{u}}{\partial{x}}\biggr\rvert_i + \dfrac{\Delta{x^2}}{2!}\dfrac{\partial^2{u}}{\partial{x^2}} + \ldots \\
+u_{i-1} &= u_{i} - \Delta{x}\dfrac{\partial{u}}{\partial{x}}\biggr\rvert_i + \dfrac{\Delta{x^2}}{2!}\dfrac{\partial^2{u}}{\partial{x^2}} + \ldots
+\end{cases}\\
+\sim
+\begin{cases}
+u_{i+1} &= u_{i} + \sum_{n=1}^{M}{\dfrac{(\Delta{x})^n}{n!}\dfrac{\partial^n{u(x)}}{\partial{x^n}}\biggr\rvert_i}\\
+u_{i-1} &= u_{i} + \sum_{n=1}^{M}{(-1)^n\dfrac{(\Delta{x})^n}{n!}\dfrac{\partial^n{u(x)}}{\partial{x^n}}\biggr\rvert_i}
+\end{cases}
+\end{aligned}
+\end{equation}
+
+Summing both terms and isolating
+$\dfrac{\partial^2{u}}{\partial{x^2}}\biggr\rvert_i$, we have:
+
+\begin{equation}
+\begin{aligned}
+\dfrac{\partial^2{u}}{\partial{x^2}}\biggr\rvert_i = \dfrac{u_{i+1}-2u_i+u_{i-1}}{\Delta{x^2}} - O(\Delta{x^2})
+\end{aligned}
+\end{equation}
+
+* Conclusion
+The use of PINNs got us closer to reproducing Kerner's
+results. But, at the same time, the pigtail of using a method that
+hide us the ability of adjusting the discretization showed itself,
+once the results were not satisfactory.
+
+After getting stuck on this riddle, we took the path of learning more
+about /classical methods/ on numerical methods for PDEs. Knowledge on
+the subject of /equation Stiffness/ was gained in the process e.g., why
+and how to categorize methods and to grasp what does it mean to an
+equation to be stiff.
+
+bibliography:/home/buddhilw/Bibliography/collection.bib
+
+# bibliographystyle:unsrt
+
+
+* Footnotes
+
+[fn:1] the program was based on https://github.com/jverzani/ImplicitEquations.jl

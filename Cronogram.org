@@ -1,0 +1,64 @@
+#+latex_class: article
+# #+latex_class_options: [20pt]
+#+latex_header: \usepackage[landscape,margin=2.5cm, total={10in, 10in},scale=30]{geometry}
+#+latex_header: \usepackage[familydefault,light]{Chivo} %% Option 'familydefault' only
+#+latex_header: \normalfont % in case the EC fonts aren't available
+#+latex_header: \usepackage[T1]{fontenc}
+
+#+latex_header:\usepackage{pdflscape} % provides the landscape environment
+#+latex_header: \usepackage{lscape}
+#+latex_header:\usepackage{ragged2e} % provides \RaggedLeft
+
+
+
+
+#+STARTUP: align
+
+* Horários Semanais
+** Português
+\large
+|----------+--------+---------------------------+--------------------+------------------+------------+-------------+------------+------------|
+| Horários |        |                           |                    |                  |            |             |            |            |
+|----------+--------+---------------------------+--------------------+------------------+------------+-------------+------------+------------|
+| *Começo* | *Fim*  | Segunda                   | Terça              | Quarta           | Quinta     | Sexta       | Sábado     | Domingo    |
+|----------+--------+---------------------------+--------------------+------------------+------------+-------------+------------+------------|
+| 08h00m   | 10h00m | Xadr/Exerc. Físco         | -                  | -                | -          | */Reunião/* | -          | -          |
+| 10h00m   | 12h00m | /Proj. Integr. II/       | *Pesquisa*         | /Reun. e Estat./ | *Pesquisa* | *Pesquisa*  | *Pesquisa* | *Pesquisa* |
+|----------+--------+---------------------------+--------------------+------------------+------------+-------------+------------+------------|
+| 12h00m   | 14h00m | \textsc{Almoço}           | -                  | -                | -          | -           | -          | -          |
+| 14h00m   | 16h00m | *Pesquisa*                | *Pesquisa*         | Mandarim         | *Pesquisa* | Mandarim    | *Pesquisa* | *Pesquisa* |
+|----------+--------+---------------------------+--------------------+------------------+------------+-------------+------------+------------|
+| 16h00m   | 18h00m | *Pesquisa*                | /Fund. Adm. Prod./ | Programação      | *Pesquisa* | *Pesquisa*  | -          | -          |
+| 18h00m   | 19h00m | /Pisc. Org./              | *Pesquisa*         | *Pesquisa*       | *Pesquisa* | *Pesquisa*  | -          | -          |
+| 19h00m   | 20h00m | \textsc{Jantar/Descansar} | -                  | -                | -          | -           | -          | -          |
+|----------+--------+---------------------------+--------------------+------------------+------------+-------------+------------+------------|
+\vspace{5mm}
+| Abreviação       | Significado                              |
+|------------------+------------------------------------------|
+| Xadr.            | Xadrez                                   |
+| Exerc. Físico    | Exercício Físico                         |
+| Proj. Integr. II | Projeto Integrado II                     |
+| Pisc. Org.       | Psicologia Organizacional                |
+| Fund. Adm. Prod. | Fundamentos da Administração da Produção |
+| Reun. e Estat.   | Reunião sobre mentoria semanal           |
+|------------------+------------------------------------------|
+
+\clearpage
+** English
+\large
+|----------+--------+----------------------+--------------------+----------------+------------+-------------+------------+------------|
+| Time     |        |                      |                    |                |            |             |            |            |
+|----------+--------+----------------------+--------------------+----------------+------------+-------------+------------+------------|
+| *Start* | *Finish* | Monday               | Tusday             | Wendnesday     | Thrusday   | Friday      | Saturday   | Sunday     |
+|----------+--------+----------------------+--------------------+----------------+------------+-------------+------------+------------|
+| 08h00m   | 10h00m | Chess/Phys. Exerc.   | -                  | -              | -          | */Meeting/* | -          | -          |
+| 10h00m   | 12h00m | /Integr. Proj.  II/  | *Research*         | /Meet.  Stat./ | *Research* | *Research*  | *Research* | *Research* |
+|----------+--------+----------------------+--------------------+----------------+------------+-------------+------------+------------|
+| 12h00m   | 14h00m | \textsc{Lunch}       | -                  | -              | -          | -           | -          | -          |
+| 14h00m   | 16h00m | *Research*           | *Research*         | Mandarin       | *Research* | Mandarin    | *Research* | *Research* |
+|----------+--------+----------------------+--------------------+----------------+------------+-------------+------------+------------|
+| 16h00m   | 18h00m | *Research*           | /Fund. Adm. Prod./ | Programming    | *Research* | *Research*  | -          | -          |
+| 18h00m   | 19h00m | /Org. Psych./        | *Research*         | *Research*     | *Research* | *Research*  | -          | -          |
+| 19h00m   | 20h00m | \textsc{Dinner/Rest} | -                  | -              | -          | -           | -          | -          |
+|----------+--------+----------------------+--------------------+----------------+------------+-------------+------------+------------|
+

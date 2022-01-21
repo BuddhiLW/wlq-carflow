@@ -1,0 +1,18 @@
+\begin{thebibliography}{1}
+
+\bibitem{bando1995dynamical}
+{\sc Bando, M., Hasebe, K., Nakayama, A., Shibata, A., and Sugiyama, Y.}
+\newblock Dynamical model of traffic congestion and numerical simulation.
+\newblock {\em Physical review E 51}, 2 (1995), 1035.
+
+\bibitem{kerner1993cluster}
+{\sc Kerner, B.~S., and Konh{\"a}user, P.}
+\newblock Cluster effect in initially homogeneous traffic flow.
+\newblock {\em Physical review E 48}, 4 (1993), R2335.
+
+\bibitem{press1986numerical}
+{\sc Press, W.~H., Vetterling, W.~T., Teukolsky, S.~A., and Flannery, B.~P.}
+\newblock {\em Numerical recipes}, vol.~818.
+\newblock Cambridge university press Cambridge, 1986.
+
+\end{thebibliography}
