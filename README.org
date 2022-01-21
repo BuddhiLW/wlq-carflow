@@ -4,7 +4,7 @@ The code, documents, resources used and the papers that guided the objetives of
 the research are all on the top directory.
 
 #+begin_src shell :exports both
-tree . -d
+tree -d -I "ltximg"
 #+end_src
 
 #+RESULTS:
@@ -17,32 +17,22 @@ tree . -d
 | ├── | Papers       |                             |           |
 | ├── | Research     |                             |           |
 | │   | ├──          | Bando                       |           |
-| │   | │            | └──                         | ltximg    |
 | │   | ├──          | CFD                         |           |
-| │   | │            | └──                         | ltximg    |
 | │   | ├──          | GeneralNotes                |           |
-| │   | │            | └──                         | ltximg    |
 | │   | ├──          | IMPA                        |           |
-| │   | │            | ├──                         | figs      |
-| │   | │            | └──                         | ltximg    |
+| │   | │            | └──                         | figs      |
 | │   | ├──          | IntroCompPhysics            |           |
 | │   | │            | └──                         | Chap7     |
-| │   | │            | └──                         | ltximg    |
 | │   | ├──          | Kerner                      |           |
-| │   | │            | └──                         | ltximg    |
 | │   | ├──          | NeuralPDE                   |           |
-| │   | │            | └──                         | ltximg    |
 | │   | ├──          | Pertubations                |           |
-| │   | │            | └──                         | ltximg    |
 | │   | └──          | wiki                        |           |
-| │   | ├──          | img                         |           |
-| │   | └──          | ltximg                      |           |
+| │   | └──          | img                         |           |
 | └── | Resources    |                             |           |
 | ├── | Bibliography |                             |           |
 | ├── | Books        |                             |           |
 | ├── | Gifs         |                             |           |
 | ├── | Literature   |                             |           |
-| ├── | img          |                             |           |
-| └── | ltximg       |                             |           |
+| └── | img          |                             |           |
 |     |              |                             |           |
-| 35  | directories  |                             |           |
+| 25  | directories  |                             |           |
