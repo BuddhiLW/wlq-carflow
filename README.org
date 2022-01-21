@@ -1,0 +1,59 @@
+#+TITLE: Research of PDE and Traffic Flow
+
+The code, documents, resources used and the papers that guided the objetives of
+the research are all on the top directory.
+
+#+begin_src shell
+tree . -d
+#+end_src
+
+#+RESULTS:
+| .   |              |                             |                      |
+| ├── | Documents    |                             |                      |
+| │   | ├──          | Conclusion                  |                      |
+| │   | │            | └──                         | resources            |
+| │   | ├──          | Proposal                    |                      |
+| │   | └──          | projecto_estagio_PedroGomes |                      |
+| ├── | Papers       |                             |                      |
+| ├── | Research     |                             |                      |
+| │   | ├──          | Bando                       |                      |
+| │   | │            | └──                         | ltximg               |
+| │   | ├──          | CFD                         |                      |
+| │   | │            | ├──                         | ltximg               |
+| │   | │            | └──                         | ~                    |
+| │   | │            | └──                         | PP                   |
+| │   | │            | └──                         | Julia                |
+| │   | │            | └──                         | Mathematics          |
+| │   | ├──          | GeneralNotes                |                      |
+| │   | │            | └──                         | ltximg               |
+| │   | ├──          | IMPA                        |                      |
+| │   | │            | ├──                         | figs                 |
+| │   | │            | └──                         | ltximg               |
+| │   | ├──          | IntroCompPhysics            |                      |
+| │   | │            | └──                         | Chap7                |
+| │   | │            | └──                         | ltximg               |
+| │   | ├──          | Kerner                      |                      |
+| │   | │            | ├──                         | ltximg               |
+| │   | │            | └──                         | ~                    |
+| │   | │            | └──                         | PP                   |
+| │   | │            | └──                         | MonitoriaEstatistica |
+| │   | ├──          | NeuralPDE                   |                      |
+| │   | │            | └──                         | ltximg               |
+| │   | ├──          | Pertubations                |                      |
+| │   | │            | └──                         | ltximg               |
+| │   | └──          | wiki                        |                      |
+| │   | ├──          | img                         |                      |
+| │   | ├──          | ltximg                      |                      |
+| │   | └──          | ~                           |                      |
+| │   | └──          | PP                          |                      |
+| │   | └──          | wlq                         |                      |
+| │   | └──          | wiki                        |                      |
+| └── | Resources    |                             |                      |
+| ├── | Bibliography |                             |                      |
+| ├── | Books        |                             |                      |
+| ├── | Gifs         |                             |                      |
+| ├── | Literature   |                             |                      |
+| ├── | img          |                             |                      |
+| └── | ltximg       |                             |                      |
+|     |              |                             |                      |
+| 46  | directories  |                             |                      |
