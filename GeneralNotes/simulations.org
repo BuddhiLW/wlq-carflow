@@ -47,7 +47,11 @@ t_n = t_0 + n\Delta{}t, \quad n = 0, 1, \ldots, N
     \dfrac{\partial{u}}{\partial{x}}\biggr\rvert_{j,n} = \dfrac{u^{n}_{j+1} - u^n_{j-1}}{2\Delta{x}} + O(\Delta{x^2})
     \end{aligned}
     \end{equation}
+<<<<<<< HEAD
 - Foward Time Centered Space (FTCS): *Generally*, unstable for hyperbolic probelms
+=======
+- Forward Time Centered Space (FTCS): *Generally*, unstable for hyperbolic probelms
+>>>>>>> c079ef6 (Update state of reaserch)
 *** Consequence
 \begin{equation}
 \begin{aligned}

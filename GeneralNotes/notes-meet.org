@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 * lowest possible stable orbit
 * Rugge-Kutta
 time
@@ -6,4 +7,24 @@ space
 * Leap frog
 time-space
 * How does backward and forward methods relate to Rugge-Kutta
+=======
+* Meet 3
+** lowest possible stable orbit
+** Rugge-Kutta
+time
+** Interpolation
+space
+** Leap frog
+time-space
+** How does backward and forward methods relate to Rugge-Kutta
+* References meet 4
+https://en.wikipedia.org/wiki/Stiff_equation
+- Dynamical system
+- [21:50, 11/12/2021] Wei-Liang Qian: dynamical system
+[21:50, 11/12/2021] Wei-Liang Qian: attractor
+[21:51, 11/12/2021] Wei-Liang Qian: limit circle
+- stopping ago
+
+** Box normalization
+>>>>>>> c079ef6 (Update state of reaserch)
 

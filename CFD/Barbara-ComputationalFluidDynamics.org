@@ -8,6 +8,10 @@ https://www.youtube.com/watch?v=cDy5XGOokBY&list=PL30F4C5ABCE62CB61&ab_channel=B
 
 * Class 1
 ** Navier-Stokes Equations
+<<<<<<< HEAD
+=======
+# ((
+>>>>>>> c079ef6 (Update state of reaserch)
 - General Equation:
   \begin{equation}
           \begin{aligned}
@@ -704,6 +708,10 @@ save(term="gif", saveopts = "animate size 600,400 delay 1", output="anim3d.gif",
 #+RESULTS:
 
 
+<<<<<<< HEAD
+=======
+* 
+>>>>>>> c079ef6 (Update state of reaserch)
 
 * 12 Steps (program)
 ** Intro

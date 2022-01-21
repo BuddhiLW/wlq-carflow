@@ -1,0 +1,56 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem{kerner1993}
+\abntrefinfo{Kerner e Konhäuser}{KERNER; KONHäUSER}{1993}
+{KERNER, B.~S.; KONHäUSER, P. Cluster effect in initially homogeneous traffic
+  flow.
+\emph{Physical Review E}, American Physical Society (APS), v.~48, n.~4, p.
+  R2335–R2338, Oct 1993.
+ISSN 1095-3787.
+Dispon{\'\i}vel em: \url{http://dx.doi.org/10.1103/physreve.48.r2335}.}
+
+\bibitem{press1986numerical}
+\abntrefinfo{Press et al.}{PRESS et al.}{1986}
+{PRESS, W.~H. et al. \emph{Numerical recipes}. [S.l.]: Cambridge university
+  press Cambridge, 1986. v.~818.}
+
+\bibitem{zubov2021neuralpde}
+\abntrefinfo{Zubov et al.}{ZUBOV et al.}{2021}
+{ZUBOV, K. et al. Neuralpde: Automating physics-informed neural networks
+  (pinns) with error approximations.
+\emph{arXiv preprint arXiv:2107.09443}, 2021.}
+
+\bibitem{john1978partial}
+\abntrefinfo{John}{JOHN}{1978}
+{JOHN, F. Partial differential equations.
+\emph{Applied mathematical sciences}, v.~1, n.~1, 1978.}
+
+\bibitem{brauer1989qualitative}
+\abntrefinfo{Brauer e Nohel}{BRAUER; NOHEL}{1989}
+{BRAUER, F.; NOHEL, J.~A. \emph{The qualitative theory of ordinary differential
+  equations: an introduction}. [S.l.]: Courier Corporation, 1989.}
+
+\bibitem{tremblay2017phy}
+\abntrefinfo{Tremblay}{TREMBLAY}{2017}
+{TREMBLAY, A.-M. Phy-892 the many-body problem, from perturbation theory to
+  dynamical-mean field theory (lecture notes).
+2017.}
+
+\bibitem{smith1930rhind}
+\abntrefinfo{Smith}{SMITH}{1930}
+{SMITH, D.~E. The rhind papyrus.
+\emph{Bulletin of the American Mathematical Society}, American Mathematical
+  Society, v.~36, n.~3, p. 166--170, 1930.}
+
+\bibitem{evans1998partial}
+\abntrefinfo{Evans}{EVANS}{1998}
+{EVANS, L.~C. Partial differential equations.
+\emph{Graduate studies in mathematics}, Rhode Island, USA, v.~19, n.~4, p.~7,
+  1998.}
+
+\end{thebibliography}

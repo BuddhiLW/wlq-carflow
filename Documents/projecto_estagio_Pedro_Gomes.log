@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/Arch Linux) (preloaded format=xelatex 2021.9.20)  21 SEP 2021 07:10
+=======
+This is XeTeX, Version 3.141592653-2.6-0.999993 (TeX Live 2021/Arch Linux) (preloaded format=xelatex 2021.11.25)  17 DEC 2021 00:16
+>>>>>>> c079ef6 (Update state of reaserch)
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -623,7 +627,11 @@ anged.
  ) 
 Here is how much of TeX's memory you used:
  13799 strings out of 476919
+<<<<<<< HEAD
  258475 string characters out of 5827674
+=======
+ 258475 string characters out of 5827673
+>>>>>>> c079ef6 (Update state of reaserch)
  649182 words of memory out of 5000000
  33546 multiletter control sequences out of 15000+600000
  431616 words of font info for 53 fonts, out of 8000000 for 9000

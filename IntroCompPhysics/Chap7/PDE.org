@@ -1,0 +1,24 @@
+#+startup: latexpreview
+#+startup: imagepreview
+
+* Example of the three type of PDE, in Physics
+** Elliptic Equation - Poisson Potential
+\begin{equation}
+\begin{aligned}
+\nabla^2\phi(\mathbf{r}) = - \dfrac{\rho(\mathbf{r})}{\epsilon_0}
+\end{aligned}
+\end{equation}
+
+** Parabolic Equation - Diffusion Equation
+\begin{equation}
+\begin{aligned}
+\dfrac{\partial{n(\mathbf{r},t)}}{\partial{t}} - \mathbf{\nabla}.D(\mathbf{r})\mathbf{\nabla}{n(\mathbf{r},t)} = S(\mathbf{r},t)
+\end{aligned}
+\end{equation}
+
+** Hyperbolic Equation - Wave Equation
+\begin{equation}
+\begin{aligned}
+\dfrac{1}{c^2}\dfrac{\partial^2{u(\mathbf{r},t)}}{\partial{t}^2} - \nabla^2{u(\mathbf{r},t)} = R(\mathbf{r},t)
+\end{aligned}
+\end{equation}

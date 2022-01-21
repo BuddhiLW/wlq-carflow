@@ -1,6 +1,25 @@
 #+STARTUP: latexpreview
 #+STARTUP: inlineimages
 
+<<<<<<< HEAD
+=======
+* Setup
+#+begin_src julia :session main :result output
+  using Pkg
+  Pkg.activate("./")
+#+end_src
+
+#+RESULTS:
+: nothing
+
+#+begin_src julia :session main :result output
+  Pkg.add("PlotlyJS")
+  Pkg.add("Plots")
+#+end_src
+
+#+RESULTS:
+
+>>>>>>> c079ef6 (Update state of reaserch)
 * Equations
 ** The equation to solve:
 \begin{equation}
@@ -35,8 +54,14 @@ From the definition of $q$ and the boundary condition (I),
 \end{aligned}
 \end{equation}
 
+<<<<<<< HEAD
 * The discretization
 ** Conventions
+=======
+* Not convergent try
+** The discretization
+*** Conventions
+>>>>>>> c079ef6 (Update state of reaserch)
 First, some convetions,
 \begin{equation}
 \begin{aligned}
@@ -49,17 +74,33 @@ First, some convetions,
 \end{equation}
 
 The same convention is valid to $i$.
+<<<<<<< HEAD
 ** We have
+=======
+*** We have
+>>>>>>> c079ef6 (Update state of reaserch)
 
 \begin{equation}
   \begin{aligned}
     \begin{cases}
+<<<<<<< HEAD
       v^n_{i+1}=v^n_i + [\frac{\mu}{\rho^n_i}\frac{\Delta{t}}{\Delta{x^2}}](\Delta_n)^2v_n + [\frac{c_0^2}{\rho^n_i}\frac{\Delta{t}}{\Delta{x}}](\Delta_n\rho) + [\frac{\Delta{t}}{\tau}](V(\rho^n_i) - v^n_i)\\
+=======
+      v^n_{i+1}=v^n_i - [v^n_i\frac{\Delta{t}}{\Delta{x}}](\Delta_n{v}) + [\frac{\mu}{\rho^n_i}\frac{\Delta{t}}{\Delta{x^2}}](\Delta_n)^2v_n + [\frac{c_0^2}{\rho^n_i}\frac{\Delta{t}}{\Delta{x}}](\Delta_n\rho) + [\frac{\Delta{t}}{\tau}](V(\rho^n_i) - v^n_i)\\
+>>>>>>> c079ef6 (Update state of reaserch)
       \rho^n_{i+1} = \rho^n_i - [\frac{\Delta{t}}{\Delta{x}}]((\Delta_n)\textrm{v}\rho)
     \end{cases}
   \end{aligned}
 \end{equation}
 
+<<<<<<< HEAD
+=======
+\begin{equation}
+\begin{aligned}
+v \dfrac{\partial{v}}{\partial{x}} = v[n]\frac{(dif(v,n))}{\Delta{x}} \, \Leftrightarrow \, v \dfrac{\partial{v}}{\partial{x}}=[v^n_i\frac{\Delta{t}}{\Delta{x}}](\Delta_n{v})
+\end{aligned}
+\end{equation}
+>>>>>>> c079ef6 (Update state of reaserch)
 
 #+begin_src julia :session main :result output
   v = zeros(100,100)
@@ -69,7 +110,11 @@ The same convention is valid to $i$.
 #+RESULTS:
 : Output suppressed (line too long)
 
+<<<<<<< HEAD
 ** Auxiliatory functions
+=======
+*** Auxiliatory functions
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   function dif(v, n, i, arg=n)
       if arg == n
@@ -98,11 +143,16 @@ The same convention is valid to $i$.
 
 #+RESULTS:
 : mdif
+<<<<<<< HEAD
 *** Tests of the aux func
+=======
+**** Tests of the aux func
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
 pt = [(i+j)*t for i=1:2:20, j=1:1:10, t=1:1:20]
 #+end_src
 
+<<<<<<< HEAD
 #+RESULTS:
 #+begin_example
 [2 3 4 5 6 7 8 9 10 11; 4 5 6 7 8 9 10 11 12 13; 6 7 8 9 10 11 12 13 14 15; 8 9 10 11 12 13 14 15 16 17; 10 11 12 13 14 15 16 17 18 19; 12 13 14 15 16 17 18 19 20 21; 14 15 16 17 18 19 20 21 22 23; 16 17 18 19 20 21 22 23 24 25; 18 19 20 21 22 23 24 25 26 27; 20 21 22 23 24 25 26 27 28 29]
@@ -146,6 +196,8 @@ pt = [(i+j)*t for i=1:2:20, j=1:1:10, t=1:1:20]
 [40 60 80 100 120 140 160 180 200 220; 80 100 120 140 160 180 200 220 240 260; 120 140 160 180 200 220 240 260 280 300; 160 180 200 220 240 260 280 300 320 340; 200 220 240 260 280 300 320 340 360 380; 240 260 280 300 320 340 360 380 400 420; 280 300 320 340 360 380 400 420 440 460; 320 340 360 380 400 420 440 460 480 500; 360 380 400 420 440 460 480 500 520 540; 400 420 440 460 480 500 520 540 560 580]
 #+end_example
 
+=======
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
 p = [(i+j) for i=1:2:20, j=1:1:10]
 #+end_src
@@ -168,7 +220,36 @@ dif2(p,4,2)
 #+RESULTS:
 : 0
 
+<<<<<<< HEAD
 ** Initial conditions
+=======
+*** Initial conditions
+***** Parameters (space)
+#+begin_src julia :session main :result :tangle hand.jl
+  nx= 50;
+  ν=0.4;
+  # c=5;
+  δx = 15/(nx - 1);
+  x_range = range(0, stop=δx*(nx-1), length=nx) # Full range of spatial steps for wich a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.30612244897959184:15.0
+
+***** Parameters (time)
+#+begin_src julia :session main :result :tangle hand.jl
+  endTime = 100   # simulation end time
+  nt = 1000          # nt is the number of timesteps we want to calculate
+  δt = endTime/nt  # Δt is the amount of time each timestep covers
+  t = range(0, stop=endTime, length=nt) # Full range of time steps for which a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.1001001001001001:100.0
+
+***** Contants
+
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output :tangle neuralPDE.jl
   m=1;
   μ=1; #choose as we like
@@ -182,7 +263,11 @@ dif2(p,4,2)
   δv₀ = 0.01;
   vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6);
 
+<<<<<<< HEAD
   k=2π/L;
+=======
+  k=2000π/L;
+>>>>>>> c079ef6 (Update state of reaserch)
 
   c₀= 1.8634; 
   # δρₛ(x) = δρ₀*exp(complex(0,1)*k*x);
@@ -192,7 +277,11 @@ dif2(p,4,2)
 #+end_src
 
 #+RESULTS:
+<<<<<<< HEAD
 : 1.370793129404024e-6 + 0.036972278932846527im
+=======
+: 1.3707931294040239 + 36.97227893284652im
+>>>>>>> c079ef6 (Update state of reaserch)
 
 Work out analytically only the real part,
 \begin{equation}
@@ -217,7 +306,11 @@ Work out analytically only the real part,
 #+RESULTS:
 : δvᵣ
 
+<<<<<<< HEAD
 ** Discretization time-forward
+=======
+*** Discretization time-forward
+>>>>>>> c079ef6 (Update state of reaserch)
 Time forward one step, given the discretization,
 #+begin_src julia :session main :result output
   v[n, i+1] = v[n,i] + μ*Δt/ρ[n,i](Δx)^2*(diff2(v,n,i)) + (c₀^2*Δt/ρ[n,i]*Δx)*(diff(ρ,n,i)) + (Δt/τ)*(V(ρ[n,i])-v[n,i])
@@ -227,8 +320,13 @@ Time forward one step, given the discretization,
   ρ[n, i+1] = p[n,i] - (Δt/Δx)*(mdif(v,ρ))
 #+end_src
 
+<<<<<<< HEAD
 ** The boundary conditions
 *** From earlier work,
+=======
+*** The boundary conditions
+**** From earlier work,
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   # Initial and boundary conditions
   bcs = [ρ(t,0) ~ ρ(t,L),
@@ -246,7 +344,11 @@ Time forward one step, given the discretization,
   dx = 0.1
 #+end_src
 
+<<<<<<< HEAD
 *** Translation to our discretization scheme
+=======
+**** Translation to our discretization scheme
+>>>>>>> c079ef6 (Update state of reaserch)
 
 #+begin_src julia :session main :result output
   ρ[0,i] = ρ[length(ρ),i]
@@ -255,8 +357,13 @@ Time forward one step, given the discretization,
   ρ[n,0] = ρₕ + δρᵣ(n,0)
   ρ[n,0] = vₕ + δvᵣ(n,0)
 #+end_src
+<<<<<<< HEAD
 
 * Function for increasing values in space-time
+=======
+ 
+** Function for increasing values in space-time
+>>>>>>> c079ef6 (Update state of reaserch)
 
 #+begin_src julia :session main :result output
   v = ones(100,100)
@@ -298,11 +405,17 @@ v[1:10,1:10]
 #+RESULTS:
 : [1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0]
 
+<<<<<<< HEAD
 
 * Function for increasing values in space-time
 
 *** Program
 **** Parameters common to (velocity and density)
+=======
+** Function for increasing values in space-time
+**** Program
+***** Parameters common to (velocity and density)
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   N = 168; 
   ρₕ = 0.168;
@@ -312,7 +425,11 @@ v[1:10,1:10]
 #+RESULTS:
 : 999.9999999999999
 
+<<<<<<< HEAD
 **** Parameters (velocity)
+=======
+***** Parameters (velocity)
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   nv=0.168;
   # c=5;
@@ -322,7 +439,11 @@ v[1:10,1:10]
 
 #+RESULTS:
 
+<<<<<<< HEAD
 **** Parameters (density)
+=======
+***** Parameters (density)
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   nρ=0.168;
   # c=5;
@@ -332,7 +453,11 @@ v[1:10,1:10]
 
 #+RESULTS:
 
+<<<<<<< HEAD
 **** Parameters (time)
+=======
+***** Parameters (time)
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   endTime = 100   # simulation end time
   nt = 1000          # nt is the number of timesteps we want to calculate
@@ -343,7 +468,11 @@ v[1:10,1:10]
 #+RESULTS:
 : 0.0:0.1001001001001001:100.0
 
+<<<<<<< HEAD
 **** Initial conditions (space-time)
+=======
+***** Initial conditions (space-time)
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   # Init array of ones at initial timestep
   u_zero = ones(nx) 
@@ -355,9 +484,14 @@ v[1:10,1:10]
 #+end_src
 
 #+RESULTS:
+<<<<<<< HEAD
 : [1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
 
 **** Run the differential equation
+=======
+
+***** Run the differential equation
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   # u[:,] = copy(u_zero) # Initialize arbitrary future timestep with inital condition, u_zero
   u=zeros((nx,nt+1))
@@ -376,7 +510,11 @@ v[1:10,1:10]
 #+RESULTS:
 : nothing
 
+<<<<<<< HEAD
 **** Plots
+=======
+***** Plots
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   using Plots
   gr()
@@ -400,7 +538,11 @@ v[1:10,1:10]
 
 #+RESULTS:
 
+<<<<<<< HEAD
 **** Gif
+=======
+***** Gif
+>>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   gif(anim, "gif_ploting_viscosity.gif", fps=60)
 #+end_src
@@ -408,5 +550,956 @@ v[1:10,1:10]
 #+RESULTS:
 : Plots.AnimatedGif("/home/buddhilw/PP/wlq/gif_ploting_viscosity.gif")
 
+<<<<<<< HEAD
 
 
+=======
+** Methods and functions
+We will follow to avoid time as an explicit parameter, so we have to
+redefine the auxiliatory functions
+*** Contants
+
+#+begin_src julia :session main :result output :tangle neuralPDE.jl
+  m=1;
+  μ=1; #choose as we like
+  τ=1; #choose as we like 
+  # l=sqrt(μ*τ/ρ_hat);
+
+  N = 168; 
+  ρₕ = 0.168;
+  L=N/ρₕ; 
+  δρ₀ = 0.02;
+  δv₀ = 0.01;
+  vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6);
+
+  k=2π/L;
+  c₀= 1.8634;
+  λ=k^2*(c₀^2)/100
+  ω=k*(vₕ+c₀)
+
+  ρₕ = 0.168
+  vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6)
+#+end_src
+
+#+RESULTS:
+: 4.020920949534869
+
+*** Auxiliatory functions
+=nt=: no time
+#+begin_src julia :session main :result output :tangle hand.jl
+  function dif_nt(v, n)
+      return v[n+1] - v[n]
+  end
+
+  function dif2_nt(v, n)
+      return v[n+1] - 2*v[n] + v[n-1]
+  end
+
+  function mdif_nt(u,v,n)
+          return u[n+1]*v[n] + v[n+1]*u[n] - 2*v[n]*u[n]
+  end
+#+end_src
+
+#+RESULTS:
+: mdif_nt
+
+*** Kerner function
+**** Boundary
+#+begin_src julia :session main :result output
+  # Bondary condition
+  # https://www.youtube.com/watch?v=uf4g_U8Ok3c&list=PLP8iPy9hna6Q2Kr16aWPOKE0dz9OnsnIJ&index=50&t=10m14s
+
+  function kerner_boundary(pl, vl, δρ₀, δv₀, k)
+      ## Fixed (Real parts of δρ e δv)
+      # δρᵣ(x,t)=δρ₀*cos(k*x)*cos(ω*t)exp(-λ*t)
+      δρᵣx(x)=δρ₀*cos(k*x)
+      # δvᵣ(x,t)=δv₀*cos(k*x)*cos(ω*t)exp(-λ*t)
+      δvᵣx(x)=δv₀*cos(k*x)
+      V(ρ) = 5.0461*((1+exp((ρ-0.25)/0.06))^-1 - 3.72*10^-6) 
+      # ρ[n,0] = ρₕ + δρᵣ(n,0)
+      # ρ[n,0] = vₕ + δvᵣ(n,0)
+      ρl[length(ρ)] = δρᵣx(length(ρ)*Δx) # - ρₕ 
+      vl[length(v)] = δvᵣx(length(v)*Δx) # - vₕ 
+      ρl[0] = ρl[length(ρ)]
+      vl[0] = vl[length(v)]
+      # dif(v,0,i,arg=i) = dif(v,length(v),i,arg=i)
+      return vl, ρl
+  end
+#+end_src
+
+#+RESULTS:
+: kerner_boundary
+
+**** Main (Buck)
+
+#+begin_src julia :session main :result output :tangle hand.jl
+  # u[:,] = copy(u_zero) # Initialise arbitrary future timestep with inital condition, u_zero_values
+
+  function kerner(v,ρ,Δx,Δt,V,params)
+      N = length(v)
+      vl=similar(v) # start the u in a new time step.
+      ρl=similar(ρ)
+      μ, c₀, τ = params
+      # u=zeros((nx,nt+1))
+      N = length(u_zero_values)
+      k=6π/L #2pi/L
+      ω=k*(vₕ+c₀)
+      δρ₀ = 0.02
+      for n in 2:N-1
+          ρl[n] = p[n] - (Δt/Δx)*(mdif_nt(v,ρ,n))
+          vl[n] = v[n] - (v[n]*Δt/Δx)*dif_nt(v,n) + μ*Δt/ρ[n](Δx)^2*(diff2_nt(v,n)) + (c₀^2*Δt/ρ[n]*Δx)*(diff_nt(ρ,n)) + (Δt/τ)*(V(ρ[n])-v[n])
+      end
+
+      vl, ρl = kerner_boundary(pl, vl, δρ₀, δv₀, k)
+
+      return ρl, vl
+  end 
+#+end_src
+
+#+RESULTS:
+: kerner
+
+#+begin_src julia :session main :result output
+  # Init array of ones at initial timestep
+  v₀ = ones(nx) 
+  ρ₀ = ones(nx) 
+
+  # Set u₀ = 2 in the interval 0.5 ≤ x ≤ 1 as per our I.C.s
+  v₀[0.5 .<= x .<= 100] .= 2  # Note use of . (dot) broadcasting syntax
+  ρ₀[0.5 .<= x .<= 100] .= 5
+
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+v₀
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+#+begin_src julia :session main :result output
+ρ₀
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+#+begin_src julia :session main :result output
+kerner(v,ρ,Δx,Δt,V,params)
+#+end_src
+
+#+RESULTS:
+
+** Kerner function updated
+*** Grid
+#+begin_src julia :session main :result output
+  nx= 100000;
+  # ν=0.4;
+  # c=5;
+  δx = 1000/nx;
+  x_range = range(0, stop=δx*(nx), length=nx+1) # Full range of spatial steps for wich a solution is desired
+
+  endTime = 100   # simulation end time
+  nt = 1000          # nt is the number of timesteps we want to calculate
+  δt = endTime/nt  # Δt is the amount of time each timestep covers
+  t = range(0, stop=δt*(nt), length=nt+1) # Full range of time steps for which a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.1:100.0
+
+*** Step-function
+**** Helper
+#+begin_src julia :session main :result output
+  function dif_nt(v, n)
+      return v[n+1] - v[n]
+  end
+
+  function dif2_nt(v, n)
+      return v[n+1] - 2*v[n] + v[n-1]
+  end
+
+  function mdif_nt(u,v,n)
+      return u[n+1]*v[n] + v[n+1]*u[n] - 2*v[n]*u[n]
+  end
+
+  # u[:,] = copy(u_zero) # Initialise arbitrary future timestep with inital condition, u_zero_values
+#+end_src
+
+#+RESULTS:
+: mdif_nt
+
+**** Main
+#+begin_src julia :session main :result output
+  c₀= 1.8634; 
+  # δρₛ(x) = δρ₀*exp(complex(0,1)*k*x);
+  λ=k^2*c₀^2/100
+  ω=k*(vₕ+c₀)
+  γ=complex(λ,ω)
+#+end_src
+
+#+begin_src julia :session main :result output
+  function kerner(v::Vector{Float64},ρ::Vector{Float64},Δx,Δt,params)
+      N = length(v)
+      vl=similar(v)
+      ρl=similar(ρ)
+      μ, c₀, τ = params
+      N = length(ρ)
+      k=200π/1000
+      δv₀ = 0.01
+      δρ₀ = 0.02
+
+      V(ρ) = 5.0461*((1+exp((ρ-0.25)/0.06))^-1 - 3.72*10^-6) 
+
+      for n in 2:N-1
+          ρl[n] = ρ[n] - (Δt/Δx)*(mdif_nt(v,ρ,n))
+          vl[n] = v[n] - (v[n]*Δt/Δx)*dif_nt(v,n) + (μ*Δt/(ρ[n]*(Δx)^2))*(dif2_nt(v,n)) + (c₀^2*Δt/ρ[n]*Δx)*(dif_nt(ρ,n)) + (Δt/τ)*(V(ρ[n])-v[n])
+      end
+
+      # Bondary condition
+      # https://www.youtube.com/watch?v=uf4g_U8Ok3c&list=PLP8iPy9hna6Q2Kr16aWPOKE0dz9OnsnIJ&index=50&t=10m14s
+
+      ## Fixed (Real parts of δρ e δv)
+      # δρᵣ(x,t)=δρ₀*cos(k*x)*cos(ω*t)exp(-λ*t)
+      #! δρᵣx(x)=δρ₀*cos(k*x)
+      # δvᵣ(x,t)=δv₀*cos(k*x)*cos(ω*t)exp(-λ*t)
+      #! δvᵣx(x)=δv₀*cos(k*x)
+      # ρ[n,0] = ρₕ + δρᵣ(n,0)
+      # ρ[n,0] = vₕ + δvᵣ(n,0)
+      ρₕ = 0.168
+      vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6)
+      #! ρl[length(ρ)] = ρₕ + δρᵣx(length(ρ)*Δx)
+      #! vl[length(v)] = vₕ + δvᵣx(length(v)*Δx)
+      ρl[1] = ρl[length(ρ)]
+      vl[1] = vl[length(v)]
+      # dif(v,0,i,arg=i) = dif(v,length(v),i,arg=i)
+
+      return vl, ρl
+  end
+#+end_src
+
+#+RESULTS:
+: kerner
+
+*** Test
+#+begin_src julia :session main :result output
+  # τ=1;
+  μ, c₀, τ = 1, 1.8634, 1 
+  params₀ = [μ, c₀, τ]
+
+  # Init array of ones at initial timestep
+  v₀ = ones(nx) 
+  ρ₀ = ones(nx) 
+
+  # # Set u₀ = 2 in the interval 0.5 ≤ x ≤ 1 as per our I.C.s
+  # v₀[0.5 .<= x .<= 100] .= 2  # Note use of . (dot) broadcasting syntax
+  # ρ₀[0.5 .<= x .<= 100] .= 5
+
+  # kerner(v,ρ,Δx,Δt,V,params)
+  kerner(v₀,ρ₀,δx,δt,params₀)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+*** DONE Evolve-function
+CLOSED: [2021-11-09 Tue 14:56]
+:LOGBOOK:
+- State "DONE"       from "NEXT"       [2021-11-09 Tue 14:56]
+:END:
+**** Implementation
+#+begin_src julia :session main :result output
+  function evolveₖ(method, params, xs, Δt, v::Vector{Float64}, ρ::Vector{Float64}, t_final=10.0, f₀=f_actual)
+
+      T = [map(x -> f₀.(xs,x), 1), map(x -> f₀.(xs,x), 100)]
+      Δx = xs[2] - xs[1]
+      t = 0.0
+      ts = [t]
+
+      results = [T]
+
+      while t < t_final
+          Tl =   method(T[1],T[2],Δx,Δt,params) # new
+          T = [copy(Tl[1]), copy(Tl[2])]
+          push!(results, T)
+
+          t += Δt
+          push!(ts, t)
+      end
+
+      return ts, results
+  end
+#+end_src
+
+#+RESULTS:
+: evolveₖ
+
+**** Test
+***** Initial condition function
+#+begin_src julia :session main :result output :export both :eval
+  function f(x,N)
+    g = 1/2
+    for k in 1:1:N
+        g += (2/((2*k -1)*π))*sin((2*k-1)*x)
+    end
+    return g
+  end
+#+end_src
+
+#+RESULTS:
+: f
+
+#+begin_src julia :session main :result output :export both :eval
+  values = map(x -> f.(-4*π:0.01:4*π,x), 1:1:100)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+#+begin_src julia :session main :result output :export both :eval
+  function f_actual(x)
+      if abs(x)<π
+          if 0<=x<π 
+              return 1
+          elseif -π<=x<0
+              return 0
+          end
+      else 
+          y = (x/2π -floor(x/2π))*2π
+          if π<=y<2π 
+              return 0
+          elseif 0<=y<π
+              return 1
+          end
+      end
+  end
+#+end_src
+
+#+RESULTS:
+: f_actual
+
+#+begin_src julia :session main :result output :export both :eval
+  values_actual = f_actual.(-4*π:0.01:4*π)
+#+end_src
+
+***** Run try
+#+begin_src julia :session main :result output
+  # v₀, ρ₀,δx,δt,params₀
+  x_range, δx
+#+end_src
+
+#+RESULTS:
+: (0.0:0.01:1000.0, 0.01)
+
+#+begin_src julia :session main :result output :export both :eval
+  values = map(x -> f.(0.0:0.01:1000.0,x), 1:99:100)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+#+begin_src julia :session main :result output
+  v₀, ρ₀ = values[1], values[2]
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+#+begin_src julia :session main :result output
+(kerner, params₀, x_range, δt, v₀, ρ₀, t_final=10.0, f₀=f_actual)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+
+#+begin_src julia :session main :result output
+    # function evolveₖ(method, params, xs, Δt, v, ρ, t_final=10.0, f₀)
+  ts_ev, results_ev = evolveₖ(kerner, params₀, x_range, δt, v₀, ρ₀, 10.0, f)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+**** Result and note
+The result quickly diverged, because the perturbation equation was
+only implemented partially in exponential time-evolution.
+
+How to come around it: implement the time-decayment of the
+perturbation inside the evolution-in-time function.
+
+*** Evolve Fuction with time decayment
+**** Implementation
+#+begin_src julia :session main :result output
+  function evolveₖ(method, params, xs, Δt, v::Vector{Float64}, ρ::Vector{Float64}, t_final=10.0, f₀=f_actual)
+
+      T = [map(x -> f₀.(xs,x), 1), map(x -> f₀.(xs,x), 100)]
+      Δx = xs[2] - xs[1]
+      t = 0.0
+      ts = [t]
+
+      results = [T]
+
+      while t < t_final
+          Tl = method(T[1],T[2],Δx,Δt,params) # new
+          ## Time decayment in bulk / new
+          for i in 1:1:2
+              for j in 2:1:(length(Tl[i])-1)
+                  Tl[i][j] = Tl[i][j]*cos(ω*t)*exp(-λ*t)
+              end
+          end
+
+          T = [copy(Tl[1]), copy(Tl[2])]
+          push!(results, T)
+
+          t += Δt
+          push!(ts, t)
+      end
+
+      return ts, results
+  end
+#+end_src
+
+#+RESULTS:
+: evolveₖ
+
+**** Test
+***** Initial condition function
+#+begin_src julia :session main :result output :export both :eval
+  function f(x,N)
+    g = 1/2
+    for k in 1:1:N
+        g += (2/((2*k -1)*π))*sin((2*k-1)*x)
+    end
+    return g
+  end
+#+end_src
+
+#+RESULTS:
+: f
+
+#+begin_src julia :session main :result output :export both :eval
+  values = map(x -> f.(-4*π:0.01:4*π,x), 1:1:100)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output :export both :eval
+  function f_actual(x)
+      if abs(x)<π
+          if 0<=x<π 
+              return 1
+          elseif -π<=x<0
+              return 0
+          end
+      else 
+          y = (x/2π -floor(x/2π))*2π
+          if π<=y<2π 
+              return 0
+          elseif 0<=y<π
+              return 1
+          end
+      end
+  end
+#+end_src
+
+#+RESULTS:
+: f_actual
+
+#+begin_src julia :session main :result output :export both :eval
+  values_actual = f_actual.(-4*π:0.01:4*π)
+#+end_src
+
+***** Run try
+#+begin_src julia :session main :result output
+  # v₀, ρ₀,δx,δt,params₀
+  x_range, δx
+#+end_src
+
+#+RESULTS:
+: (0.0:1.0:1000.0, 1.0)
+
+
+#+begin_src julia :session main :result output :export both :eval
+  values = map(x -> f.(0.0:0.01:1000.0,x), 1:1:100)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+  v₀, ρ₀ = values[1], values[100]
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+
+#+begin_src julia :session main :result output
+(kerner, params₀, x_range, δt, v₀, ρ₀, t_final=10.0, f₀=f_actual)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+
+#+begin_src julia :session main :result output
+  # function evolveₖ(method, params, xs, Δt, v, ρ, t_final=10.0, f₀)
+  ts_ev, results_ev = evolveₖ(kerner, params₀, x_range, δt, v₀, ρ₀, 10.0, f)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+**** Result and note
+The result quickly diverged, because the perturbation equation was
+only implemented partially in exponential time-evolution.
+
+How to come around it: implement the time-decayment of the
+perturbation inside the evolution-in-time function.
+
+* The numerical scheme proposed in the paper
+** The deduction
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+\label{eq:NS-n1}
+\left[\frac{\partial{v}}{\partial{t}} + v\frac{\partial{v}}{\partial{x}} \right] = \frac{1}{\rho{}}\dfrac{\partial \left(\mu \frac{\partial{v}}{\partial{x}} \right)}{\partial{x}} - \left(\frac{c_0^2}{\rho{}}\right)\dfrac{\partial{\rho}}{\partial{x}} + \frac{V(\rho) - v}{\tau} \\\\
+     \dfrac{\partial{\rho}}{\partial{t}} + \dfrac{\partial{\left( \rho{}v \right)}}{\partial{x}}=0
+\end{cases}
+   \end{aligned}
+ \end{equation}
+
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+&w(x,t) = \dfrac{\partial{v}}{\partial{x}}\\
+\phi{(x,t)} \,\ni\, &\dfrac{\partial{\phi}}{\partial{x}}=\rho{(x,t)}
+\end{cases}
+\end{aligned}
+\end{equation}
+
+Let's substitute these new variables in the first system of two
+equations.
+
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+\dfrac{\partial{v}}{\partial{t}} &= -vw + \frac{\mu}{\rho}\dfrac{\partial{w}}{\partial{x}} - (\frac{c_0^2}{\rho})\dfrac{\partial{\rho}}{\partial{x}} + \left(\dfrac{V(\rho) - v}{\tau} \right)\\
+\dfrac{\partial{\rho}}{\partial{t}} &= - \dfrac{\partial{(\rho v)}}{\partial{x}} = -\left(\dfrac{\partial{\rho}}{\partial{x}}v + w\rho \right)\\
+\dfrac{\partial{v}}{\partial{x}} &= w\\
+\dfrac{\partial{\phi}}{\partial{x}} &= \rho
+\end{cases}
+\end{aligned}
+\end{equation}
+
+*** Boundary Condition
+
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+\phi{(0,t)} = 0\\
+\phi{(L,t)} = \rho_h L \\
+v(0,t) = v(L,t)\\
+w(0,t) = w(L,t)
+\end{cases}
+\end{aligned}
+\end{equation}
+
+*** Grid
+\begin{equation}
+\begin{aligned}
+\begin{cases}
+x_i = (i-1)dx, \quad i=1:1:I \\
+x_I = L\\
+t_i = j dt, \quad j=1,2,\ldots
+\end{cases}
+\end{aligned}
+\end{equation}
+** The implementation
+*** Grid
+#+begin_src julia :session main :result output
+  nx= 1000;
+  # ν=0.4;
+  # c=5;
+  δx = 1000/nx;
+  x_range = range(0, stop=δx*(nx), length=nx+1) # Full range of spatial steps for wich a solution is desired
+
+  endTime = 100   # simulation end time
+  nt = 1000          # nt is the number of timesteps we want to calculate
+  δt = endTime/nt  # Δt is the amount of time each timestep covers
+  t = range(0, stop=δt*(nt), length=nt+1) # Full range of time steps for which a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.1:100.0
+
+#+begin_src julia :session main :result output
+  endTime = 100   # simulation end time
+  nt = 1000          # nt is the number of timesteps we want to calculate
+  delta_t = endTime/nt  # Δt is the amount of time each timestep covers
+  t = range(0, stop=endTime, length=nt+1) # Full range of time steps for which a solution is desired
+#+end_src
+
+#+RESULTS:
+: 0.0:0.1:100.0
+
+*** Initial condition
+#+begin_src julia :session main :result output
+  μ, c₀, τ = 1, 1.8634, 1 
+  params₀ = [μ, c₀, τ]
+#+end_src
+
+#+RESULTS:
+: [1.0, 1.8634, 1.0]
+
+#+begin_src julia :session main :result output
+  N = 168; 
+  ρₕ = 0.168;
+  L=N/ρₕ; 
+  δρ₀ = 0.02;
+  δv₀ = 0.01;
+  vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6);
+
+  k=2000π/L;
+  c₀= 1.8634;
+  λ=k^2*(c₀^2)/100
+  ω=k*(vₕ+c₀)
+
+  ρₕ = 0.168
+  vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6)
+#+end_src
+
+#+RESULTS:
+: 4.020920949534869
+
+*** Step-function
+**** Helper
+#+begin_src julia :session main :result output
+    function dif_nt(v, n)
+        return v[n+1] - v[n]
+    end
+
+    function dif2_nt(v, n)
+        return v[n+1] - 2*v[n] + v[n-1]
+    end
+
+    function mdif_nt(u,v,n)
+        return u[n+1]*v[n] + v[n+1]*u[n] - 2*v[n]*u[n]
+    end
+
+    function pbc_derivative(u::Vector{Float64},Δx)
+      d = zeros(length(u))
+
+        for i in 2:1:(length(u)-1)
+            d[i] = dif2_nt(u,i)/Δx
+        end
+        d[1] = (u[1]-u[length(u)])/Δx
+        d[length(u)] = (u[length(u)]-u[1])/Δx
+
+        return d
+    end
+
+    # u[:,] = copy(u_zero) # Initialise arbitrary future timestep with inital condition, u_zero_values
+#+end_src
+
+#+RESULTS:
+: pbc_derivative
+
+**** Main
+#+begin_src julia :session main :result output
+    function kerner(v::Vector{Float64},ρ::Vector{Float64},Δx,Δt,params,w=pbc_derivative(v,Δx),ϕ=pbc_derivative(ρ,Δx))
+        N = length(v)
+        vl=similar(v)
+        ρl=similar(ρ)
+        wl=similar(w)
+        ϕl=similar(ϕ)
+        μ, c₀, τ = params
+        N = length(ρ)
+        k=200π/1000
+        δv₀ = 0.01
+        δρ₀ = 0.02
+
+        V(ρ) = 5.0461*((1+exp((ρ-0.25)/0.06))^-1 - 3.72*10^-6) 
+
+        for n in 2:N-1
+            wl[n]= w[n] + Δx*v[n]
+            ϕl[n]= ϕ[n] + Δx*ρ[n] 
+            ρl[n] = ρ[n] - (Δt/Δx)*(dif_nt(ρ,n)*v[n]) + (Δt)*w[n]*ρ[n]
+            vl[n] = v[n] - (Δt/Δx)*(v[n]*w[n]) + (μ*Δt/(ρ[n]*Δx))*(dif_nt(w,n)) + (c₀^2*Δt/ρ[n]*Δx)*(dif_nt(ρ,n)) + (Δt/τ)*(V(ρ[n])-v[n])
+        end
+
+        # Bondary condition
+        ρₕ = 0.168
+        vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6)
+        wl[N] = w[N] + Δx * v[N]
+        ϕl[N] = ϕ[N] + Δx * ρ[N] 
+        ρl[N] = ρ[N] - (Δt/Δx)*((ρ[1]-ρ[N])*v[N] + w[N]*ρ[N])
+        vl[N] = v[N] - (Δt/Δx)*(v[N]*w[N]) + (μ*Δt/(ρ[N]*Δx))*(w[1]-w[N]) + (c₀^2*Δt/ρ[N]*Δx)*(ρ[1]-ρ[N]) + (Δt/τ)*(V(ρ[N])-v[N])
+
+        ϕl[1] = 0
+        ϕl[length(ϕl)] = ρₕ*L
+        ρl[1] = ρl[N]
+        vl[1] = vl[N]
+        return vl, ρl, wl, ϕl
+    end
+#+end_src
+
+#+RESULTS:
+: kerner
+
+*** Test
+#+begin_src julia :session main :result output
+  # τ=1;
+  μ, c₀, τ = 1, 1.8634, 1 
+  params₀ = [μ, c₀, τ]
+#+end_src
+
+#+RESULTS:
+: [1.0, 1.8634, 1.0]
+
+*** Evolve Fuction with time decayment
+**** Implementation
+#+begin_src julia :session main :result output
+    function evolveₖ(method, params, xs, Δt, v::Vector{Float64}, ρ::Vector{Float64}, t_final=10.0, f₀=f_actual)
+
+        Δx = xs[2] - xs[1]
+        T = [map(x -> f₀.(xs,x), 1), map(x -> f₀.(xs,x), 100), pbc_derivative(map(x -> f₀.(xs,x), 1),Δx), pbc_derivative(map(x -> f₀.(xs,x), 100), Δx)]
+        t = 0.0
+        ts = [t]
+
+        results = [T]
+
+        while t < t_final
+            Tl = method(T[1],T[2],Δx,Δt,params,T[3],T[4]) # new
+            ## Time decayment in bulk / new
+            for i in 1:1:2
+                for j in 2:1:(length(Tl[i])-1)
+                    Tl[i][j] = Tl[i][j]*cos(ω*t)*exp(-λ*t)
+                end
+            end
+
+            T = [copy(Tl[1]), copy(Tl[2]), copy(Tl[3]), copy(Tl[4])]
+            push!(results, T)
+
+            t += Δt
+            push!(ts, t)
+        end
+
+        return ts, results
+    end
+#+end_src
+
+#+RESULTS:
+: evolveₖ
+
+**** Test
+***** Initial condition function
+#+begin_src julia :session main :result output :export both :eval
+  function f(x,N)
+    g = 1/2
+    for k in 1:1:N
+        g += (2/((2*k -1)*π))*sin((2*k-1)*x)
+    end
+    return g
+  end
+#+end_src
+
+#+RESULTS:
+: f
+
+#+begin_src julia :session main :result output :export both :eval
+  values = map(x -> f.(-4*π:0.01:4*π,x), 1:1:100)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output :export both :eval
+  function f_actual(x)
+      if abs(x)<π
+          if 0<=x<π 
+              return 1
+          elseif -π<=x<0
+              return 0
+          end
+      else 
+          y = (x/2π -floor(x/2π))*2π
+          if π<=y<2π 
+              return 0
+          elseif 0<=y<π
+              return 1
+          end
+      end
+  end
+#+end_src
+
+#+RESULTS:
+: f_actual
+
+#+begin_src julia :session main :result output :export both :eval
+  values_actual = f_actual.(-4*π:0.01:4*π)
+#+end_src
+
+***** Run try
+#+begin_src julia :session main :result output
+  # v₀, ρ₀,δx,δt,params₀
+  x_range, δx
+#+end_src
+
+#+RESULTS:
+: (0.0:1.0:1000.0, 1.0)
+
+
+#+begin_src julia :session main :result output :export both :eval
+  values = map(x -> f.(0.0:0.01:1000.0,x), 1:1:100)
+#+end_src
+
+#+RESULTS:
+
+#+begin_src julia :session main :result output
+  v₀, ρ₀ = values[1], values[100]
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+#+begin_src julia :session main :result output
+  # kerner(v,ρ,Δx,Δt,V,params)
+  kerner(v₀,ρ₀,δx,δt,params₀)
+#+end_src
+
+#+RESULTS:
+
+
+#+begin_src julia :session main :result output
+(kerner, params₀, x_range, δt, v₀, ρ₀, t_final=10.0, f₀=f_actual)
+#+end_src
+
+#+RESULTS:
+: Output suppressed (line too long)
+
+
+#+begin_src julia :session main :result output
+  # function evolveₖ(method, params, xs, Δt, v, ρ, t_final=10.0, f₀)
+  ts_ev, results_ev = evolveₖ(kerner, params₀, x_range, δt, v₀, ρ₀, 10.0, f)
+#+end_src
+
+#+RESULTS:
+
+**** Result and note
+The result quickly diverged, because the perturbation equation was
+only implemented partially in exponential time-evolution.
+
+How to come around it: implement the time-decayment of the
+perturbation inside the evolution-in-time function.
+
+* Five point-formulas with kerner method
+#+begin_src julia :session main :result output
+    function kerner(v::Vector{Float64},ρ::Vector{Float64},Δx,Δt,params,w=pbc_derivative(v,Δx),ϕ=pbc_derivative(ρ,Δx))
+        N = length(v)
+        vl=similar(v)
+        ρl=similar(ρ)
+        wl=similar(w)
+        ϕl=similar(ϕ)
+        μ, c₀, τ = params
+        N = length(ρ)
+        k=200π/1000
+        δv₀ = 0.01
+        δρ₀ = 0.02
+
+        V(ρ) = 5.0461*((1+exp((ρ-0.25)/0.06))^-1 - 3.72*10^-6) 
+
+        for n in 2:N-1
+            wl[n]= w[n] + Δx*v[n]
+            ϕl[n]= ϕ[n] + Δx*ρ[n] 
+            ρl[n] = ρ[n] - (Δt/Δx)*(dif5_nt(ρ,n)*v[n]) + (Δt)*w[n]*ρ[n]
+            vl[n] = v[n] - (Δt/Δx)*(v[n]*w[n]) + (μ*Δt/(ρ[n]*Δx))*(dif5_nt(w,n)) + (c₀^2*Δt/ρ[n]*Δx)*(dif5_nt(ρ,n)) + (Δt/τ)*(V(ρ[n])-v[n])
+        end
+
+        # Bondary condition
+        ρₕ = 0.168
+        vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6)
+        wl[N] = w[N] + Δx * v[N]
+        ϕl[N] = ϕ[N] + Δx * ρ[N] 
+        ρl[N] = ρ[N] - (Δt/Δx)*((ρ[1]-ρ[N])*v[N] + w[N]*ρ[N])
+        vl[N] = v[N] - (Δt/Δx)*(v[N]*w[N]) + (μ*Δt/(ρ[N]*Δx))*(w[1]-w[N]) + (c₀^2*Δt/ρ[N]*Δx)*(ρ[1]-ρ[N]) + (Δt/τ)*(V(ρ[N])-v[N])
+
+        ϕl[1] = 0
+        ϕl[length(ϕl)] = ρₕ*L
+        ρl[1] = ρl[N]
+        vl[1] = vl[N]
+        return vl, ρl, wl, ϕl
+    end
+#+end_src
+
+* Writing the =f= equations
+Sources:
+- https://julialang.org/jsoc/gsoc/diffeq/
+
+** Helpers
+#+begin_src julia :session main :result output
+  function dif5_nt(v,n)
+    return (1/12)*(v[n-2] - 8*v[n-1] + 8*v[n+1] - v[n+2])
+  end
+#+end_src
+
+#+RESULTS:
+: dif5_nt
+
+** Isolated equations
+#+begin_src julia :session main :result output
+  wl[n]= w[n] + Δx*v[n]
+  ϕl[n]= ϕ[n] + Δx*ρ[n] 
+  ρl[n] = ρ[n] - Δt*fρ(ρ,v,w,n)
+  vl[n] = v[n] - Δt*fv(ρ,v,w,Δx,n)
+#+end_src
+
+#+begin_src julia :session main :result output
+  function fρ(ρ,v,w,Δx,n)
+    return (1/Δx)*(dif5_nt(ρ,n)*v[n]) + w[n]*ρ[n]
+  end
+#+end_src
+
+#+begin_src julia :session main :result output
+  function fv(ρ,v,w,Δx,n)
+      return (1/Δx)*(v[n]*w[n]) + (μ/(ρ[n]*Δx))*(dif5_nt(w,n)) + (c₀^2/ρ[n]*Δx)*(dif5_nt(ρ,n)) + (1/τ)*(V(ρ[n])-v[n])
+  end
+#+end_src
+
+#+RESULTS:
+: fv
+
+* Paper's reference
+We show that each isolated solution, $y(t)$, of the general nonlinear
+two-point boundary value problem $( * ):y' = f(t,y),a < t <
+b,g(y(a),y(b)) = 0$ can be approximated by the (box) difference scheme
+$( * * ):{{[u_j - u_{j - 1} ]} / {h_j }} = f(t_{{{j - 1} 2}} ,{{[u_j +
+u_{j - 1} ]} / 2}),\, 1 \leqq j \leqq J,\, g(u_0 ,u_J ) = 0$. For $h =
+\max _{1 \leqq j \leqq J} h_j$ sufficiently small, the difference
+equations (**) are shown to have a unique solution $\{ u_j \} _0^J$
+in some sphere about $\{ y(t_j )\} _0^J$, and it can be computed by
+Newton’s method which converges quadratically. If $y(t)$ is
+sufficiently smooth, then the error has an asymptotic expansion of the
+form $u_j - y(t_j ) = \sum _{v = 1}^m {h^{2v} e_v (t_j ) + O(h^{2m +
+2} )}$, so that Richardson extrapolation is justified.
+
+
+The coefficient matrices of the linear systems to be solved in
+applying Newton’s method are of order $n(J + 1)$ when $y(t) \in
+\mathbb{R}^n$. For separated endpoint boundary conditions: $g_1
+(y(a)) = 0,\, g_2 (y(b)) = 0$ with $\dim g_1 = p,\dim g_2 = q$ and
+$p + q = n$, the coefficient matrices have the special block
+tridiagonal form $A \equiv [B_j ,A_j ,C_j ]$ in which the $n \times n$
+matrices $B_j (C_j )$ have their last q (first p) rows null. Block
+elimination and band elimination without destroying the zero pattern
+are shown to be valid. The numerical scheme is very efficient, as a
+worked out example illustrates.
+
+
+
+
+
+Read More: https://epubs.siam.org/doi/10.1137/0711028
+
+>>>>>>> c079ef6 (Update state of reaserch)

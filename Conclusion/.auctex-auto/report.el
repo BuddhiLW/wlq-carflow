@@ -1,0 +1,79 @@
+(TeX-add-style-hook
+ "report"
+ (lambda ()
+   (TeX-add-to-alist 'LaTeX-provided-class-options
+                     '(("article" "12pt")))
+   (TeX-add-to-alist 'LaTeX-provided-package-options
+                     '(("inputenc" "utf8") ("fontenc" "T1") ("ulem" "normalem")))
+   (TeX-run-style-hooks
+    "latex2e"
+    "article"
+    "art12"
+    "inputenc"
+    "fontenc"
+    "graphicx"
+    "longtable"
+    "wrapfig"
+    "rotating"
+    "ulem"
+    "amsmath"
+    "amssymb"
+    "capt-of"
+    "hyperref"
+    "abntex2cite"
+    "microtype"
+    "xltxtra"
+    "fontspec")
+   (TeX-add-symbols
+    "unifont")
+   (LaTeX-add-labels
+    "sec:org0433570"
+    "sec:orga5bbc5f"
+    "sec:org5f3a230"
+    "sec:orgb7d42a6"
+    "eq:PDE"
+    "sec:org36ed4fa"
+    "sec:orgf7e6c65"
+    "sec:orgf30f7a4"
+    "sec:orgbace7c4"
+    "sec:org043d0f9"
+    "sec:orgb94241a"
+    "sec:orgb55d75d"
+    "sec:org8f253cb"
+    "sec:orgfd71f3e"
+    "sec:org420448b"
+    "sec:org323599d"
+    "sec:org601ed5d"
+    "sec:org555a840"
+    "sec:orgffa886a"
+    "eq:sixth-order"
+    "sec:org78c774f"
+    "sec:orge8c4e5f"
+    "sec:org5fe54f7"
+    "sec:non-linear"
+    "eq:NavEstEQ"
+    "sec:org582f9ae"
+    "sec:org9046ac6"
+    "eq:general-2th-order"
+    "sec:org06a2eb4"
+    "sec:num-julia"
+    "sec:org8c9ff59"
+    "sec:org6920671"
+    "sec:org690609a"
+    "sec:org412a699"
+    "sec:orgfd82340"
+    "sec:org86f9dd4"
+    "sec:orgb071807"
+    "sec:orga9122c5"
+    "sec:org14ffb3d"
+    "fig:sim1"
+    "fig:sim2"
+    "sec:org15fb6e0"
+    "sec:orgfbdd1ef"
+    "sec:orga0598aa"
+    "sec:org8357717"
+    "sec:org79e9334")
+   (LaTeX-add-bibliographies
+    "../../../Bibliography/collection"))
+ :latex)
+

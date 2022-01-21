@@ -38,18 +38,33 @@ Dxx = Differential(x)^2
 δρ(t,x)=δρ₀*exp(complex(0,k*x))*exp(-γ*t)
 δv(t,x)=δv₀*exp(complex(0,k*x))*exp(-γ*t)
 
+<<<<<<< HEAD
+=======
+# Only real part
+δρᵣ(t,x)=δρ₀*cos(k*x)*cos(ω*t)exp(-λ*t)
+δvᵣ(t,x)=δv₀*cos(k*x)*cos(ω*t)exp(-λ*t)
+>>>>>>> c079ef6 (Update state of reaserch)
 
 #2D PDE
 eqs  = [Dt(v(t,x)) + v(t,x)*Dx(v(t,x)) - (μ/ρ(t,x))*Dxx(v(t,x)) + (c₀^2/ρ(t,x))*Dx(ρ(t,x)) - (5.0461*((1+exp((ρ(t,x)-0.25)/0.06))^-1 - 3.72*10^-6) - v(t,x))/τ ~ 0,
         Dt(ρ(t,x)) + Dx(ρ(t,x)*v(t,x)) ~ 0]
 
 # Initial and boundary conditions
+<<<<<<< HEAD
+=======
+# Initial and boundary conditions
+>>>>>>> c079ef6 (Update state of reaserch)
 bcs = [ρ(t,0) ~ ρ(t,L),
        v(t,0) ~ v(t,L),
        Dt(v(t,0)) ~ Dt(v(t,L)),
        # max(ρ(t,x)) ~ ρₕ,
+<<<<<<< HEAD
        ρ(0,x) ~ ρₕ + real(δρ(0,x)),
        v(0,x) ~ vₕ + real(δv(0,x))]
+=======
+       ρ(0,x) ~ ρₕ + δρᵣ(0,x),
+       v(0,x) ~ vₕ + δvᵣ(0,x)]
+>>>>>>> c079ef6 (Update state of reaserch)
 
 # Space and time domains
 domains = [t ∈ Interval(0.0,3000.0),
@@ -67,7 +82,11 @@ chain = FastChain(FastDense(dim,16,Flux.σ),FastDense(16,16,Flux.σ),FastDense(1
 
 discretization = PhysicsInformedNN(chain, QuadratureTraining())
 
+<<<<<<< HEAD
 pde_system = PDESystem(eqs,bcs,domains,[t,x],[v,ρ])
+=======
+@named pde_system = PDESystem(eqs,bcs,domains,[t,x],[v,ρ])
+>>>>>>> c079ef6 (Update state of reaserch)
 
 prob = discretize(pde_system,discretization)
 
