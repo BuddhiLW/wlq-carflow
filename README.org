@@ -3,7 +3,7 @@
 The code, documents, resources used and the papers that guided the objetives of
 the research are all on the top directory.
 
-#+begin_src shell :exports both
+#+begin_src shell
 tree . -d
 #+end_src
 

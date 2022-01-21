@@ -392,6 +392,7 @@ bibliography:/home/buddhilw/Bibliography/collection.bib
 
 # bibliographystyle:unsrt
 
+
 * Footnotes
 
 [fn:1] the program was based on https://github.com/jverzani/ImplicitEquations.jl
