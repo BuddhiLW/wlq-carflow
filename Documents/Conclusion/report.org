@@ -404,7 +404,7 @@ accompanying plot for the simplified methods, discused in ref:sec:devcode, were
 done, as well as the plot of the numerical method against the analytical solution.
 
 * Results and Discussion
-** TODO Kerner's reproduction through PINNs
+** Kerner's reproduction through PINNs
 
 #+begin_export latex
 \begin{figure}[!htb]

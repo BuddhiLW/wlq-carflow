@@ -1,0 +1,10 @@
+\contentsline {section}{\numberline {1}{\bfseries \sffamily DONE} Done}{1}{section.1}%
+\contentsline {section}{\numberline {2}NEXT Reading}{1}{section.2}%
+\contentsline {section}{\numberline {3}{\bfseries \sffamily TODO} Todo}{1}{section.3}%
+\contentsline {section}{\numberline {4}Spring-mass}{2}{section.4}%
+\contentsline {subsection}{\numberline {4.1}The equation of motion}{2}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Mass-spring}{2}{subsubsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.2}Deviation from Equilibrium}{2}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Mass-spring}{2}{subsubsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.3}Power expansion - Expansion around \((q_0,0)\)}{3}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Mass-spring}{3}{subsubsection.4.3.1}%

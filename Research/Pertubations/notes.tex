@@ -1,34 +1,34 @@
-% Created 2021-10-26 Tue 09:02
+% Created 2022-01-24 Mon 09:27
 % Intended LaTeX compiler: pdflatex
-\documentclass[11pt]{article}
+\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
-\usepackage{grffile}
 \usepackage{longtable}
 \usepackage{wrapfig}
 \usepackage{rotating}
 \usepackage[normalem]{ulem}
 \usepackage{amsmath}
-\usepackage{textcomp}
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
+\author{Pedro Branquinho}
 \date{\today}
 \title{}
 \hypersetup{
- pdfauthor={},
+ pdfauthor={Pedro Branquinho},
  pdftitle={},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 27.2 (Org mode 9.4.4)}, 
+ pdfcreator={Emacs 27.2 (Org mode 9.6)}, 
  pdflang={English}}
 \begin{document}
 
 \tableofcontents
 
+
 \section{{\bfseries\sffamily DONE} Done}
-\label{sec:org158c9dc}
+\label{sec:orgce7d909}
 Pertubation Methods:
 \begin{itemize}
 \item Multiple Scales Expansion.
@@ -36,18 +36,147 @@ Pertubation Methods:
 \end{itemize}
 \url{https://www.math.arizona.edu/\~ntna2007/Perturbation\_Methods.pdf}
 
-\section{{\bfseries\sffamily NEXT} Reading}
-\label{sec:org7383952}
-Title: *PHY-892 The Many-Body problem, from
+\section{NEXT Reading}
+\label{sec:orge42d7ba}
+Title: \textbf{PHY-892 The Many-Body problem, from
 perturbation theory to dynamical-mean Öeld
-theory (lecture notes)*.
+theory (lecture notes)}.
 
 Author: André-Marie Tremblay
 
 \url{https://pitp.phas.ubc.ca/confs/sherbrooke2018/archives/N-corps-2017.pdf}
 
 \section{{\bfseries\sffamily TODO} Todo}
-\label{sec:org12aab9d}
+\label{sec:orgfb48cac}
 \url{http://galileoandeinstein.phys.virginia.edu/7010/CM\_22\_Resonant\_Nonlinear\_Oscillations.html}
 \url{https://chem.libretexts.org/Bookshelves/Physical\_and\_Theoretical\_Chemistry\_Textbook\_Maps/Supplemental\_Modules\_(Physical\_and\_Theoretical\_Chemistry)}
+
+\section{Spring-mass}
+\label{sec:orgcc7162a}
+
+Following \textbf{\href{https://www.uio.no/studier/emner/matnat/fys/FYS3120/v14/undervisningsmateriale/smalloscillations.pdf}{FYS 3120: Classical Mechanics and Electrodynamics}}, considering:
+\subsection{The equation of motion}
+\label{sec:org8302932}
+\begin{equation}
+\begin{aligned}
+\ddot{q} = f(q, \dot{q})
+\end{aligned}
+\end{equation}
+
+\subsubsection{Mass-spring}
+\label{sec:org6e3345a}
+In our case, mass-pring:
+
+\begin{equation}
+\begin{aligned}
+m.\ddot{q} &= -k.q\\
+\Leftrightarrow \ddot{q} &= - \frac{k}{m}q \, \land \, f(q,\dot{q})= - \frac{k}{m}q
+\end{aligned}
+\end{equation}
+
+\subsection{Deviation from Equilibrium}
+\label{sec:orga13ec44}
+Let the variation from equilibrium be: \(\rho = q - q_0\).
+
+\begin{equation}
+\begin{aligned}
+\ddot{\rho} = f(q_0 + \rho{}, \dot{\rho{}})
+\end{aligned}
+\end{equation}
+
+e.g.,
+\begin{equation}
+\begin{aligned}
+q = \rho + q_0 \implies \dot{q} = \dot{\rho} \,\land\,\ddot{q} = \ddot{\rho}
+\end{aligned}
+\end{equation}
+
+\subsubsection{Mass-spring}
+\label{sec:org30ebd78}
+In our spring-mass case,
+
+\begin{equation}
+\begin{aligned}
+\ddot{\rho} = - \frac{k}{m}(q_0 + \rho)
+\end{aligned}
+\end{equation}
+
+\subsection{Power expansion - Expansion around \((q_0,0)\)}
+\label{sec:orga6cd5da}
+
+\begin{equation}
+\begin{aligned}
+\ddot{\rho} = f(q_0, 0) + \rho \dfrac{\partial{f}}{\partial{\rho}}(q_0,0) + \dot{\rho} \dfrac{\partial{f}}{\partial{\dot{\rho}}}(q_0,0)
+\end{aligned}
+\end{equation}
+
+\(f(q_0,0)=0\, \because\, q_0\) is equilibrium point: \hyperref[sec:org8302932]{The equation of motion} would be zero in this point.
+
+We also neglect second order or higher terms.
+
+\subsubsection{Mass-spring}
+\label{sec:orga71c2f8}
+In our case,
+
+\begin{equation}
+\begin{aligned}
+\ddot{\rho} = \rho \dfrac{\partial{f}}{\partial{\rho}}(q_0,0) + \dot{\rho} \dfrac{\partial{f}}{\partial{\dot{\rho}}}(q_0,0)\\
+\end{aligned}
+\end{equation}
+
+in which,
+
+\begin{equation}
+\begin{aligned}
+\left(\dfrac{\partial{f}}{\partial{\rho}}(\rho,\dot{\rho})
+=- \dfrac{k}{m}\right) \, \land \, \left(\dfrac{\partial{\dot{f}}}{\partial{\dot{\rho}}}(\rho,\dot{\rho})=0\right)
+\end{aligned}
+\end{equation}
+
+Therefore, in our case, the pertubation equation is:
+
+\begin{equation}
+\begin{aligned}
+\ddot{\rho} = - \dfrac{k}{m}\rho
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+ \implies \rho(t) = A \sin{\left(\sqrt{\frac{k}{m}}t\right)} + B cos{\left(\sqrt{\frac{k}{m}}t\right)}
+\end{aligned}
+\end{equation}
+\begin{enumerate}
+\item Particular solution
+\label{sec:org4181458}
+Particular case if \(t_0 = 0\),
+
+\begin{equation}
+\begin{aligned}
+\rho_0 &= B
+\implies \rho(t) = \rho_0 \cos{\left(\sqrt{\frac{k}{m}}t\right)}
+\end{aligned}
+\end{equation}
+
+\item General initical condition
+\label{sec:org9f21614}
+
+If \(\rho(t_0)=\rho_0\),
+
+\begin{equation}
+\begin{aligned}
+\rho_0 &= A \sin{\left(\sqrt{\frac{k}{m}}t\right)} + B cos{\left(\sqrt{\frac{k}{m}}t\right)} \\
+\Leftrightarrow  \rho_0 &= \left(\dfrac{A \sin{\left(\sqrt{\frac{k}{m}}t_0\right)} + B cos{\left(\sqrt{\frac{k}{m}}t_0\right)}}{\sqrt{A^2 + B^2}}\right). \sqrt{A^2 + B^2}
+\end{aligned}
+\end{equation}
+
+Let the right-triangle with sides oposite side A and adjacent side B, with thus hippotenuse, \(\sqrt{A^2 + B^2}\). This triangle define a angle \(\alpha = \arctan{(\dfrac{A}{B})}\). So, \(\sin{(\alpha)}= \dfrac{A}{\sqrt{A^2 + B^2}}\) and \(\cos{(\alpha)}= \dfrac{B}{\sqrt{A^2 + B^2}}\).
+
+\begin{equation}
+\begin{aligned}
+\implies \rho_0 &= (\sqrt{A^2 + B^2})\left(\sin{(\alpha)} \sin{\left(\sqrt{\frac{k}{m}}t_0\right)} + \cos{(\alpha)} cos{\left(\sqrt{\frac{k}{m}}t_0\right)}\right)\\
+\therefore \rho_0 &= (\sqrt{A^2 + B^2}) \cos{\left(\sqrt{\frac{k}{m}}t_0 - \alpha\right)}
+\end{aligned}
+\end{equation}
+\end{enumerate}
 \end{document}
