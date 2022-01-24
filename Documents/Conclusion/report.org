@@ -387,8 +387,22 @@ non-linear.
 architecture. Therefore, our program structurally resembles the symbolical
 notation used in mathematics.
 
-** TODO Developed code
-** TODO Stability Regions
+** Developed code
+\label{sec:devcode}
+As exercise to sharpen intuition about programs and physics computational
+methods, simpler differential equations were solved. These were all done by
+programs written by ourselves.
+
+We used Euler Forward, Euler Backward, Trapezoidal Method, and a variety of
+different point-approximations. These methods were tested in a category of
+equations on exponential decayments.
+
+** Stability Regions
+The stability region of a method is the region where, no matter the stepsize
+used, the solution steadily converges to the real behavior. Therefore, the
+accompanying plot for the simplified methods, discused in ref:sec:devcode, were
+done, as well as the plot of the numerical method against the analytical solution.
+
 * Results and Discussion
 ** TODO Kerner's reproduction through PINNs
 
@@ -413,8 +427,9 @@ notation used in mathematics.
 #+end_export
 ** TODO Steps to derive the Stability Region
 ** TODO Stiffness
+
 ** Nth-order approximation
-*** Third-order approximation of second-order differential equation
+*** Third-order approximation of second-order differential equation derivation
 
 By Taylor Expansion
 \begin{equation}
