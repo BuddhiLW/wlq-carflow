@@ -284,6 +284,10 @@ characterization [[cite:&john1978partial]].
 ** Numerical Methods implemented in Julia
 \label{sec:num-julia}
 
+*** The language
+OK [fn:2]
+
+*** PDEs
 There exists a variety of libraries on /numerical methods/
 available in modern languages. Most of them with ports of libraries
 written in C and FORTRAN. To list a few, from the =Julia=
@@ -319,9 +323,49 @@ system. =Julia= is a high performance programming language. And, =Org-mode= is a
 literate programming environment suited to computer programming research and
 documentation.
 
-** TODO Version Control
-The research was stored and gradually updated on GitHub, available at https://github.com/BuddhiLW/wlq-carflow
-** TODO Julia language
+** Version Control
+The research was stored and gradually updated on GitHub, available at https://github.com/BuddhiLW/wlq-carflow. The structure of the root directory is the following:
+
+#+begin_src shell :export results
+tree ../.. -d -I "ltximg"
+#+end_src
+
+#+RESULTS:
+| .   |              |                             |           |
+| ├── | Documents    |                             |           |
+| │   | ├──          | Conclusion                  |           |
+| │   | │            | └──                         | resources |
+| │   | ├──          | Proposal                    |           |
+| │   | └──          | projecto_estagio_PedroGomes |           |
+| ├── | Papers       |                             |           |
+| ├── | Research     |                             |           |
+| │   | ├──          | Bando                       |           |
+| │   | ├──          | CFD                         |           |
+| │   | ├──          | GeneralNotes                |           |
+| │   | ├──          | IMPA                        |           |
+| │   | │            | └──                         | figs      |
+| │   | ├──          | IntroCompPhysics            |           |
+| │   | │            | └──                         | Chap7     |
+| │   | ├──          | Kerner                      |           |
+| │   | ├──          | NeuralPDE                   |           |
+| │   | ├──          | Pertubations                |           |
+| │   | └──          | wiki                        |           |
+| │   | └──          | img                         |           |
+| └── | Resources    |                             |           |
+| ├── | Bibliography |                             |           |
+| ├── | Books        |                             |           |
+| ├── | Gifs         |                             |           |
+| ├── | Literature   |                             |           |
+| └── | img          |                             |           |
+|     |              |                             |           |
+| 25  | directories  |                             |           |
+
+This way, were able to document and keep track of the work, based on =Documents=, =Papers=, =Reseach= and =Resources=.
+
+** Julia language
+
+Julia has been created by MIT personnel in order to fulfill segmented tasks usually handled by different languages, in the process of =scientific computing=. In our work, we used the libraries =NeuralPDE.jl= [[cite:&zubov2021neuralpde]], and the native capabilities of Julia, to compute. To plot graphics, we used both =GR= and =PyPlot= as out backend for =Plots=.
+
 ** TODO PINNs
 ** TODO Developed code
 ** TODO Stability Regions
@@ -392,7 +436,5 @@ bibliography:/home/buddhilw/Bibliography/collection.bib
 
 # bibliographystyle:unsrt
 
-
 * Footnotes
-
-[fn:1] the program was based on https://github.com/jverzani/ImplicitEquations.jl
+[fn:2] Article on why Julia was created https://julialang.org/blog/2012/02/why-we-created-julia/. Edelman was awarded for his contributions to High Performance Computing (HPC), due to Julia https://www.computer.org/press-room/2019-news/2019-ieee-fernbach-award-edelman.[fn:1] the program was based on https://github.com/jverzani/ImplicitEquations.jl
