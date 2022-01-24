@@ -46,7 +46,8 @@
 
 We reproduced numerical method algorithms in this research. The initial
 aim was at studying partial differential equations and to
-recreate the simulations of a well known work on /Traffic Flow/ [[cite:&kerner1993]]. Although the end goal was not achieved, the
+recreate the simulations of a well known work on /Traffic Flow/
+[[cite:&kerner1993]]. Although the end goal was not achieved, the
 research provided knowledge on the topics of /Numerical Stiffness/ and
 the limitations of /Physics Informed Neural Network/ (PINN).
 
@@ -285,7 +286,10 @@ characterization [[cite:&john1978partial]].
 \label{sec:num-julia}
 
 *** The language
-OK [fn:2]
+Julia was invented to be both highly performative and to be an unified general
+purpose language. It's sophisticated, meaning the language has polymorphism
+(=dispatches=), can be statistically of dynamically typed, has a powerful macro
+system, and can function as an scripting language. [fn:2]
 
 *** PDEs
 There exists a variety of libraries on /numerical methods/
@@ -306,9 +310,16 @@ documentation on available methods:
 - Non-classical methods.
   
   *Source:* https://github.com/JuliaPDE/SurveyofPDEPackages
-** TODO PINN
+** PINN
 
-Physics Informed Neural Networks
+Physics Informed Neural Networks have different use cases. One of them is
+scalability to higher dimensions. While standard methods can require a computing
+power beyond current capability, Physics Informed Neural Networks only linearly
+increase in use of memory, regarding dimensionality [[cite:&zubov2021neuralpde]].
+
+Another use case, which fits our requirements, is the certainty of convergence
+via the Universal Approximation Theorem. Specially, non-linear equation can be
+approximated with physics informed neural networks [[cite:&raissi2019physics]].
 
 * Materials and Methods
 
@@ -364,9 +375,18 @@ This way, were able to document and keep track of the work, based on =Documents=
 
 ** Julia language
 
-Julia has been created by MIT personnel in order to fulfill segmented tasks usually handled by different languages, in the process of =scientific computing=. In our work, we used the libraries =NeuralPDE.jl= [[cite:&zubov2021neuralpde]], and the native capabilities of Julia, to compute. To plot graphics, we used both =GR= and =PyPlot= as out backend for =Plots=.
+Julia has been created by MIT personnel in order to fulfill segmented tasks usually handled by different languages, in the process of =scientific computing=. In our work, we used the libraries =NeuralPDE.jl= [[cite:&zubov2021neuralpde]], and the native capabilities of Julia, to compute. To plot graphics, we used both =GR= and =PyPlot= as out back-end for =Plots=.
 
-** TODO PINNs
+** STRT PINNs
+The package =NeuralPDE.jl= has documentation on a variety of physical equations,
+including non-linear equations and fluid equations. We used this package as a
+means to reproduce the fluid equations in =Traffic Flow= modeling, as it's also
+non-linear.
+
+=NeuralPDE.jl= makes use of the =Symbolics.jl= and =ModelingToolkit.jl=
+architecture. Therefore, our program structurally resembles the symbolical
+notation used in mathematics.
+
 ** TODO Developed code
 ** TODO Stability Regions
 * Results and Discussion
