@@ -385,7 +385,11 @@ This way, were able to document and keep track of the work, based on =Documents=
 
 ** Julia language
 
-Julia has been created by MIT personnel in order to fulfill segmented tasks usually handled by different languages, in the process of =scientific computing=. In our work, we used the libraries =NeuralPDE.jl= [[cite:&zubov2021neuralpde]], and the native capabilities of Julia, to compute. To plot graphics, we used both =GR= and =PyPlot= as out back-end for =Plots=.
+Julia has been created by MIT personnel in order to fulfill segmented tasks
+usually handled by different languages, in the process of =scientific
+computing=. In our work, we used the libraries =NeuralPDE.jl=
+[[cite:&zubov2021neuralpde]], and the native capabilities of Julia, to compute. To
+plot graphics, we used both =GR= and =PyPlot= as out back-end for =Plots=.
 
 ** PINNs
 The package =NeuralPDE.jl= has documentation on a variety of physical equations,
@@ -446,6 +450,80 @@ research. Furthermore, the importante of knowing when to give up on a topic -  o
 put the topic aside and replan the research - has been one of the most important
 aspects of the research. Therefore, I learned to schedule and reschedule myself
 dynamically and eval if I'm or not on track for my deadlines and objectives.
+
+** Stiff equations
+We simulated the effects of stiffness in both =Ordinary Differential Equations=
+(ODEs) and =Partial Differential Equations= (PDEs). The discussion in this
+section will solemnly deal with notions concerning stiffness.
+
+We will discuss the source of /stiffness/, as there is no general definition for
+the phenomena. Also, there is no mathematical formulation for it. Altough, the
+concept arrises often, and was first discovered in an =Chemical Reaction=
+modeling [[cite:&robertson1966solution]].
+
+*** Methods relly on using the =f= form
+As numerical methods, be them Euler, Trapezoidal etc., use the fact
+that $\dfrac{\partial{y_i}}{\partial{y_j}}=f_{ij}(y_1, y_2,
+\ldots)$. Then, use the evaluation of $f_{ij}$, in a discrete step
+scheme, so to approximate the $\mathbf{y}$ vector.
+
+Therefore, mapping this mathematical formula $f_{ij}$ to a programming
+function can generalize the process and help to build many kinds of
+"evolvers". Each method will have a general rule for writting an evolver,
+because they appear out of analytical considerations on approximating functions.
+
+Each different solver will have different error approximations. And some methods
+may give rise to expurial behavior. Methods can be categorized as /A-stable/ or
+/L-stable/, depending on the caractheristics and behavior of the method regarding
+a general model of a curve.
+
+*** Factors with high exponents
+Even though a term may not greatly influence the analytical behavior of a
+system, it may create the /Stiffness/ effect on numerical solvers.
+
+For example, the Robert's equation
+
+\begin{equation}
+\begin{aligned}
+{\dot {x}}=-0.04x+10^{4}y\cdot z
+{\dot {y}}=0.04x-10^{4}y\cdot z-3\cdot 10^{7}y^{2}
+{\dot {z}}=3\cdot 10^{7}y^{2}
+\end{aligned}
+\end{equation}
+
+Have term with coefficients of order $10^{-2},\,10^{4},\,10^{7}$. Even though
+the main behaviour may be simply approximate to the terms of $10^{7}$ order with
+high precision, when we give a numerical solver to simulate the equation, it can
+present expurious behavior due to this different order of coefficients. And,
+given a simplified analytical equation, there would be neglectable expurious
+behavior, for the same numerical methods.
+
+*** Example
+A very simple equation of decayment can show us what stiffness means.
+
+$y'(t)=-\lambda{}y(t),\quad t\geq 0,y(0)=1.$
+
+The exact solution, in orange, is
+
+$y(t)=e^{-\lambda{}t}\, with y(t)\to 0 as t\to \infty$.
+
+#+begin_export latex
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:burguer-square} Decay equation with different numerical methods}
+  \includegraphics[width=0.70\linewidth]{Resources/img/Figure_2.png}
+  \\  \legend{Source: the author. Red: Trap. (step=0.125); green: EuE (step=0.125); blue: EuE (step=0.25); orange: Analytical.}
+\end{figure}
+#+end_export
+
+We see that Euler Explicit (EuE) gives us an unstable behavior. Increasing or
+periodical, for the stepsizes of 0.25 and 0.125 respectivetly. In contrast, the
+Trapezoidal method gives a quickly convergent approximation to the analytical
+behavior.
+
+For some special equations presenting /Stiffness/, this expurious behavior is
+present for almost all stepsizes and methods used - unless we use very small
+stepsizes, which becomes computationally inefficient.
 
 ** Burguer 1-D with self-made program - Euler Explicit
 
@@ -515,7 +593,131 @@ ts = collect(t)
 plot(collect(x),collect(t),u'[1:1000,1:100],st=:surface, title="Burguer equation", xlabel="X", ylabel="Y", zlabel="U")
 #+end_src
 
-** Burguer 1-D with PINN
+**** Results
+
+When we use the =step function= and send it as an initial condition in the
+burguer's equation. We see that the square equation becomes a bell-shaped
+equation, evolving in time.
+
+#+begin_export latex
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:burguer-square} Burguer's with square wave}
+  \includegraphics[width=0.45\linewidth]{Resources/img/Burguer.png}
+  \includegraphics[width=0.45\linewidth]{Resources/img/Burguer2.png}
+  \\  %\legend{Fonte: Imagem de Kerner e Konhäuser \cite{kerner1993cluster}}
+\end{figure}
+#+end_export
+
+A step decrease in the function can be seen. This =dissipation= effecit is not found in
+the equation. This is due to Euler Explicit method giving an exporious effect to
+the solution. E.i., this is a numerical-error driven effect.
+
+#+begin_export latex
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:burguer-square} Burguer's with square wave, views}
+  \includegraphics[width=0.45\linewidth]{Resources/img/burguerNkerner/Burguer_32.png}
+  \includegraphics[width=0.45\linewidth]{Resources/img/Burguer_13.png}
+  \\  %\legend{Fonte: Imagem de Kerner e Konhäuser \cite{kerner1993cluster}}
+\end{figure}
+#+end_export
+
+** Comparison: Analytical equation and Euler Explicit
+*** Computation
+
+We will utilize the same algorithm, with a different initial condition. This
+time, we will use a normal wave, given by:
+
+\begin{equation}
+\begin{aligned}
+f(x) = (\frac{1}{(2*\sqrt{\pi}))}*e^{[(\frac{-1}{2})*(x-3)^2]} \, \land \, u(t=0,x) = f(x) \\
+\text{Domain: } x \in [0,10], \, t \in [0,20]
+\end{aligned}
+\end{equation}
+
+The program, ajusting for f(x),
+
+#+begin_src julia :session main :result output :eval no
+nxx=100;
+delta_xx = 10/(nxx - 1)
+xx = range(0, stop=delta_xx*(nxx-1), length=nxx) 
+
+endTime = 20  
+nt = 1000    
+delta_t = endTime/nt  
+t = range(0, stop=endTime, length=nt)
+
+f(x) = (1/(2*√π))*exp((-1/2)*(x-3)^2)
+v_zero = f.(xx) 
+
+v_zero
+
+v=zeros((nxx,nt+1))
+v[:,1]=copy(v_zero)
+
+for n in 1:nt  
+    v[:,n+1] = copy(v[:,n]) 
+    for i in 2:nxx  
+        v[i,n+1] = v[i,n] - v[i,n] * delta_t/delta_xx * (v[i,n] - v[i-1,n])
+    end
+end
+
+using Plots; pyplot()
+
+xxs = collect(xx)
+ts = collect(t)
+
+plot(collect(xx),collect(t),v'[1:1000,1:100],st=:surface, title="Burguer equation Euler Explicit", xlabel="X", ylabel="Time", zlabel="V")
+#+end_src
+
+*** Analytical solution
+The solution to the Invicid Burguer Equation is:
+\begin{equation}
+\begin{aligned}
+u(x,t) = f(x - f(\xi)t)
+\end{aligned}
+\end{equation}
+
+in which $f(x) = (\dfrac{1}{(2*\sqrt{\pi})})*e^{(-1/2)*(x-3)^2)}$, and $\xi = 0$
+therefore, $f(\xi)= (\dfrac{1}{(2*\sqrt{\pi})})*e^{(-1/2)*(-3)^2)}=0.003134$
+
+Finally, $u(x,t)=f(x-0.00314t)$.
+
+#+begin_src julia :session main :result output :eval no
+function u_real(x,t)
+    return (1/(2*√π))*exp((-1/2)*((x-00314*t)-3)^2)
+end
+#+end_src
+#+begin_src julia :session main :result output
+u_real_val = map(z -> map(x -> u_real(x,z), xx), t)
+#+end_src
+
+#+begin_src julia :session main :result output :eval no
+plot(collect(xx),collect(t),u_real_val,st=:surface, title="Burguer equation Analytical", xlabel="X", ylabel="Time", zlabel="V")
+#+end_src
+
+*** Comparison
+
+We see that both solutions shift to the right of the right axes with time, which
+is expect. But, the numerical method based on =Euler Explicit= gives a
+dissipation which is expurious. Furthermore, we see that the rate in which the
+wave propagates the =x-axis= in time is increased by the =dissipative numerical
+method=.
+
+#+begin_export latex
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:burguer-square} Burguer's with square wave}
+  \includegraphics[width=0.45\linewidth]{Resources/img/BurguerAnalEuler/Burguer_Anal1.png}
+  \includegraphics[width=0.45\linewidth]{Resources/img/BurguerAnalEuler/EulerExpicit_1.png}
+  \\  %\legend{Fonte: Imagem de Kerner e Konhäuser \cite{kerner1993cluster}}
+\end{figure}
+#+end_export
+
+
+This behaviour is equivalent to the expuriousness saw in the study of
+=Stiffness=.
 
 ** Kerner's reproduction through PINNs
 *** Mathematical description
@@ -795,7 +997,7 @@ Then, we arrive at
 **** Where this knowledge is used in Traffic theory
 In Section 2, item /B. Critical fluctuation/, Pertubation theory is used.
 
-#+begin_export
+#+begin_export latex
 \begin{figure}[!htb]
   \centering
   \caption{\label{fig:perturbation} Pertubation derivation on Navier-Stokes equation}
@@ -851,7 +1053,8 @@ f(a,b) = sqrt((a-1)^2 + b^2)
 plot(f ≫ 1, fill=(0,:blue))
 #+end_src
 
-#+begin_export
+***** Plot of the stability region
+#+begin_export latex
 \begin{figure}[!htb]
   \centering
   \caption{\label{fig:stabEI} Stability region, Euler Implicit}
@@ -894,7 +1097,8 @@ f(a,b) = sqrt((a+1)^2 + b^2)
 plot(f ≪ 1, fill=(0,:blue))
 #+end_src
 
-#+begin_export
+***** Plot of the stability region
+#+begin_export latex
 \begin{figure}[!htb]
   \centering
   \caption{\label{fig:stabEI} Stability region, Euler Implicit}
@@ -902,13 +1106,13 @@ plot(f ≪ 1, fill=(0,:blue))
   \\ %\legend{}
 \end{figure}
 #+end_export
-**** PINN
+****** PINN
 Via the Universal Approximation Theorem ref:sec:bib-PINN, Neural Networks have a
 stability region that catches all the complex plane, in so far we choose enough
 neural nets.
 
 *** Stiffness
-**** The stiff decayment equation
+**** The stiff decayment equation (a particular example)
 \begin{equation}
 \begin{aligned}
 x(t)=x_{0}\left(-{\frac {1}{999}}e^{-1000t}+{\frac {1000}{999}}e^{-t}\right)\approx x_{0}e^{-t}.
@@ -1119,40 +1323,23 @@ Using =PyPlot.jl= backend,
 pyplot()
 #+end_src
 
-#+RESULTS:
-: Plots.PyPlotBackend()
-
-
 We create a figure on top of each other, for each simulation,
 #+begin_src julia :session main :result both :eval no :exports both
 Plots.plot(res[1], res[2][length(res[2])], label="EuE 1/4")
 #+end_src
 
-#+RESULTS:
-: Plot{Plots.GRBackend() n=1}
-
 #+begin_src julia :session main :result both :eval no :exports both
 Plots.plot!(res2[1], res2[2][length(res2[2])], label="EuE 1/8")
 #+end_src
-
-#+RESULTS:
-: Plot{Plots.GRBackend() n=3}
-
 
 #+begin_src julia :session main :result both :eval no :exports both
 Plots.plot!(res3[1], res3[2][length(res3[2])], label="Trapezoidal 1/8")
 #+end_src
 
-#+RESULTS:
-: Plot{Plots.GRBackend() n=2}
-
-
 Finally, we plot the joing figure,
 #+begin_src julia :session main :result graphic results :exports both :eval no
 PyPlot.plot(ts,ys, label='Analytical')
 #+end_src
-
-#+RESULTS:
 
 ***** Result
 

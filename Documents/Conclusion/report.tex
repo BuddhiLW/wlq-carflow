@@ -1,4 +1,4 @@
-% Created 2022-01-25 Tue 16:58
+% Created 2022-01-26 Wed 17:58
 % Intended LaTeX compiler: xelatex
 \documentclass[11pt]{article}
 \usepackage{graphicx}
@@ -25,10 +25,10 @@
 \usepackage{minted}
 \usemintedstyle{monokai}
 \hypersetup{colorlinks, allcolors=., colorlinks=true, linkcolor={blue!78!white}, urlcolor={purple}, filecolor={winered}}
+\usepackage{minted}
+\usemintedstyle{monokai}
 \graphicspath{../../}
 \graphicspath{../../Resources/img/}
-\usepackage{minted}
-\usepackage{newunicodechar}
 \author{Pedro G. Branquinho, Wei-Liang Qian (\ch{钱卫良})}
 \date{17 December 2021}
 \title{Simulation and Modeling of Traffic Congestion.}
@@ -39,7 +39,6 @@
  pdfsubject={},
  pdfcreator={Emacs 27.2 (Org mode 9.4.4)}, 
  pdflang={English}}
-
 \begin{document}
 
 \maketitle
@@ -47,9 +46,9 @@
 
 \clearpage
 \section{Abstract page}
-\label{sec:orgaa1069c}
-\subsection{Page for the Formulary Syntesis (§2)}
-\label{sec:org887506e}
+\label{sec:org855d35c}
+\subsection{Page for the Formulary Synthesis (§2)}
+\label{sec:orgbde5ff5}
 
 \begin{center}
 \begin{tabular}{ll}
@@ -57,28 +56,28 @@
 Name & Pedro Gomes Branquinho\\
 USP Number & 9843240\\
 Course & Engineer Physics\\
-Nome da Empresa & Universidade de São Paulo\\
-Endereço da Empresa & Estrada municipal do Campinho, S/N, Campinho, Lorena/SP\\
-Área em que o estágio foi realizado & Departamento de Ciências Básicas e Ambientais\\
-Nome do Profissional Supervisor & Wei-Liang Qian (\ch{钱卫良})\\
-Nome do Professor Supervisor & Luiz Tadeu Fernandes Eleno\\
-Período de relização do Estágio & 01/10/2021 à 01/02/2022\\
-Número de horas estagiadas & 476h\\
+Enterprise Name & University of São Paulo\\
+Enterprise Adress & Estrada municipal do Campinho, S/N, Campinho, Lorena/SP\\
+Area of internship & Departamento de Ciências Básicas e Ambientais\\
+Name of the Supervisor & Wei-Liang Qian (\ch{钱卫良})\\
+Name of the Professor Supervisor & Luiz Tadeu Fernandes Eleno\\
+Internship period & 01/10/2021 à 01/02/2022\\
+Number of hours of Internship & 476h\\
 \hline
 \end{tabular}
 \end{center}
 
-\subsection{Page for the Enterprise Synthesis(§3)}
-\label{sec:org5e07cc3}
+\subsection{Page for the Enterprise Synthesis (§3)}
+\label{sec:org2bef051}
 \subsubsection{University of São Paulo (USP)}
-\label{sec:org02dca7c}
+\label{sec:orgde4e38d}
 University of São Paulo is a public university. It's considered one of the
 best one hundred universities in the world. Besides having excelence in the
 formation of industrially oriented professionals, also USP is the greatest
 Latin American university in terms of high quality publications.
 
 \subsection{Description of the work (§4)}
-\label{sec:org0ef3cc3}
+\label{sec:org4e255dc}
 
 We reproduced numerical method algorithms in this research. The initial
 aim was at studying partial differential equations and to
@@ -88,7 +87,7 @@ research provided knowledge on the topics of \emph{Numerical Stiffness} and
 the limitations of \emph{Physics Informed Neural Network} (PINN).
 
 \section{Introduction}
-\label{sec:org9a48815}
+\label{sec:org56132cc}
 
 Throughout the research, we used a \texttt{Version Control System} to keep a backup and
 to track the progress; git and GitHub. The language chosen to model and compute
@@ -106,14 +105,14 @@ the study. At this point, one of the programs developed dialed with simulating
 The equations we intended to simulate are a \texttt{non-linear system} \ref{sec:non-linear}.
 
 \subsection{Analytical standpoint}
-\label{sec:org9fa64de}
+\label{sec:org8baa5ab}
 From a \emph{Analytical} point of view, Partial Differential Equations
 (PDEs) differs from Ordinary Differential Equations (ODEs) in the
 number of free variables. This means, in the case of PDEs the model depends on a
 relationship of many variables and ODEs of only one.
 
 \subsubsection{Definition}
-\label{sec:org47decfd}
+\label{sec:orgf5b985d}
 A \texttt{partial differential equation} means a relation, for a given function
 \texttt{u(x,y,...)} \cite{john1978partial},
 \begin{equation}
@@ -131,7 +130,7 @@ If substituted an \(u(\mathbf{x})\) which satisfies
 \texttt{system}.
 
 \subsection{Numerical standpoint}
-\label{sec:org8ec9b4b}
+\label{sec:org4836cc8}
 The similarity between ODEs and PDEs, from a \emph{Numerical} point of view, is
 that different approximation methods will result in different errors,
 in relation to the exact, analytical, solution of the equations.
@@ -142,10 +141,10 @@ equation. Since, even with ODEs as simple as the one derived from the
 hypothesis \cite{brauer1989qualitative}.
 
 \subsection{Methods studied}
-\label{sec:orgf56c5b1}
+\label{sec:org1601f68}
 
 \subsubsection{Ordinary Differential Equation}
-\label{sec:org51fcba8}
+\label{sec:org50f4371}
 Euler Forward, Backward and Adams-Moulton (trapezoidal) methods have been
 studied with the standard test equation,
 
@@ -163,7 +162,7 @@ Different variations of this system was simulated, in order to understand the
 concepts of \texttt{Stiffness}, \texttt{A-stability} and \texttt{L-stability}.
 
 \subsubsection{Nth-order methods for partial differentiation}
-\label{sec:orgc4a6eea}
+\label{sec:org719871a}
 The numerical methods were further explored using the analytical derivation of
 higher order numerical formulas. These derivations consisting in using Taylor
 Series and arrive at a formula considering \texttt{n} points to calculate a step. E.g.,
@@ -176,7 +175,7 @@ for the second order partial differential of the third order
 \end{equation}
 
 \subsection{Analytical theory on perturbations}
-\label{sec:org6fbf713}
+\label{sec:org838b447}
 On Kerner's paper, he uses perturbation theory to developed the analytical
 formulas that implies the existence of a clustering effect - traffic jams - even
 with extremely initial small perturbations \cite{kerner1993}.
@@ -186,11 +185,11 @@ the topic \cite{tremblay2017phy}, and a derivation of the spring-mass equations 
 was derived.
 
 \section{Bibliography Review}
-\label{sec:org2719cf8}
+\label{sec:orgeb24ab2}
 \subsection{Development of the field}
-\label{sec:org31837ad}
+\label{sec:orgcbdf3bb}
 \subsubsection{The dawn of numerical methods}
-\label{sec:orga09f713}
+\label{sec:org2e45f14}
 Numerical analysis dawn can be dated to
 1820 B.C. \cite{smith1930rhind}, with Egyptian's methods for
 calculating roots.
@@ -199,7 +198,7 @@ Although, modern methods for solving ODEs and PDEs were mainly
 developed after the discovery of \emph{Calculus}, in the 17th century.
 
 \subsubsection{Modern methods and Computing}
-\label{sec:orgecc9594}
+\label{sec:org46fcfcf}
 Currently, even though sophisticated mathematics has been
 developed to accurately simulate virtually any ODE, the mathematics
 for solving PDEs is still a open field. This is due to the nature of
@@ -207,7 +206,7 @@ PDEs which do not have a general method or procedure that is
 efficient, when simulating them.
 
 \subsubsection{Physics Informed Neural Networks}
-\label{sec:orga72aac0}
+\label{sec:org558bf63}
 There exists methods aimed at using the computational power available in computers
 to abstract the theoretical knowledge of Numerical Stability away from
 the problem. \emph{Physics Informed Neural Network}
@@ -216,21 +215,21 @@ possibility of making small adjustments to the resulting \emph{Numerical
 Method}, as will be discussed further on the results.
 
 \subsubsection{Numerical Instability}
-\label{sec:org44ca627}
+\label{sec:org0e0474f}
 Each equation, and it's constant parameters, will have specific method
 or a coupling of methods suited to the simulation of a PDE.
 
 \subsubsection{Grouping of methods and types of PDEs}
-\label{sec:orgc87c1e4}
+\label{sec:org109f829}
 Broadly, methods are associated with the kind of partial differential
 equation one is studying. These equations can be either \texttt{Hyperbolic},
 \texttt{Parabolic} or \texttt{Elliptic}. Also, equations can be mixed, e.g., \texttt{Mixed
 Parabolic-Hyperbolic}, etc.
 
 \subsection{Mathematical categorization of PDEs}
-\label{sec:org156a1ef}
+\label{sec:org26f9439}
 \subsubsection{Order of equations and systems}
-\label{sec:org3ba969a}
+\label{sec:orgeaabdf4}
 "The order of the system is the order of the highest derivative that occurs."
 \cite{john1978partial}. In which, irrespective of the free variable, we count the
 total number of derivatives. E.g., a sixth order equation, with mixed variables.
@@ -244,10 +243,10 @@ F(\mathbf{x}) = \dfrac{\partial{}^6 \mathbf{u}}{(\partial{x})^2(\partial{y})^2(\
 \end{equation}
 
 \subsubsection{Linearity, quasi-linearity and non-linearity}
-\label{sec:orgc3f33cb}
+\label{sec:orgaa23f18}
 \begin{enumerate}
 \item Linearity
-\label{sec:org6e3423b}
+\label{sec:org1dda5ae}
 
 Linearity is defined as not having any term in the \eqref{eq:PDE}, such that it's
 a result of a multiplication of two independent terms. The independent terms
@@ -265,7 +264,7 @@ u_{t} - \sum_{i,j=1}^{n}{a^{ij}u_{x_{i}x_{j}}} + \sum_{i}^{n}{b^{i}u_{x_{i}}} = 
 We see there is no non-linear terms, as the product \(u_{x_{i}}*u_{x_{j}}\), etc.
 
 \item Non-linear equations
-\label{sec:org289e430}
+\label{sec:org6e5e11a}
 \label{sec:non-linear}
 
 The physical model we are interested deals with an equation similar to the
@@ -284,7 +283,7 @@ E.i.,
 \end{equation}
 
 \item Quasi-linear equations
-\label{sec:orge65cc53}
+\label{sec:org898f047}
 
 A special kind of equations that follow under the category of non-linear
 equations are the quasi-linear equations. These have the non-linear terms which
@@ -299,7 +298,7 @@ u_t + c uu_{x} + u_{xxx} = 0
 \end{enumerate}
 
 \subsubsection{Elliptic, hyperbolic and parabolic PDEs}
-\label{sec:org5e5045c}
+\label{sec:orgc786b13}
 Given the general quasi-linear equation for a function \texttt{u},
 
 \begin{equation}
@@ -333,18 +332,18 @@ types of behaviors, regarding the \texttt{elliptic}, \texttt{hyperbolic} and \te
 characterization \cite{john1978partial}.
 
 \subsection{Numerical Methods implemented in Julia}
-\label{sec:org539b488}
+\label{sec:org9a7ee03}
 \label{sec:num-julia}
 
 \subsubsection{The language}
-\label{sec:org297c693}
+\label{sec:org938bb15}
 Julia was invented to be both highly performative and to be an unified general
 purpose language. It's sophisticated, meaning the language has polymorphism
 (\texttt{dispatches}), can be statistically of dynamically typed, has a powerful macro
 system, and can function as an scripting language.
 
 \subsubsection{PDEs}
-\label{sec:orgeeceec9}
+\label{sec:orga87431a}
 There exists a variety of libraries on \emph{numerical methods}
 available in modern languages. Most of them with ports of libraries
 written in C and FORTRAN. To list a few, from the \texttt{Julia}
@@ -366,7 +365,7 @@ documentation on available methods:
 \textbf{Source:} \url{https://github.com/JuliaPDE/SurveyofPDEPackages}
 \end{itemize}
 \subsection{PINN}
-\label{sec:org543aee8}
+\label{sec:org6f2153b}
 \label{sec:bib-PINN}
 
 Physics Informed Neural Networks have different use cases. One of them is
@@ -379,7 +378,7 @@ via the \textbf{Universal Approximation Theorem}. Specially, non-linear equation
 approximated with physics informed neural networks \cite{raissi2019physics}.
 
 \section{Materials and Methods}
-\label{sec:orgf00143e}
+\label{sec:org6eada4a}
 
 The materials used were:
 \begin{itemize}
@@ -395,55 +394,33 @@ literate programming environment suited to computer programming research and
 documentation.
 
 \subsection{Version Control}
-\label{sec:org01be186}
+\label{sec:orgb168ce4}
 The research was stored and gradually updated on GitHub, available at \url{https://github.com/BuddhiLW/wlq-carflow}. The structure of the root directory is the following:
 
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{shell}
 tree ../.. -d -I "ltximg"
 \end{minted}
 
-\begin{center}
-\begin{tabular}{llll}
-. &  &  & \\
-├── & Documents &  & \\
-│   & ├── & Conclusion & \\
-│   & │   & └── & resources\\
-│   & ├── & Proposal & \\
-│   & └── & projecto\textsubscript{estagio}\textsubscript{PedroGomes} & \\
-├── & Papers &  & \\
-├── & Research &  & \\
-│   & ├── & Bando & \\
-│   & ├── & CFD & \\
-│   & ├── & GeneralNotes & \\
-│   & ├── & IMPA & \\
-│   & │   & └── & figs\\
-│   & ├── & IntroCompPhysics & \\
-│   & │   & └── & Chap7\\
-│   & ├── & Kerner & \\
-│   & ├── & NeuralPDE & \\
-│   & ├── & Pertubations & \\
-│   & └── & wiki & \\
-│   & └── & img & \\
-└── & Resources &  & \\
-├── & Bibliography &  & \\
-├── & Books &  & \\
-├── & Gifs &  & \\
-├── & Literature &  & \\
-└── & img &  & \\
- &  &  & \\
-25 & directories &  & \\
-\end{tabular}
-\end{center}
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:dir} }
+  \includegraphics[width=0.45\linewidth]{Resources/img/directories.png}
+  \legend{Source: The authors}
+\end{figure}
 
 This way, were able to document and keep track of the work, based on \texttt{Documents}, \texttt{Papers}, \texttt{Reseach} and \texttt{Resources}.
 
 \subsection{Julia language}
-\label{sec:orgfb81aea}
+\label{sec:orgc25f8ab}
 
-Julia has been created by MIT personnel in order to fulfill segmented tasks usually handled by different languages, in the process of \texttt{scientific computing}. In our work, we used the libraries \texttt{NeuralPDE.jl} \cite{zubov2021neuralpde}, and the native capabilities of Julia, to compute. To plot graphics, we used both \texttt{GR} and \texttt{PyPlot} as out back-end for \texttt{Plots}.
+Julia has been created by MIT personnel in order to fulfill segmented tasks
+usually handled by different languages, in the process of \texttt{scientific
+computing}. In our work, we used the libraries \texttt{NeuralPDE.jl}
+\cite{zubov2021neuralpde}, and the native capabilities of Julia, to compute. To
+plot graphics, we used both \texttt{GR} and \texttt{PyPlot} as out back-end for \texttt{Plots}.
 
 \subsection{PINNs}
-\label{sec:orga094dc2}
+\label{sec:orgb9fe131}
 The package \texttt{NeuralPDE.jl} has documentation on a variety of physical equations,
 including non-linear equations and fluid equations. We used this package as a
 means to reproduce the fluid equations in \texttt{Traffic Flow} modeling, as it's also
@@ -454,7 +431,7 @@ architecture. Therefore, our program structurally resembles the symbolical
 notation used in mathematics.
 
 \subsection{Developed code}
-\label{sec:orgfd3f49a}
+\label{sec:orge8a8007}
 \label{sec:devcode}
 As exercise to sharpen intuition about programs and physics computational
 methods, simpler differential equations were solved. These were all done by
@@ -465,14 +442,14 @@ different point-approximations. These methods were tested in a category of
 equations on exponential decayments.
 
 \subsection{Stability Regions}
-\label{sec:orgb2f5d6a}
+\label{sec:org50bcb78}
 The stability region of a method is the region where, no matter the stepsize
 used, the solution steadily converges to the real behavior. Therefore, the
 accompanying plot for the simplified methods, discused in \ref{sec:devcode}, were
 done, as well as the plot of the numerical method against the analytical solution.
 
 \subsection{Pertubation theory}
-\label{sec:org8f98b7a}
+\label{sec:orgd910530}
 In the equations of motion of traffic jams, we need to understand pertubation
 theory, so to understand how small pertubations will lead to singularities.
 
@@ -480,11 +457,11 @@ Therefore, as part of the research, we derived the pertubation equation for the
 classical \texttt{mass-spring} problem.
 
 \section{Results and Discussion (§5)}
-\label{sec:org672e8b6}
+\label{sec:orgfe7694b}
 \subsection{Contribution to my formation}
-\label{sec:orgb605db2}
+\label{sec:orga89dadf}
 \subsubsection{Technical knowledge}
-\label{sec:orgc6eae55}
+\label{sec:orgc4360ac}
 While many physics techniques were acquired, regarding the field of Applied
 Numerical Methods, also I stayed in touch with all the programming required to
 lead such a task. Therefore, I acquired knowledge on many subjects concerning
@@ -499,7 +476,7 @@ impacted my interview for the Centro Nacional de Pesquisa em Energia e
 Materiais (CNPEM).
 
 \subsubsection{Self management}
-\label{sec:org16abfc8}
+\label{sec:orgfc96ccc}
 One of the most difficult aspects of carrying on the research was the
 motivational aspect. It's extremelly difficult to maintain a regular
 performance, even more so when it's hard to even measure this performance
@@ -510,8 +487,84 @@ put the topic aside and replan the research - has been one of the most important
 aspects of the research. Therefore, I learned to schedule and reschedule myself
 dynamically and eval if I'm or not on track for my deadlines and objectives.
 
-\subsection{Burguer 1-D with self-made Euler Explicit}
-\label{sec:org6abadd0}
+\subsection{Stiff equations}
+\label{sec:org76b94b9}
+We simulated the effects of stiffness in both \texttt{Ordinary Differential Equations}
+(ODEs) and \texttt{Partial Differential Equations} (PDEs). The discussion in this
+section will solemnly deal with notions concerning stiffness.
+
+We will discuss the source of \emph{stiffness}, as there is no general definition for
+the phenomena. Also, there is no mathematical formulation for it. Altough, the
+concept arrises often, and was first discovered in an \texttt{Chemical Reaction}
+modeling \cite{robertson1966solution}.
+
+\subsubsection{Methods relly on using the \texttt{f} form}
+\label{sec:org316c491}
+As numerical methods, be them Euler, Trapezoidal etc., use the fact
+that \(\dfrac{\partial{y_i}}{\partial{y_j}}=f_{ij}(y_1, y_2,
+\ldots)\). Then, use the evaluation of \(f_{ij}\), in a discrete step
+scheme, so to approximate the \(\mathbf{y}\) vector.
+
+Therefore, mapping this mathematical formula \(f_{ij}\) to a programming
+function can generalize the process and help to build many kinds of
+"evolvers". Each method will have a general rule for writting an evolver,
+because they appear out of analytical considerations on approximating functions.
+
+Each different solver will have different error approximations. And some methods
+may give rise to expurial behavior. Methods can be categorized as \emph{A-stable} or
+\emph{L-stable}, depending on the caractheristics and behavior of the method regarding
+a general model of a curve.
+
+\subsubsection{Factors with high exponents}
+\label{sec:org06878d1}
+Even though a term may not greatly influence the analytical behavior of a
+system, it may create the \emph{Stiffness} effect on numerical solvers.
+
+For example, the Robert's equation
+
+\begin{equation}
+\begin{aligned}
+{\dot {x}}=-0.04x+10^{4}y\cdot z
+{\dot {y}}=0.04x-10^{4}y\cdot z-3\cdot 10^{7}y^{2}
+{\dot {z}}=3\cdot 10^{7}y^{2}
+\end{aligned}
+\end{equation}
+
+Have term with coefficients of order \(10^{-2},\,10^{4},\,10^{7}\). Even though
+the main behaviour may be simply approximate to the terms of \(10^{7}\) order with
+high precision, when we give a numerical solver to simulate the equation, it can
+present expurious behavior due to this different order of coefficients. And,
+given a simplified analytical equation, there would be neglectable expurious
+behavior, for the same numerical methods.
+
+\subsubsection{Example}
+\label{sec:orgc19e7d9}
+A very simple equation of decayment can show us what stiffness means.
+
+\$y'(t)=-\(\lambda\)y(t),\quad t\(\ge\) 0,y(0)=1.\$
+
+The exact solution, in orange, is
+
+\(y(t)=e^{-\lambda{}t}\, with y(t)\to 0 as t\to \infty\).
+
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:burguer-square} Decay equation with different numerical methods}
+  \includegraphics[width=0.70\linewidth]{Resources/img/Figure_2.png}
+  \\  \legend{Source: the author. Red: Trap. (step=0.125); green: EuE (step=0.125); blue: EuE (step=0.25); orange: Analytical.}
+\end{figure}
+
+We see that Euler Explicit (EuE) gives us an unstable behavior. Increasing or
+periodical, for the stepsizes of 0.25 and 0.125 respectivetly. In contrast, the
+Trapezoidal method gives a quickly convergent approximation to the analytical
+behavior.
+
+For some special equations presenting \emph{Stiffness}, this expurious behavior is
+present for almost all stepsizes and methods used - unless we use very small
+stepsizes, which becomes computationally inefficient.
+
+\subsection{Burguer 1-D with self-made program - Euler Explicit}
+\label{sec:org8e946c7}
 
 We solved the partial differential equation of non-linear conventionm
 called Burguer's equation and described as,
@@ -520,7 +573,7 @@ $$\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} =
 0$$
 
 \subsubsection{Mathematically, using Forward Euler}
-\label{sec:orga23cd47}
+\label{sec:orge2d8a08}
 
 By Forward Euler,
 
@@ -529,10 +582,10 @@ $$\frac{u_i^{n+1}-u_i^n}{\Delta t} + u_i^n \frac{u_i^n-u_{i-1}^n}{\Delta x} = 0$
 $$u_i^{n+1} = u_i^n - u_i^n \frac{\Delta t}{\Delta x} (u_i^n - u_{i-1}^n)$$
 
 \subsubsection{Computation in Julia}
-\label{sec:org0af2d91}
+\label{sec:org2e5b517}
 \begin{enumerate}
 \item Chose the discretization of \(x\) and \(t\)
-\label{sec:org0c3b23f}
+\label{sec:orgc95adff}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 nx=100;
 # c=5;
@@ -546,7 +599,7 @@ t = range(0, stop=endtime, length=nt) # full range of time steps for which a sol
 \end{minted}
 
 \item Initial conditions
-\label{sec:org6fec842}
+\label{sec:org6ef4665}
 I have chose a square signal, as the initial condition
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 # Init array of ones at initial timestep
@@ -557,7 +610,7 @@ u_zero[0.5 .<= x .<= 10] .= 2  # Note use of . (dot) broadcasting syntax
 \end{minted}
 
 \item Solving the equations
-\label{sec:orgc403b62}
+\label{sec:orgfc96bd8}
 Create an empty matrix of the same size of the solutions we
 intend. Then, we can solve utilizing various methods. But, we used
 Euler Explicit for simplicity. 
@@ -584,15 +637,140 @@ ts = collect(t)
 
 plot(collect(x),collect(t),u'[1:1000,1:100],st=:surface, title="Burguer equation", xlabel="X", ylabel="Y", zlabel="U")
 \end{minted}
+
+\item Results
+\label{sec:orgba78843}
+
+When we use the \texttt{step function} and send it as an initial condition in the
+burguer's equation. We see that the square equation becomes a bell-shaped
+equation, evolving in time.
+
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:burguer-square} Burguer's with square wave}
+  \includegraphics[width=0.45\linewidth]{Resources/img/Burguer.png}
+  \includegraphics[width=0.45\linewidth]{Resources/img/Burguer2.png}
+  \\  %\legend{Fonte: Imagem de Kerner e Konhäuser \cite{kerner1993cluster}}
+\end{figure}
+
+A step decrease in the function can be seen. This \texttt{dissipation} effecit is not found in
+the equation. This is due to Euler Explicit method giving an exporious effect to
+the solution. E.i., this is a numerical-error driven effect.
+
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:burguer-square} Burguer's with square wave, views}
+  \includegraphics[width=0.45\linewidth]{Resources/img/burguerNkerner/Burguer_32.png}
+  \includegraphics[width=0.45\linewidth]{Resources/img/Burguer_13.png}
+  \\  %\legend{Fonte: Imagem de Kerner e Konhäuser \cite{kerner1993cluster}}
+\end{figure}
 \end{enumerate}
 
+\subsection{Comparison: Analytical equation and Euler Explicit}
+\label{sec:org7895e77}
+\subsubsection{Computation}
+\label{sec:org816223d}
+
+We will utilize the same algorithm, with a different initial condition. This
+time, we will use a normal wave, given by:
+
+\begin{equation}
+\begin{aligned}
+f(x) = (\frac{1}{(2*\sqrt{\pi}))}*e^{[(\frac{-1}{2})*(x-3)^2]} \, \land \, u(t=0,x) = f(x) \\
+\text{Domain: } x \in [0,10], \, t \in [0,20]
+\end{aligned}
+\end{equation}
+
+The program, ajusting for f(x),
+
+\begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
+nxx=100;
+delta_xx = 10/(nxx - 1)
+xx = range(0, stop=delta_xx*(nxx-1), length=nxx) 
+
+endTime = 20  
+nt = 1000    
+delta_t = endTime/nt  
+t = range(0, stop=endTime, length=nt)
+
+f(x) = (1/(2*√π))*exp((-1/2)*(x-3)^2)
+v_zero = f.(xx) 
+
+v_zero
+
+v=zeros((nxx,nt+1))
+v[:,1]=copy(v_zero)
+
+for n in 1:nt  
+    v[:,n+1] = copy(v[:,n]) 
+    for i in 2:nxx  
+	v[i,n+1] = v[i,n] - v[i,n] * delta_t/delta_xx * (v[i,n] - v[i-1,n])
+    end
+end
+
+using Plots; pyplot()
+
+xxs = collect(xx)
+ts = collect(t)
+
+plot(collect(xx),collect(t),v'[1:1000,1:100],st=:surface, title="Burguer equation Euler Explicit", xlabel="X", ylabel="Time", zlabel="V")
+\end{minted}
+
+\subsubsection{Analytical solution}
+\label{sec:org228e512}
+The solution to the Invicid Burguer Equation is:
+\begin{equation}
+\begin{aligned}
+u(x,t) = f(x - f(\xi)t)
+\end{aligned}
+\end{equation}
+
+in which \(f(x) = (\dfrac{1}{(2*\sqrt{\pi})})*e^{(-1/2)*(x-3)^2)}\), and \(\xi = 0\)
+therefore, \(f(\xi)= (\dfrac{1}{(2*\sqrt{\pi})})*e^{(-1/2)*(-3)^2)}=0.003134\)
+
+Finally, \(u(x,t)=f(x-0.00314t)\).
+
+\begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
+function u_real(x,t)
+    return (1/(2*√π))*exp((-1/2)*((x-00314*t)-3)^2)
+end
+\end{minted}
+\begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
+u_real_val = map(z -> map(x -> u_real(x,z), xx), t)
+\end{minted}
+
+\begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
+plot(collect(xx),collect(t),u_real_val,st=:surface, title="Burguer equation Analytical", xlabel="X", ylabel="Time", zlabel="V")
+\end{minted}
+
+\subsubsection{Comparison}
+\label{sec:orga43a14a}
+
+We see that both solutions shift to the right of the right axes with time, which
+is expect. But, the numerical method based on \texttt{Euler Explicit} gives a
+dissipation which is expurious. Furthermore, we see that the rate in which the
+wave propagates the \texttt{x-axis} in time is increased by the \texttt{dissipative numerical
+method}.
+
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:burguer-square} Burguer's with square wave}
+  \includegraphics[width=0.45\linewidth]{Resources/img/BurguerAnalEuler/Burguer_Anal1.png}
+  \includegraphics[width=0.45\linewidth]{Resources/img/BurguerAnalEuler/EulerExpicit_1.png}
+  \\  %\legend{Fonte: Imagem de Kerner e Konhäuser \cite{kerner1993cluster}}
+\end{figure}
+
+
+This behaviour is equivalent to the expuriousness saw in the study of
+\texttt{Stiffness}.
+
 \subsection{Kerner's reproduction through PINNs}
-\label{sec:org5f4cafb}
+\label{sec:org659aded}
 \subsubsection{Mathematical description}
-\label{sec:org0c3afa8}
+\label{sec:org8e302ee}
 \begin{enumerate}
 \item The System of Equations to solve
-\label{sec:orgcf7cfb0}
+\label{sec:org68f1b41}
 \begin{equation}
 \begin{aligned}
 \begin{cases}
@@ -610,7 +788,7 @@ q(x,t)=\rho(x,t)v(x,t)
 \end{equation}
 
 \item Boundary Conditions
-\label{sec:orgccee43e}
+\label{sec:orgc4e6b75}
 \begin{equation}
 \begin{aligned}
 q(0,t) &= q(L,t)\\
@@ -628,7 +806,7 @@ From the definition of \(q\) and the boundary condition (I),
 \end{enumerate}
 
 \subsubsection{The program}
-\label{sec:orgfbca5f7}
+\label{sec:org161d5a3}
 
 We will use \texttt{NeuralPDE.jl} and other packages to model and optimize our
 simulation. \texttt{ModelingToolkit.jl} makes possible to write our equations
@@ -638,7 +816,7 @@ partially derivate the symbolical equations.
 
 \begin{enumerate}
 \item Imports
-\label{sec:org74f7285}
+\label{sec:org75211a0}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
 import ModelingToolkit: Interval, infimum, supremum
@@ -646,7 +824,7 @@ import Flux: flatten, params
 \end{minted}
 
 \item The symbolical equations
-\label{sec:org58b0347}
+\label{sec:orgb0e2c86}
 
 Writting the equations following all constrains discussed in Section 1, in
 Kerner's paper \cite{kerner1993},
@@ -709,7 +887,7 @@ domains = [t ∈ Interval(0.0,1000.0),
 \end{minted}
 
 \item Neural Network setup
-\label{sec:orgca8cebc}
+\label{sec:orgd61ddd2}
 Now, we choose how detailed we want the equations to be solved. This parameters
 run a simulation that needs \textasciitilde{}5GB of RAM to save the resolution in memory.
 
@@ -740,7 +918,7 @@ end
 \end{minted}
 
 \item Resolution computation
-\label{sec:orgc0c904f}
+\label{sec:org79582cd}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 res = GalacticOptim.solve(prob,BFGS(); cb = cb, maxiters=100) #5000
 phi = discretization.phi
@@ -750,11 +928,11 @@ ts,xs = [infimum(d.domain):0.1:supremum(d.domain) for d in domains]
 acum =  [0;accumulate(+, length.(initθ))]
 sep = [acum[i]+1 : acum[i+1] for i in 1:length(acum)-1]
 minimizers_ = [res.minimizer[s] for s in sep]
-u_predict  = [[phi[i]([t,x],minimizers_[i])[1] for t in ts  for x in xs] for i in 1:2]
+u_predict  = [[phi[i]([t,x],minimizers_[i])[1] for t in ts for x in xs] for i in 1:2]
 \end{minted}
 
 \item Plot 2D
-\label{sec:org79ce62b}
+\label{sec:orgc478cca}
 Finally, we plot the solution in 2D,
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 # using Plots
@@ -769,7 +947,7 @@ end
 \end{minted}
 
 \item Plot 3D in time (Gif)
-\label{sec:org9c09303}
+\label{sec:orgb08680b}
 
 We reshape the output of the \texttt{res} variable (resolution) in a matrix form, such
 we can plot it against each \texttt{t} and \texttt{x}.
@@ -804,10 +982,10 @@ plot_(res)
 \end{enumerate}
 
 \subsubsection{Results}
-\label{sec:orge0274e4}
+\label{sec:org3543f28}
 \begin{enumerate}
 \item 2D Plots
-\label{sec:org16394f4}
+\label{sec:orge00c713}
 
 \begin{figure}[!htb]
   \centering
@@ -816,7 +994,6 @@ plot_(res)
   \includegraphics[width=0.45\linewidth]{Resources/img/sol_variable_corrected_bcs32.png}
   \\ %\legend{}
 \end{figure}
-\clearpage
 
 \begin{figure}[!htb]
   \centering
@@ -826,7 +1003,7 @@ plot_(res)
 \end{figure}
 
 \item 3D Plots
-\label{sec:org671aac5}
+\label{sec:orgfd4cd28}
 
 \begin{figure}[!htb]
   \centering
@@ -834,7 +1011,6 @@ plot_(res)
   \includegraphics[width=0.45\linewidth]{Resources/img/Kerner-3d-1.jpeg}
   \\ \legend{Source: The authors}
 \end{figure}
-\clearpage
 
 \begin{figure}[!htb]
   \centering
@@ -842,7 +1018,6 @@ plot_(res)
   \includegraphics[width=0.45\linewidth]{Resources/img/Kerner-3d-1.jpeg}
   \\ \legend{Source: The authors}
 \end{figure}
-\clearpage
 
 \begin{figure}[!htb]
   \centering
@@ -853,9 +1028,9 @@ plot_(res)
 \end{enumerate}
 
 \subsection{Research on basic topics}
-\label{sec:org984ff19}
+\label{sec:org2974ffe}
 \subsubsection{Pertubation theory}
-\label{sec:orgdc7c4f9}
+\label{sec:orgffea163}
 The derivation of the pertubation of the \texttt{mass-spring} can be seen at
 GitHub.
 
@@ -877,19 +1052,26 @@ Then, we arrive at
 
 \begin{enumerate}
 \item Where this knowledge is used in Traffic theory
-\label{sec:org04380d7}
+\label{sec:org14c6700}
 In Section 2, item \emph{B. Critical fluctuation}, Pertubation theory is used.
+
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:perturbation} Pertubation derivation on Navier-Stokes equation}
+  \includegraphics[width=0.45\linewidth]{Resources/img/kerner-pertubation.png}
+  \\ %\legend{}
+\end{figure}
 \end{enumerate}
 
 \subsubsection{Steps to derive the Stability Region}
-\label{sec:orgd820d0a}
+\label{sec:org4200366}
 \begin{enumerate}
 \item Euler Implicit
-\label{sec:org72a0931}
+\label{sec:orgb623d32}
 
 From the definition of the method,
 \begin{equation}
-\begin{aligned}
+  \begin{aligned}
 y_{n+1}&= y_n + \Delta{t}.f_n\\
 \implies y_{n+1} &= y_{n} + \Delta{t}.\lambda{} y_{n}\\
 \Leftrightarrow y_{n+1} &= y_{n}.(1+ \Delta{t}\lambda{}), \, \forall{n}\\
@@ -927,12 +1109,23 @@ f(a,b) = sqrt((a-1)^2 + b^2)
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 plot(f ≫ 1, fill=(0,:blue))
 \end{minted}
+
+\begin{enumerate}
+\item Plot of the stability region
+\label{sec:orgdc9752d}
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:stabEI} Stability region, Euler Implicit}
+  \includegraphics[width=0.45\linewidth]{Resources/img/curve2.png}
+  \\ %\legend{}
+\end{figure}
+\end{enumerate}
 \item Euler Explicit
-\label{sec:org76650d0}
+\label{sec:orge6e63ff}
 
 From the definition of the method,
 \begin{equation}
-\begin{aligned}
+  \begin{aligned}
 y_{n+1}&= y_n + \Delta{t}.f_n\\
 \implies y_{n+1} &= y_{n} + \Delta{t}.\lambda{} y_{n}\\
 \Leftrightarrow y_{n+1} &= y_{n}.(1+ \Delta{t}\lambda{}), \, \forall{n}\\
@@ -957,18 +1150,31 @@ f(a,b) = sqrt((a+1)^2 + b^2)
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 plot(f ≪ 1, fill=(0,:blue))
 \end{minted}
+
+\begin{enumerate}
+\item Plot of the stability region
+\label{sec:orgffa2514}
+\begin{figure}[!htb]
+  \centering
+  \caption{\label{fig:stabEI} Stability region, Euler Implicit}
+  \includegraphics[width=0.45\linewidth]{Resources/img/curve.png}
+  \\ %\legend{}
+\end{figure}
+\begin{enumerate}
 \item PINN
-\label{sec:orgb9dd019}
+\label{sec:orgafb5f91}
 Via the Universal Approximation Theorem \ref{sec:bib-PINN}, Neural Networks have a
 stability region that catches all the complex plane, in so far we choose enough
 neural nets.
 \end{enumerate}
+\end{enumerate}
+\end{enumerate}
 
 \subsubsection{Stiffness}
-\label{sec:org1494448}
+\label{sec:org5dde9b8}
 \begin{enumerate}
-\item The stiff decayment equation
-\label{sec:orgde07914}
+\item The stiff decayment equation (a particular example)
+\label{sec:orgc285e15}
 \begin{equation}
 \begin{aligned}
 x(t)=x_{0}\left(-{\frac {1}{999}}e^{-1000t}+{\frac {1000}{999}}e^{-t}\right)\approx x_{0}e^{-t}.
@@ -979,13 +1185,13 @@ x(t)=x_{0}\left(-{\frac {1}{999}}e^{-1000t}+{\frac {1000}{999}}e^{-t}\right)\app
 So, that \(f(y,t) = x'(t) = x_0.(\frac{1000}{999}e^{-1000t} - \frac{1000}{999}e^{-t})\)
 
 \item Numerical Methods
-\label{sec:org430136f}
+\label{sec:org6bfd6bf}
 \begin{enumerate}
 \item Euler Explicit (EuE), h=1/4
-\label{sec:org03f71c7}
+\label{sec:org2b13d14}
 \begin{enumerate}
 \item The method
-\label{sec:org163ca8d}
+\label{sec:orge058639}
 \texttt{Euler Explicit}
 
 \begin{equation}
@@ -998,7 +1204,7 @@ y_{n+1}&=y_n + \Delta{t}.f(y_n, t_n) \\
 \(\gamma\) will be your step functions.
 
 \item \texttt{f} function
-\label{sec:orga5a5027}
+\label{sec:orgc0d9075}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 function f₁(n, Δt,x₀=1.0)
     return x₀*((1000/999)*exp(-1000*n*Δt)-(1000/999)*exp(-n*Δt))
@@ -1014,7 +1220,7 @@ f₁
 \end{verbatim}
 
 \item EuE implementation
-\label{sec:org3054b5d}
+\label{sec:org94c9077}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 function EuE(y,f,n,Δt)
     return y[n] + Δt*f(y[n], n)
@@ -1027,7 +1233,7 @@ EuE
 
 \begin{enumerate}
 \item EuE step function
-\label{sec:org371a047}
+\label{sec:org9acaf11}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 function γ₁(f, y::Vector{Float64}, Δt)
     yl = copy(y)
@@ -1043,7 +1249,7 @@ end
 \end{verbatim}
 
 \item Initial condition
-\label{sec:org0da6ae2}
+\label{sec:org0f2676e}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 y₀=[1.]
 \end{minted}
@@ -1052,7 +1258,7 @@ y₀=[1.]
 [1.0]
 \end{verbatim}
 \item Grid
-\label{sec:org4bda126}
+\label{sec:org001147a}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 tf = 1
 Δt = 1/4
@@ -1064,7 +1270,7 @@ t = 0:Δt:tf
 \end{verbatim}
 
 \item Step function test
-\label{sec:org6d8dc37}
+\label{sec:orge2f6c55}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 γ₁(f₁, y₀, Δt)
 \end{minted}
@@ -1086,7 +1292,7 @@ st2 = γ₁(f₁, st1, Δt)
 \end{enumerate}
 
 \item Evolver
-\label{sec:orgfee0bbe}
+\label{sec:org12485da}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 function evolveₖ(method, Δt, t_final=1.0, y₀=1.0, f=f₁)
 
@@ -1116,10 +1322,10 @@ evolveₖ
 \end{verbatim}
 
 \item Tests
-\label{sec:org5375acb}
+\label{sec:orgde1ebc7}
 \begin{enumerate}
 \item Calling the Evolver
-\label{sec:org11b2139}
+\label{sec:orga38b90c}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 res = evolveₖ(γ₁, Δt, 10.0, y₀, f₁)
 \end{minted}
@@ -1131,7 +1337,7 @@ Output suppressed (line too long)
 \end{enumerate}
 
 \item Euler Explicit (EuE), h=1/8
-\label{sec:org9ddc6f4}
+\label{sec:orga465418}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 Δt = 1/8
 \end{minted}
@@ -1150,10 +1356,10 @@ Output suppressed (line too long)
 \end{verbatim}
 
 \item Adams-Moulton, h=1/8 (Trapezoidal Method)
-\label{sec:org7e3a7c3}
+\label{sec:orgc4b95b2}
 \begin{enumerate}
-\item The method
-\label{sec:org08dbcc7}
+  \item The method
+\label{sec:org316a53d}
 \texttt{Trapezoidal}
 \begin{equation}
 \begin{aligned}
@@ -1161,7 +1367,7 @@ y_{n+1}&=y_n + \dfrac{1}{2}\Delta{t}.(f(y_n, t_n) + f(y_{n+1}, t_{n+1}))
 \end{aligned}
 \end{equation}
 \item AM Evolver
-\label{sec:org8124598}
+\label{sec:orgf254161}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 function AM(y,f,n,Δt)
     return y[n] + (1/2)*(Δt)*(f(n,Δt)+f(n+1,Δt))
@@ -1173,7 +1379,7 @@ AM
 \end{verbatim}
 
 \item AM step function
-\label{sec:orgc0c2afb}
+\label{sec:org83db08f}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 function γ₂(f, y::Vector{Float64}, Δt)
     yl = copy(y)
@@ -1189,7 +1395,7 @@ end
 \end{verbatim}
 
 \item Calling the Evolver
-\label{sec:org8e1f817}
+\label{sec:org6863662}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 res3 = evolveₖ(γ₂, Δt, 10.0, y₀, f₁)
 \end{minted}
@@ -1200,7 +1406,7 @@ Output suppressed (line too long)
 \end{enumerate}
 
 \item Analytical
-\label{sec:org2e5d6b8}
+\label{sec:org7d2f946}
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 ts = 0:Δt:10
 \end{minted}
@@ -1219,48 +1425,25 @@ ys = ((-1/999)*exp.(-1000*t)+(1000/999)*exp.(-t))
 \end{verbatim}
 
 \item Plots
-\label{sec:org413a75b}
+\label{sec:orgdb08cc9}
 
 Using \texttt{PyPlot.jl} backend,
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 pyplot()
 \end{minted}
 
-\begin{verbatim}
-Plots.PyPlotBackend()
-\end{verbatim}
-
-
-
 We create a figure on top of each other, for each simulation,
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 Plots.plot(res[1], res[2][length(res[2])], label="EuE 1/4")
 \end{minted}
 
-\begin{verbatim}
-Plot{Plots.GRBackend() n=1}
-\end{verbatim}
-
-
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 Plots.plot!(res2[1], res2[2][length(res2[2])], label="EuE 1/8")
 \end{minted}
 
-\begin{verbatim}
-Plot{Plots.GRBackend() n=3}
-\end{verbatim}
-
-
-
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
 Plots.plot!(res3[1], res3[2][length(res3[2])], label="Trapezoidal 1/8")
 \end{minted}
-
-\begin{verbatim}
-Plot{Plots.GRBackend() n=2}
-\end{verbatim}
-
-
 
 Finally, we plot the joing figure,
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
@@ -1268,7 +1451,7 @@ PyPlot.plot(ts,ys, label='Analytical')
 \end{minted}
 
 \item Result
-\label{sec:orge170292}
+\label{sec:orgfafb198}
 
 We see that the Euler Explicit method fail to approximate the \emph{stiff equation}.
 In comparison, the Trapezoidal Method lies on the stability region for the
@@ -1280,19 +1463,18 @@ approximation equation. Therefore, the behavior follows the analytical one
   \includegraphics[width=0.45\linewidth]{Resources/img/exponential.png}
   \\ %\legend{}
 \end{figure}
-\clearpage
 \end{enumerate}
 \end{enumerate}
 
 \subsubsection{Nth-order approximation}
-\label{sec:org8d5d0ee}
+\label{sec:org8c5ba0a}
 Let \(u_i\) be the \texttt{i-th} node on our approximation grid. Then, we can create a
 \emph{Taylor Expansion} forward and backwards, considering neighboring nodes, in order
 to approximate a point-node.
 
 \begin{enumerate}
 \item Third-order approximation of second-order differential equation derivation
-\label{sec:orgda61e51}
+\label{sec:org5785936}
 By \texttt{Taylor Expansion} on backwards expansion on \(u_{i+1}\) and forward on
 \(u_{i-1}\), we can derive an expression for \(u_i\),
 \begin{equation}
@@ -1318,7 +1500,7 @@ Summing both terms and isolating
 \end{aligned}
 \end{equation}
 \item Algorithm for Kerner's paper
-\label{sec:org11ae2af}
+\label{sec:org3d2b2d2}
 
 Considering the general formula for each algorithmic step, we have,
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=false,bgcolor=LightGray]{julia}
@@ -1384,10 +1566,10 @@ end
 \end{enumerate}
 
 \subsubsection{A-stable and L-stable}
-\label{sec:orgebec159}
+\label{sec:org32c6307}
 \begin{enumerate}
 \item A-stable
-\label{sec:org2499429}
+\label{sec:org46b86b8}
 
 \begin{quote}
 The solution of this equation is \(y(t) = e^{kt}\). This solution
@@ -1403,14 +1585,14 @@ Not necessarily converges fast, or accurately. But, goes to the right
 values over large times.
 
 \item L-stable
-\label{sec:org46add7d}
+\label{sec:org2ea34a4}
 \texttt{A-stable} and the growth-factor goes to zero, as z goes to infinity
 (converges even for really large steps). Therefore, \texttt{L-stability} is more
 restrict than \texttt{A-stability}. L-stable methods are, necessarily, A-stable.
 \end{enumerate}
 
 \section{Conclusion (§6)}
-\label{sec:org36e2719}
+\label{sec:orgfaa285c}
 The use of PINNs got us closer to reproducing Kerner's
 results. But, at the same time, the pigtail of using a method. This method
 hide us the ability of adjusting the discretization. Once the results were not
@@ -1425,8 +1607,8 @@ equation to be stiff.
 
 The computations made in this work were: a diversity of tries regarding equation-parameters on
 Navier-Stoker's equation; we also programmed a program to solve the 1D-Burguer's
-equation successefully. A program has began to be develep that use Classical
-Methods to solve Kerner's equation, which consistend in a five-point
+equation successfully. A program has began to be develop that use Classical
+Methods to solve Kerner's equation, which consisted in a five-point
 approximation on space and a back-wards approximation on time.
 
 \bibliography{../../../../Bibliography/collection}

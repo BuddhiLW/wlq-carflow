@@ -293,12 +293,13 @@ PyPlot.plot(ts,ys)
 ** Methods relly on using the =f= form
 As numerical methods, be them Euler, Trapezoidal etc., use the fact
 that $\dfrac{\partial{y_i}}{\partial{y_j}}=f_{ij}(y_1, y_2,
-\ldots)$. Then, use the evaluation of $f_{ij}$, in a descrite step
-scheme, so to aproximate the $\mathbf{y}$ vector.
+\ldots)$. Then, use the evaluation of $f_{ij}$, in a discrete step
+scheme, so to approximate the $\mathbf{y}$ vector.
 
-Therefore, mappinh this mathematical formula $f_{ij}$ to a programming
-function can generalize the process and help building many
-steper-evolvers, given a method.
+Therefore, mapping this mathematical formula $f_{ij}$ to a programming
+function can generalize the process and help to build many kinds of
+"evolvers". Each method will have a general rule for writting an evolver,
+because they appear out of analytical considerations on approximating functions.
 
 * A-stable and L-stable
 ** A-stable
