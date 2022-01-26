@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{function} \PYG{n}{evolveₖ}\PYG{p}{(}\PYG{n}{method}\PYG{p}{,} \PYG{n}{Δt}\PYG{p}{,} \PYG{n}{t\PYGZus{}final}\PYG{o}{=}\PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{n}{y₀}\PYG{o}{=}\PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{n}{f}\PYG{o}{=}\PYG{n}{f₁}\PYG{p}{)}
+
+    \PYG{n}{T} \PYG{o}{=} \PYG{n}{y₀}
+    \PYG{n}{t} \PYG{o}{=} \PYG{l+m+mf}{0.0}
+
+    \PYG{n}{ts} \PYG{o}{=} \PYG{p}{[}\PYG{n}{t}\PYG{p}{]}
+    \PYG{n}{results} \PYG{o}{=} \PYG{p}{[}\PYG{n}{T}\PYG{p}{]}
+
+    \PYG{k}{while} \PYG{n}{t} \PYG{o}{\PYGZlt{}} \PYG{n}{t\PYGZus{}final}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{ITl} \PYG{o}{=} \PYG{n}{method}\PYG{p}{(}\PYG{n}{f}\PYG{p}{,}\PYG{n}{T}\PYG{p}{,}\PYG{n}{Δt}\PYG{p}{)} \PYG{c}{\PYGZsh{} new}
+
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{IT} \PYG{o}{=} \PYG{n}{copy}\PYG{p}{(}\PYG{n}{Tl}\PYG{p}{)}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Ipush!}\PYG{p}{(}\PYG{n}{results}\PYG{p}{,} \PYG{n}{T}\PYG{p}{)}
+
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{It} \PYG{o}{+=} \PYG{n}{Δt}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Ipush!}\PYG{p}{(}\PYG{n}{ts}\PYG{p}{,} \PYG{n}{t}\PYG{p}{)}
+    \PYG{k}{end}
+
+    \PYG{k}{return} \PYG{n}{ts}\PYG{p}{,} \PYG{n}{results}
+\PYG{k}{end}
+
+\end{Verbatim}

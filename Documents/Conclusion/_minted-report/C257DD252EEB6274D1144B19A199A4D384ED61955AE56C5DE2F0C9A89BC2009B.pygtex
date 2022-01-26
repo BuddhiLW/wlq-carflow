@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{using} \PYG{n}{NeuralPDE}\PYG{p}{,} \PYG{n}{Flux}\PYG{p}{,} \PYG{n}{ModelingToolkit}\PYG{p}{,} \PYG{n}{GalacticOptim}\PYG{p}{,} \PYG{n}{Optim}\PYG{p}{,} \PYG{n}{DiffEqFlux}
+\PYG{k}{import} \PYG{n}{ModelingToolkit}\PYG{o}{:} \PYG{n}{Interval}\PYG{p}{,} \PYG{n}{infimum}\PYG{p}{,} \PYG{n}{supremum}
+\PYG{k}{import} \PYG{n}{Flux}\PYG{o}{:} \PYG{n}{flatten}\PYG{p}{,} \PYG{n}{params}
+\end{Verbatim}

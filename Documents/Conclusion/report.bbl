@@ -53,4 +53,12 @@ Dispon{\'\i}vel em: \url{http://dx.doi.org/10.1103/physreve.48.r2335}.}
 \emph{Graduate studies in mathematics}, Rhode Island, USA, v.~19, n.~4, p.~7,
   1998.}
 
+\bibitem{raissi2019physics}
+\abntrefinfo{Raissi, Perdikaris e Karniadakis}{RAISSI; PERDIKARIS;
+  KARNIADAKIS}{2019}
+{RAISSI, M.; PERDIKARIS, P.; KARNIADAKIS, G.~E. Physics-informed neural
+  networks: A deep learning framework for solving forward and inverse problems
+  involving nonlinear partial differential equations.
+\emph{Journal of Computational Physics}, Elsevier, v.~378, p. 686--707, 2019.}
+
 \end{thebibliography}

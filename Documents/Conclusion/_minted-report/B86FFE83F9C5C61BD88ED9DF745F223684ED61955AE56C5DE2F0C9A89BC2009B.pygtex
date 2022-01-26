@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{st1} \PYG{o}{=} \PYG{n}{γ₁}\PYG{p}{(}\PYG{n}{f₁}\PYG{p}{,} \PYG{n}{y₀}\PYG{p}{,} \PYG{n}{Δt}\PYG{p}{)}
+\PYG{n}{st2} \PYG{o}{=} \PYG{n}{γ₁}\PYG{p}{(}\PYG{n}{f₁}\PYG{p}{,} \PYG{n}{st1}\PYG{p}{,} \PYG{n}{Δt}\PYG{p}{)}
+\PYG{n}{γ₁}\PYG{p}{(}\PYG{n}{f₁}\PYG{p}{,} \PYG{n}{st2}\PYG{p}{,} \PYG{n}{Δt}\PYG{p}{)}
+\end{Verbatim}

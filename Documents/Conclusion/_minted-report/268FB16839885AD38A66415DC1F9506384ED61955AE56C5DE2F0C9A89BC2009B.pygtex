@@ -1,0 +1,51 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nd}{@parameters} \PYG{n}{t}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{N}\PYG{p}{,} \PYG{n}{L}\PYG{p}{,} \PYG{n}{ρ\PYGZus{}hat}\PYG{p}{,} \PYG{n}{μ}\PYG{p}{,} \PYG{n}{c₀}\PYG{p}{,} \PYG{n}{τ}\PYG{p}{,} \PYG{n}{L}\PYG{p}{,} \PYG{n}{l}\PYG{p}{,}\PYG{n}{vₕ}\PYG{p}{,} \PYG{n}{k}\PYG{p}{,} \PYG{n}{m}\PYG{p}{,} \PYG{n}{ω}\PYG{p}{,} \PYG{n}{λ}\PYG{p}{,} \PYG{n}{γ}
+\PYG{n+nd}{@variables} \PYG{n}{v}\PYG{p}{(}\PYG{o}{..}\PYG{p}{),} \PYG{n}{ρ}\PYG{p}{(}\PYG{o}{..}\PYG{p}{)}
+\PYG{c}{\PYGZsh{} ρ\PYGZus{}hat=0.89;}
+\PYG{n}{m}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{μ}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{c}{\PYGZsh{}choose as we like}
+\PYG{n}{τ}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{c}{\PYGZsh{}choose as we like}
+\PYG{c}{\PYGZsh{} l=sqrt(μ*τ/ρ\PYGZus{}hat);}
+
+\PYG{n}{N} \PYG{o}{=} \PYG{l+m+mi}{168}\PYG{p}{;}
+\PYG{n}{ρₕ} \PYG{o}{=} \PYG{l+m+mf}{0.168}\PYG{p}{;}
+\PYG{n}{L}\PYG{o}{=}\PYG{n}{N}\PYG{o}{/}\PYG{n}{ρₕ}\PYG{p}{;}
+\PYG{n}{δρ₀} \PYG{o}{=} \PYG{l+m+mf}{0.02}\PYG{p}{;}
+\PYG{n}{δv₀} \PYG{o}{=} \PYG{l+m+mf}{0.01}\PYG{p}{;}
+\PYG{n}{vₕ} \PYG{o}{=} \PYG{l+m+mf}{5.0461}\PYG{o}{*}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{o}{+}\PYG{n}{exp}\PYG{p}{((}\PYG{n}{ρₕ}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.25}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{0.06}\PYG{p}{))}\PYG{o}{\PYGZca{}\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{3.72}\PYG{o}{*}\PYG{l+m+mi}{10}\PYG{o}{\PYGZca{}\PYGZhy{}}\PYG{l+m+mi}{6}\PYG{p}{);}
+\PYG{c}{\PYGZsh{} ρₕ=N/L;}
+\PYG{n}{k}\PYG{o}{=}\PYG{l+m+mi}{2}\PYG{n+nb}{π}\PYG{o}{/}\PYG{n}{L}\PYG{p}{;}
+
+\PYG{n}{c₀}\PYG{o}{=} \PYG{l+m+mf}{1.8634}\PYG{p}{;}
+\PYG{n}{Dt} \PYG{o}{=} \PYG{n}{Differential}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)}
+\PYG{n}{Dx} \PYG{o}{=} \PYG{n}{Differential}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+\PYG{n}{Dxx} \PYG{o}{=} \PYG{n}{Differential}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{o}{\PYGZca{}}\PYG{l+m+mi}{2}
+
+\PYG{c}{\PYGZsh{} δρₛ(x) = δρ₀*exp(complex(0,1)*k*x);}
+\PYG{n}{λ}\PYG{o}{=}\PYG{n}{k}\PYG{o}{\PYGZca{}}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{c₀}\PYG{o}{\PYGZca{}}\PYG{l+m+mi}{2}\PYG{o}{/}\PYG{l+m+mi}{100}
+\PYG{n}{ω}\PYG{o}{=}\PYG{n}{k}\PYG{o}{*}\PYG{p}{(}\PYG{n}{vₕ}\PYG{o}{+}\PYG{n}{c₀}\PYG{p}{)}
+\PYG{n}{γ}\PYG{o}{=}\PYG{n}{complex}\PYG{p}{(}\PYG{n}{λ}\PYG{p}{,}\PYG{n}{ω}\PYG{p}{)}
+
+\PYG{n}{δρ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{o}{=}\PYG{n}{δρ₀}\PYG{o}{*}\PYG{n}{exp}\PYG{p}{(}\PYG{n}{complex}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{k}\PYG{o}{*}\PYG{n}{x}\PYG{p}{))}\PYG{o}{*}\PYG{n}{exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{γ}\PYG{o}{*}\PYG{n}{t}\PYG{p}{)}
+\PYG{n}{δv}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{o}{=}\PYG{n}{δv₀}\PYG{o}{*}\PYG{n}{exp}\PYG{p}{(}\PYG{n}{complex}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{k}\PYG{o}{*}\PYG{n}{x}\PYG{p}{))}\PYG{o}{*}\PYG{n}{exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{γ}\PYG{o}{*}\PYG{n}{t}\PYG{p}{)}
+
+\PYG{c}{\PYGZsh{} Only real part}
+\PYG{n}{δρᵣ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{o}{=}\PYG{n}{δρ₀}\PYG{o}{*}\PYG{n}{cos}\PYG{p}{(}\PYG{n}{k}\PYG{o}{*}\PYG{n}{x}\PYG{p}{)}\PYG{o}{*}\PYG{n}{cos}\PYG{p}{(}\PYG{n}{ω}\PYG{o}{*}\PYG{n}{t}\PYG{p}{)}\PYG{n}{exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{λ}\PYG{o}{*}\PYG{n}{t}\PYG{p}{)}
+\PYG{n}{δvᵣ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{o}{=}\PYG{n}{δv₀}\PYG{o}{*}\PYG{n}{cos}\PYG{p}{(}\PYG{n}{k}\PYG{o}{*}\PYG{n}{x}\PYG{p}{)}\PYG{o}{*}\PYG{n}{cos}\PYG{p}{(}\PYG{n}{ω}\PYG{o}{*}\PYG{n}{t}\PYG{p}{)}\PYG{n}{exp}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{λ}\PYG{o}{*}\PYG{n}{t}\PYG{p}{)}
+
+\PYG{c}{\PYGZsh{}2D PDE}
+\PYG{n}{eqs}  \PYG{o}{=} \PYG{p}{[}\PYG{n}{Dt}\PYG{p}{(}\PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{))} \PYG{o}{+} \PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{o}{*}\PYG{n}{Dx}\PYG{p}{(}\PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{))} \PYG{o}{\PYGZhy{}} \PYG{p}{(}\PYG{n}{μ}\PYG{o}{/}\PYG{n}{ρ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{))}\PYG{o}{*}\PYG{n}{Dxx}\PYG{p}{(}\PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{))} \PYG{o}{+} \PYG{p}{(}\PYG{n}{c₀}\PYG{o}{\PYGZca{}}\PYG{l+m+mi}{2}\PYG{o}{/}\PYG{n}{ρ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{))}\PYG{o}{*}\PYG{n}{Dx}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{))} \PYG{o}{\PYGZhy{}} \PYG{p}{(}\PYG{l+m+mf}{5.0461}\PYG{o}{*}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{o}{+}\PYG{n}{exp}\PYG{p}{((}\PYG{n}{ρ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.25}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{0.06}\PYG{p}{))}\PYG{o}{\PYGZca{}\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{3.72}\PYG{o}{*}\PYG{l+m+mi}{10}\PYG{o}{\PYGZca{}\PYGZhy{}}\PYG{l+m+mi}{6}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{))}\PYG{o}{/}\PYG{n}{τ} \PYG{o}{\PYGZti{}} \PYG{l+m+mi}{0}\PYG{p}{,}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{IDt}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{))} \PYG{o}{+} \PYG{n}{Dx}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{o}{*}\PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{))} \PYG{o}{\PYGZti{}} \PYG{l+m+mi}{0}\PYG{p}{]}
+
+\PYG{c}{\PYGZsh{} Initial and boundary conditions}
+\PYG{n}{bcs} \PYG{o}{=} \PYG{p}{[}\PYG{n}{ρ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZti{}} \PYG{n}{ρ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{L}\PYG{p}{),}
+       \PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZti{}} \PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{L}\PYG{p}{),}
+       \PYG{n}{Dt}\PYG{p}{(}\PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{))} \PYG{o}{\PYGZti{}} \PYG{n}{Dt}\PYG{p}{(}\PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{L}\PYG{p}{)),}
+       \PYG{c}{\PYGZsh{} max(ρ(t,x)) \PYGZti{} ρₕ,}
+       \PYG{n}{ρ}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)} \PYG{o}{\PYGZti{}} \PYG{n}{ρₕ} \PYG{o}{+} \PYG{n}{δρᵣ}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{x}\PYG{p}{),}
+       \PYG{n}{v}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)} \PYG{o}{\PYGZti{}} \PYG{n}{vₕ} \PYG{o}{+} \PYG{n}{δvᵣ}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)]}
+
+\PYG{c}{\PYGZsh{} Space and time domains}
+\PYG{n}{domains} \PYG{o}{=} \PYG{p}{[}\PYG{n}{t} \PYG{o}{∈} \PYG{n}{Interval}\PYG{p}{(}\PYG{l+m+mf}{0.0}\PYG{p}{,}\PYG{l+m+mf}{3000.0}\PYG{p}{),}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{I}   \PYG{n}{x} \PYG{o}{∈} \PYG{n}{Interval}\PYG{p}{(}\PYG{l+m+mf}{0.0}\PYG{p}{,}\PYG{n}{L}\PYG{p}{)]}
+\end{Verbatim}

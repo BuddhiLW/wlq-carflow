@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{function} \PYG{n}{EuE}\PYG{p}{(}\PYG{n}{y}\PYG{p}{,}\PYG{n}{f}\PYG{p}{,}\PYG{n}{n}\PYG{p}{,}\PYG{n}{Δt}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{y}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{+} \PYG{n}{Δt}\PYG{o}{*}\PYG{n}{f}\PYG{p}{(}\PYG{n}{y}\PYG{p}{[}\PYG{n}{n}\PYG{p}{],} \PYG{n}{n}\PYG{p}{)}
+\PYG{k}{end}
+\end{Verbatim}

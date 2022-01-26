@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c}{\PYGZsh{} using Plots}
+\PYG{k}{using} \PYG{n}{Plots}
+\PYG{n}{ts}\PYG{p}{,}\PYG{n}{xs} \PYG{o}{=} \PYG{p}{[}\PYG{n}{infimum}\PYG{p}{(}\PYG{n}{d}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)}\PYG{o}{:}\PYG{l+m+mf}{0.1}\PYG{o}{:}\PYG{n}{supremum}\PYG{p}{(}\PYG{n}{d}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)} \PYG{k}{for} \PYG{n}{d} \PYG{k}{in} \PYG{n}{domains}\PYG{p}{]}
+
+\PYG{n}{acum} \PYG{o}{=}  \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{n}{accumulate}\PYG{p}{(}\PYG{o}{+}\PYG{p}{,} \PYG{n}{length}\PYG{o}{.}\PYG{p}{(}\PYG{n}{initθ}\PYG{p}{))]}
+\PYG{n}{sep} \PYG{o}{=} \PYG{p}{[}\PYG{n}{acum}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{+}\PYG{l+m+mi}{1} \PYG{o}{:} \PYG{n}{acum}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{k}{for} \PYG{n}{i} \PYG{k}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{length}\PYG{p}{(}\PYG{n}{acum}\PYG{p}{)}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{minimizers\PYGZus{}} \PYG{o}{=} \PYG{p}{[}\PYG{n}{res}\PYG{o}{.}\PYG{n}{minimizer}\PYG{p}{[}\PYG{n}{s}\PYG{p}{]} \PYG{k}{for} \PYG{n}{s} \PYG{k}{in} \PYG{n}{sep}\PYG{p}{]}
+
+\PYG{n}{u\PYGZus{}predict}  \PYG{o}{=} \PYG{p}{[[}\PYG{n}{phi}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]([}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{],}\PYG{n}{minimizers\PYGZus{}}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{k}{for} \PYG{n}{t} \PYG{k}{in} \PYG{n}{ts} \PYG{k}{for} \PYG{n}{x} \PYG{k}{in} \PYG{n}{xs}\PYG{p}{]} \PYG{k}{for} \PYG{n}{i} \PYG{k}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{l+m+mi}{2}\PYG{p}{]}
+\PYG{c}{\PYGZsh{} u\PYGZus{}predict = [first(Array(phi([t, x], res.minimizer))) for t in ts for x in xs]}
+
+\PYG{k}{for} \PYG{n}{i} \PYG{k}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{l+m+mi}{2}
+    \PYG{n}{p1} \PYG{o}{=} \PYG{n}{plot}\PYG{p}{(}\PYG{n}{ts}\PYG{p}{,} \PYG{n}{xs}\PYG{p}{,} \PYG{n}{u\PYGZus{}predict}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],}\PYG{n}{linetype}\PYG{o}{=}\PYG{l+s+ss}{:contourf}\PYG{p}{,}\PYG{n}{title} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}predict}\PYG{l+s+si}{\PYGZdl{}i}\PYG{l+s}{\PYGZdq{}}\PYG{p}{);}
+    \PYG{n}{plot}\PYG{p}{(}\PYG{n}{p1}\PYG{p}{)}
+    \PYG{n}{savefig}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}sol\PYGZus{}variable\PYGZus{}corrected\PYGZus{}bcs3}\PYG{l+s+si}{\PYGZdl{}i}\PYG{l+s}{\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{end}
+\end{Verbatim}

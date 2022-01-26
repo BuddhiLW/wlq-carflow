@@ -1,0 +1,8 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{using} \PYG{n}{Plots}\PYG{p}{;} \PYG{n}{pyplot}\PYG{p}{()}
+
+\PYG{n}{xs} \PYG{o}{=} \PYG{n}{collect}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+\PYG{n}{ts} \PYG{o}{=} \PYG{n}{collect}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)}
+
+\PYG{n}{plot}\PYG{p}{(}\PYG{n}{collect}\PYG{p}{(}\PYG{n}{x}\PYG{p}{),}\PYG{n}{collect}\PYG{p}{(}\PYG{n}{t}\PYG{p}{),}\PYG{n}{u}\PYG{o}{\PYGZsq{}}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{l+m+mi}{1000}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{l+m+mi}{100}\PYG{p}{],}\PYG{n}{st}\PYG{o}{=}\PYG{l+s+ss}{:surface}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Burguer equation\PYGZdq{}}\PYG{p}{,} \PYG{n}{xlabel}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}X\PYGZdq{}}\PYG{p}{,} \PYG{n}{ylabel}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Y\PYGZdq{}}\PYG{p}{,} \PYG{n}{zlabel}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}U\PYGZdq{}}\PYG{p}{)}
+\end{Verbatim}

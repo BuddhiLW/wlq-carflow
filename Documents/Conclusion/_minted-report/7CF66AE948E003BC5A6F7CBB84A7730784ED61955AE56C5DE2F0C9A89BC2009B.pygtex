@@ -1,0 +1,27 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{prob} \PYG{o}{=} \PYG{n}{remake}\PYG{p}{(}\PYG{n}{prob}\PYG{p}{,}\PYG{n}{u0}\PYG{o}{=}\PYG{n}{res}\PYG{o}{.}\PYG{n}{minimizer}\PYG{p}{)}
+\PYG{n}{res} \PYG{o}{=} \PYG{n}{GalacticOptim}\PYG{o}{.}\PYG{n}{solve}\PYG{p}{(}\PYG{n}{prob}\PYG{p}{,}\PYG{n}{ADAM}\PYG{p}{(}\PYG{l+m+mf}{0.001}\PYG{p}{);}\PYG{n}{cb}\PYG{o}{=}\PYG{n}{cb}\PYG{p}{,}\PYG{n}{maxiters}\PYG{o}{=}\PYG{l+m+mi}{2500}\PYG{p}{)}
+
+\PYG{n}{phi} \PYG{o}{=} \PYG{n}{discretization}\PYG{o}{.}\PYG{n}{phi}
+\PYG{n}{ts}\PYG{p}{,}\PYG{n}{xs} \PYG{o}{=} \PYG{p}{[}\PYG{n}{infimum}\PYG{p}{(}\PYG{n}{d}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)}\PYG{o}{:}\PYG{l+m+mf}{0.1}\PYG{o}{:}\PYG{n}{supremum}\PYG{p}{(}\PYG{n}{d}\PYG{o}{.}\PYG{n}{domain}\PYG{p}{)} \PYG{k}{for} \PYG{n}{d} \PYG{k}{in} \PYG{n}{domains}\PYG{p}{]}
+\PYG{n}{u\PYGZus{}predict} \PYG{o}{=} \PYG{p}{[}\PYG{n}{first}\PYG{p}{(}\PYG{k+kt}{Array}\PYG{p}{(}\PYG{n}{phi}\PYG{p}{([}\PYG{n}{t}\PYG{p}{,} \PYG{n}{x}\PYG{p}{],} \PYG{n}{res}\PYG{o}{.}\PYG{n}{minimizer}\PYG{p}{)))} \PYG{k}{for} \PYG{n}{t} \PYG{k}{in} \PYG{n}{ts} \PYG{k}{for} \PYG{n}{x} \PYG{k}{in} \PYG{n}{xs}\PYG{p}{]}
+
+\PYG{k}{using} \PYG{n}{Printf}
+
+\PYG{k}{function} \PYG{n}{plot\PYGZus{}}\PYG{p}{(}\PYG{n}{res}\PYG{p}{)}
+    \PYG{c}{\PYGZsh{} Animate}
+    \PYG{n}{anim} \PYG{o}{=} \PYG{n+nd}{@animate} \PYG{k}{for} \PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n}{t}\PYG{p}{)} \PYG{k}{in} \PYG{n}{enumerate}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{o}{:}\PYG{l+m+mf}{0.05}\PYG{o}{:}\PYG{n}{t\PYGZus{}max}\PYG{p}{)}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{I}\PYG{n+nd}{@info} \PYG{l+s}{\PYGZdq{}Animating frame }\PYG{l+s+si}{\PYGZdl{}i}\PYG{l+s}{...\PYGZdq{}}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Iu\PYGZus{}predict\PYGZus{}v} \PYG{o}{=} \PYG{n}{reshape}\PYG{p}{([}\PYG{k+kt}{Array}\PYG{p}{(}\PYG{n}{phi}\PYG{p}{([}\PYG{n}{t}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{],} \PYG{n}{res}\PYG{o}{.}\PYG{n}{minimizer}\PYG{p}{))[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{k}{for} \PYG{n}{x} \PYG{k}{in} \PYG{n}{xs} \PYG{k}{for} \PYG{n}{y} \PYG{k}{in} \PYG{n}{ys}\PYG{p}{],} \PYG{n}{length}\PYG{p}{(}\PYG{n}{xs}\PYG{p}{),} \PYG{n}{length}\PYG{p}{(}\PYG{n}{ys}\PYG{p}{))}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Iu\PYGZus{}predict\PYGZus{}pho} \PYG{o}{=} \PYG{n}{reshape}\PYG{p}{([}\PYG{k+kt}{Array}\PYG{p}{(}\PYG{n}{phi}\PYG{p}{([}\PYG{n}{t}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{y}\PYG{p}{],} \PYG{n}{res}\PYG{o}{.}\PYG{n}{minimizer}\PYG{p}{))[}\PYG{l+m+mi}{2}\PYG{p}{]} \PYG{k}{for} \PYG{n}{x} \PYG{k}{in} \PYG{n}{xs} \PYG{k}{for} \PYG{n}{y} \PYG{k}{in} \PYG{n}{ys}\PYG{p}{],} \PYG{n}{length}\PYG{p}{(}\PYG{n}{xs}\PYG{p}{),} \PYG{n}{length}\PYG{p}{(}\PYG{n}{ys}\PYG{p}{))}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Ititle} \PYG{o}{=} \PYG{n+nd}{@sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}predict, t = }\PYG{l+s+si}{\PYGZpc{}.3f}\PYG{l+s}{\PYGZdq{}}\PYG{p}{,} \PYG{n}{t}\PYG{p}{)}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Ip1} \PYG{o}{=} \PYG{n}{plot}\PYG{p}{(}\PYG{n}{xs}\PYG{p}{,} \PYG{n}{ys}\PYG{p}{,} \PYG{n}{u\PYGZus{}predict\PYGZus{}v}\PYG{p}{,}\PYG{n}{st}\PYG{o}{=}\PYG{l+s+ss}{:surface}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Velocity plot\PYGZdq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{n}{title}\PYG{p}{)}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Ititle} \PYG{o}{=} \PYG{n+nd}{@sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}real\PYGZdq{}}\PYG{p}{)}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Ip2} \PYG{o}{=} \PYG{n}{plot}\PYG{p}{(}\PYG{n}{xs}\PYG{p}{,} \PYG{n}{ys}\PYG{p}{,} \PYG{n}{u\PYGZus{}predict\PYGZus{}pho}\PYG{p}{,}\PYG{n}{st}\PYG{o}{=}\PYG{l+s+ss}{:surface}\PYG{p}{,} \PYG{n}{label}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Density plot\PYGZdq{}}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{n}{title}\PYG{p}{)}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Iplot}\PYG{p}{(}\PYG{n}{p1}\PYG{p}{,}\PYG{n}{p2}\PYG{p}{)}
+    \PYG{k}{end}
+    \PYG{n}{gif}\PYG{p}{(}\PYG{n}{anim}\PYG{p}{,}\PYG{l+s}{\PYGZdq{}3pde.gif\PYGZdq{}}\PYG{p}{,} \PYG{n}{fps}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{)}
+\PYG{k}{end}
+
+\PYG{n}{plot\PYGZus{}}\PYG{p}{(}\PYG{n}{res}\PYG{p}{)}
+\end{Verbatim}

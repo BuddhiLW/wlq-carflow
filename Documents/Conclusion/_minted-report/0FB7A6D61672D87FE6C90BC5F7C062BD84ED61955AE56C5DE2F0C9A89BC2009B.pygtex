@@ -1,0 +1,25 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c}{\PYGZsh{} Neural network}
+\PYG{n}{input\PYGZus{}} \PYG{o}{=} \PYG{n}{length}\PYG{p}{(}\PYG{n}{domains}\PYG{p}{)}
+\PYG{n}{n} \PYG{o}{=} \PYG{l+m+mi}{15}
+\PYG{n}{chain} \PYG{o}{=}\PYG{p}{[}\PYG{n}{FastChain}\PYG{p}{(}\PYG{n}{FastDense}\PYG{p}{(}\PYG{n}{input\PYGZus{}}\PYG{p}{,}\PYG{n}{n}\PYG{p}{,}\PYG{n}{Flux}\PYG{o}{.}\PYG{n}{σ}\PYG{p}{),}\PYG{n}{FastDense}\PYG{p}{(}\PYG{n}{n}\PYG{p}{,}\PYG{n}{n}\PYG{p}{,}\PYG{n}{Flux}\PYG{o}{.}\PYG{n}{σ}\PYG{p}{),}\PYG{n}{FastDense}\PYG{p}{(}\PYG{n}{n}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{))} \PYG{k}{for} \PYG{n}{\PYGZus{}} \PYG{k}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{l+m+mi}{2}\PYG{p}{]}
+\PYG{n}{initθ} \PYG{o}{=} \PYG{n}{map}\PYG{p}{(}\PYG{n}{c} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kt}{Float64}\PYG{o}{.}\PYG{p}{(}\PYG{n}{c}\PYG{p}{),} \PYG{n}{DiffEqFlux}\PYG{o}{.}\PYG{n}{initial\PYGZus{}params}\PYG{o}{.}\PYG{p}{(}\PYG{n}{chain}\PYG{p}{))}
+
+\PYG{n}{\PYGZus{}strategy} \PYG{o}{=} \PYG{n}{QuadratureTraining}\PYG{p}{()}
+\PYG{n}{discretization} \PYG{o}{=} \PYG{n}{PhysicsInformedNN}\PYG{p}{(}\PYG{n}{chain}\PYG{p}{,} \PYG{n}{\PYGZus{}strategy}\PYG{p}{,} \PYG{n}{init\PYGZus{}params}\PYG{o}{=} \PYG{n}{initθ}\PYG{p}{)}
+
+\PYG{n+nd}{@named} \PYG{n}{pde\PYGZus{}system} \PYG{o}{=} \PYG{n}{PDESystem}\PYG{p}{(}\PYG{n}{eqs}\PYG{p}{,}\PYG{n}{bcs}\PYG{p}{,}\PYG{n}{domains}\PYG{p}{,[}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{],[}\PYG{n}{v}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{),}\PYG{n}{ρ}\PYG{p}{(}\PYG{n}{t}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)])}
+\PYG{c}{\PYGZsh{} @named pde\PYGZus{}system = PDESystem(eqs,bcs,domains,[t,x],[u1(t, x),u2(t, x)])}
+\PYG{n}{prob} \PYG{o}{=} \PYG{n}{discretize}\PYG{p}{(}\PYG{n}{pde\PYGZus{}system}\PYG{p}{,}\PYG{n}{discretization}\PYG{p}{)}
+\PYG{n}{sym\PYGZus{}prob} \PYG{o}{=} \PYG{n}{symbolic\PYGZus{}discretize}\PYG{p}{(}\PYG{n}{pde\PYGZus{}system}\PYG{p}{,}\PYG{n}{discretization}\PYG{p}{)}
+
+\PYG{n}{pde\PYGZus{}inner\PYGZus{}loss\PYGZus{}functions} \PYG{o}{=} \PYG{n}{prob}\PYG{o}{.}\PYG{n}{f}\PYG{o}{.}\PYG{n}{f}\PYG{o}{.}\PYG{n}{loss\PYGZus{}function}\PYG{o}{.}\PYG{n}{pde\PYGZus{}loss\PYGZus{}function}\PYG{o}{.}\PYG{n}{pde\PYGZus{}loss\PYGZus{}functions}\PYG{o}{.}\PYG{n}{contents}
+\PYG{n}{bcs\PYGZus{}inner\PYGZus{}loss\PYGZus{}functions} \PYG{o}{=} \PYG{n}{prob}\PYG{o}{.}\PYG{n}{f}\PYG{o}{.}\PYG{n}{f}\PYG{o}{.}\PYG{n}{loss\PYGZus{}function}\PYG{o}{.}\PYG{n}{bcs\PYGZus{}loss\PYGZus{}function}\PYG{o}{.}\PYG{n}{bc\PYGZus{}loss\PYGZus{}functions}\PYG{o}{.}\PYG{n}{contents}
+
+\PYG{n}{cb} \PYG{o}{=} \PYG{k}{function} \PYG{p}{(}\PYG{n}{p}\PYG{p}{,}\PYG{n}{l}\PYG{p}{)}
+    \PYG{n}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}loss: \PYGZdq{}}\PYG{p}{,} \PYG{n}{l} \PYG{p}{)}
+    \PYG{n}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}pde\PYGZus{}losses: \PYGZdq{}}\PYG{p}{,} \PYG{n}{map}\PYG{p}{(}\PYG{n}{l\PYGZus{}} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{l\PYGZus{}}\PYG{p}{(}\PYG{n}{p}\PYG{p}{),} \PYG{n}{pde\PYGZus{}inner\PYGZus{}loss\PYGZus{}functions}\PYG{p}{))}
+    \PYG{n}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}bcs\PYGZus{}losses: \PYGZdq{}}\PYG{p}{,} \PYG{n}{map}\PYG{p}{(}\PYG{n}{l\PYGZus{}} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{l\PYGZus{}}\PYG{p}{(}\PYG{n}{p}\PYG{p}{),} \PYG{n}{bcs\PYGZus{}inner\PYGZus{}loss\PYGZus{}functions}\PYG{p}{))}
+    \PYG{k}{return} \PYG{n+nb}{false}
+\PYG{k}{end}
+\end{Verbatim}

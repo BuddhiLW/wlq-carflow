@@ -1,0 +1,178 @@
+* Burguer
+$$\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} =
+0$$
+
+#+begin_src julia :session main :result output
+function init(x)
+    if (5<=x<=10)
+        return 2
+    else
+        return 0
+    end
+end
+
+function f(x)
+    map(y -> init(y), x)
+end
+#+end_src
+
+#+RESULTS:
+: f
+
+#+begin_src julia :session main :result output
+nxx=100;
+# c=5;
+delta_xx = 10/(nxx - 1)
+xx = range(0, stop=delta_xx*(nxx-1), length=nxx) # Fvll range of spatial steps for wich a solvtion is desired
+
+endTime = 20   # simvlation end time
+nt = 1000          # nt is the nvmber of timesteps we want to calcvlate
+delta_t = endTime/nt  # Δt is the amovnt of time each timestep covers
+tt = range(0, stop=endTime, length=nt) # Fvll range of time steps for which a solvtion is desired
+
+# Init array of ones at initial timestep
+# v_zero = ones(nxx)
+
+f(x) = (1/(2*√π))*exp((-1/2)*(x-3)^2)
+#+end_src
+
+#+RESULTS:
+: f
+
+** Initial
+#+begin_src julia :session main :result output
+using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
+import ModelingToolkit: Interval, infimum, supremum
+
+@parameters t, x
+@variables u(..)
+Dt = Differential(t)
+Dx = Differential(x)
+
+#2D PDE
+eq  = Dt(u(t,x)) + u(t,x)*Dx(u(t,x)) ~ 0
+
+# Initial and boundary conditions
+bcs = [u(0,x) ~ f(x),
+       u(0,x) - f(x) ~ 0]
+
+# Space and time domains
+domains = [t ∈ Interval(0.0,20.0),
+           x ∈ Interval(0.0,10.0)]
+# Discretization
+
+nx=100;
+# c=5;
+dx = 10/(nx)
+endTime = 20
+nt = 100
+dt = endTime/nt
+#+end_src
+
+#+begin_src julia :session main :result output
+# Neural network
+dim = 2 # number of dimensions
+chain = FastChain(FastDense(dim,25,Flux.σ),FastDense(25,25,Flux.σ),FastDense(25,1))
+#+end_src
+
+** Using CuArray (optional)
+#+begin_src julia :session main :result output
+initθ = CuArray(Float64.(DiffEqFlux.initial_params(chain)))
+
+strategy = GridTraining(0.05)
+discretization = PhysicsInformedNN(chain,
+                                   strategy;
+                                   init_params = initθ)
+#+end_src
+
+** Not using
+
+#+begin_src julia :session main :result output
+# Initial parameters of Neural network
+initθ = Float64.(DiffEqFlux.initial_params(chain))
+
+# Discretization
+discretization = PhysicsInformedNN(chain,GridTraining(dx),init_params=initθ)
+#+end_src
+
+** The symbolic problem
+#+begin_src julia :session main :result output
+@named pde_system = PDESystem(eq,bcs,domains,[x,t],[u(x, t)])
+prob = discretize(pde_system,discretization)
+
+cb = function (p,l)
+    println("Current loss is: $l")
+    return false
+end
+
+opt = Optim.BFGS()
+res = GalacticOptim.solve(prob,opt; cb = cb, maxiters=5000)
+phi = discretization.phi
+# res = GalacticOptim.solve(prob,opt; cb = cb, maxiters=1000)
+#+end_src
+
+** Alternative
+#+begin_src julia :session main :result output
+# Neural network
+chain = FastChain(FastDense(2,12,Flux.σ),FastDense(12,12,Flux.σ),FastDense(12,1))
+discretization = PhysicsInformedNN(chain, GridTraining([dx,dt]))
+@named pde_system = PDESystem(eq,bcs,domains,[x,t],[u(x, t)])
+prob = discretize(pde_system,discretization)
+
+cb = function (p,l)
+    println("Current loss is: $l")
+    return false
+end
+
+
+# res = GalacticOptim.solve(prob,BFGS(); cb = cb, maxiters=200)
+# prob = remake(prob,u0=res.minimizer)
+res = GalacticOptim.solve(prob,ADAM(10^-3); cb = cb, maxiters=300)
+prob = remake(prob,u0=res.minimizer)
+res = GalacticOptim.solve(prob,BFGS(); cb = cb, maxiters=200)
+phi = discretization.phi
+#+end_src
+
+** Remake the problem (optional)
+#+begin_src julia :session main :result output
+prob = remake(prob,u0=res.minimizer)
+res = GalacticOptim.solve(prob,ADAM(0.001);cb=cb,maxiters=2500)
+
+phi = discretization.phi
+#+end_src
+
+
+** Plot
+#+begin_src julia :session main :result output
+using Plots; pyplot();
+
+# ts,xs = [infimum(d.domain):0.1:supremum(d.domain) for d in domains]
+xs,ts = [infimum(d.domain):dx:supremum(d.domain) for (d,dx) in zip(domains,[dx,dt])]
+u_predict = reshape([Array(phi([x, t], res.minimizer))[1] for x in xs for t in ts], length(xs), length(ts))
+# u_predict  = [first(phi([x,t],res.minimizer)) for x in xs for t in ts]
+
+plot(xs,ts,u_predict',st=:surface, title="Burguer equation, PINN", xlabel="X", ylabel="Time", zlabel="U")
+#+end_src
+
+#+begin_src julia :session main :result output
+p1=plot(xs, u_predict[1,:], title="Predicted")
+p2=plot(xs, map(x -> f(x), xs), title="Analytical")
+plot(p1,p2)
+#+end_src
+
+
+
+# #+begin_src julia :session main :result output
+#   using Plots
+
+#   ts,xs = [infimum(d.domain):dx:supremum(d.domain) for d in domains]
+#   u_predict_contourf = reshape([first(phi([t,x],res.minimizer)) for t in ts for x in xs] ,length(xs),length(ts))
+#   plot(ts, xs, u_predict_contourf, linetype=:contourf,title = "predict")
+
+#   u_predict = [[first(phi([t,x],res.minimizer)) for x in xs] for t in ts ]
+#   p1= plot(xs, u_predict[3],title = "t = 0.1");
+#   p2= plot(xs, u_predict[11],title = "t = 0.5");
+#   p3= plot(xs, u_predict[end],title = "t = 1");
+#   plot(p1,p2,p3)
+# #+end_src
+

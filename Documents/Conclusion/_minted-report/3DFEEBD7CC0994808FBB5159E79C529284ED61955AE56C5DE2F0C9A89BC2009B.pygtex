@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{plot}\PYG{p}{(}\PYG{n}{f} \PYG{o}{≪} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{fill}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+s+ss}{:blue}\PYG{p}{))}
+\end{Verbatim}

@@ -40,7 +40,6 @@
 #+ATTR_HTML: :width 300px
 [[file:2.png]]
 
-
 * Reproduction
 ** First decay ODE
 
@@ -314,7 +313,7 @@ then the method is said to be A-stable.
 =A-stable= methods are those who are coherent with the general
 behaviour of a function.
 
-Not necesserly converges fast, or accurately. But, goes to the right
+Not necessarily converges fast, or accurately. But, goes to the right
 values over large times.
 
 *** Runge-Kutta

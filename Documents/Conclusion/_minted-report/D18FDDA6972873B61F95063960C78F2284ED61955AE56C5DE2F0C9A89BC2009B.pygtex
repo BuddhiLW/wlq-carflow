@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{wl}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{=} \PYG{n}{w}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{+} \PYG{n}{Δx}\PYG{o}{*}\PYG{n}{v}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}
+\PYG{n}{ϕl}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{=} \PYG{n}{ϕ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{+} \PYG{n}{Δx}\PYG{o}{*}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}
+\PYG{n}{ρl}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{Δt}\PYG{o}{*}\PYG{n}{fρ}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{,}\PYG{n}{v}\PYG{p}{,}\PYG{n}{w}\PYG{p}{,}\PYG{n}{n}\PYG{p}{)}
+\PYG{n}{vl}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{=} \PYG{n}{v}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{Δt}\PYG{o}{*}\PYG{n}{fv}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{,}\PYG{n}{v}\PYG{p}{,}\PYG{n}{w}\PYG{p}{,}\PYG{n}{Δx}\PYG{p}{,}\PYG{n}{n}\PYG{p}{)}
+\end{Verbatim}

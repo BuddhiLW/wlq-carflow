@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{tf} \PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{Δt} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{l+m+mi}{4}
+\PYG{n}{t} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{o}{:}\PYG{n}{Δt}\PYG{o}{:}\PYG{n}{tf}
+\end{Verbatim}

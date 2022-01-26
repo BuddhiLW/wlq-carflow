@@ -1,8 +1,6 @@
 #+STARTUP: latexpreview
 #+STARTUP: inlineimages
 
-<<<<<<< HEAD
-=======
 * Setup
 #+begin_src julia :session main :result output
   using Pkg
@@ -19,7 +17,6 @@
 
 #+RESULTS:
 
->>>>>>> c079ef6 (Update state of reaserch)
 * Equations
 ** The equation to solve:
 \begin{equation}
@@ -54,14 +51,11 @@ From the definition of $q$ and the boundary condition (I),
 \end{aligned}
 \end{equation}
 
-<<<<<<< HEAD
 * The discretization
 ** Conventions
-=======
 * Not convergent try
 ** The discretization
 *** Conventions
->>>>>>> c079ef6 (Update state of reaserch)
 First, some convetions,
 \begin{equation}
 \begin{aligned}
@@ -74,33 +68,24 @@ First, some convetions,
 \end{equation}
 
 The same convention is valid to $i$.
-<<<<<<< HEAD
 ** We have
-=======
 *** We have
->>>>>>> c079ef6 (Update state of reaserch)
 
 \begin{equation}
   \begin{aligned}
     \begin{cases}
-<<<<<<< HEAD
       v^n_{i+1}=v^n_i + [\frac{\mu}{\rho^n_i}\frac{\Delta{t}}{\Delta{x^2}}](\Delta_n)^2v_n + [\frac{c_0^2}{\rho^n_i}\frac{\Delta{t}}{\Delta{x}}](\Delta_n\rho) + [\frac{\Delta{t}}{\tau}](V(\rho^n_i) - v^n_i)\\
-=======
       v^n_{i+1}=v^n_i - [v^n_i\frac{\Delta{t}}{\Delta{x}}](\Delta_n{v}) + [\frac{\mu}{\rho^n_i}\frac{\Delta{t}}{\Delta{x^2}}](\Delta_n)^2v_n + [\frac{c_0^2}{\rho^n_i}\frac{\Delta{t}}{\Delta{x}}](\Delta_n\rho) + [\frac{\Delta{t}}{\tau}](V(\rho^n_i) - v^n_i)\\
->>>>>>> c079ef6 (Update state of reaserch)
       \rho^n_{i+1} = \rho^n_i - [\frac{\Delta{t}}{\Delta{x}}]((\Delta_n)\textrm{v}\rho)
     \end{cases}
   \end{aligned}
 \end{equation}
 
-<<<<<<< HEAD
-=======
 \begin{equation}
 \begin{aligned}
 v \dfrac{\partial{v}}{\partial{x}} = v[n]\frac{(dif(v,n))}{\Delta{x}} \, \Leftrightarrow \, v \dfrac{\partial{v}}{\partial{x}}=[v^n_i\frac{\Delta{t}}{\Delta{x}}](\Delta_n{v})
 \end{aligned}
 \end{equation}
->>>>>>> c079ef6 (Update state of reaserch)
 
 #+begin_src julia :session main :result output
   v = zeros(100,100)
@@ -110,11 +95,8 @@ v \dfrac{\partial{v}}{\partial{x}} = v[n]\frac{(dif(v,n))}{\Delta{x}} \, \Leftri
 #+RESULTS:
 : Output suppressed (line too long)
 
-<<<<<<< HEAD
 ** Auxiliatory functions
-=======
 *** Auxiliatory functions
->>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   function dif(v, n, i, arg=n)
       if arg == n
@@ -143,16 +125,13 @@ v \dfrac{\partial{v}}{\partial{x}} = v[n]\frac{(dif(v,n))}{\Delta{x}} \, \Leftri
 
 #+RESULTS:
 : mdif
-<<<<<<< HEAD
 *** Tests of the aux func
-=======
 **** Tests of the aux func
 >>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
 pt = [(i+j)*t for i=1:2:20, j=1:1:10, t=1:1:20]
 #+end_src
 
-<<<<<<< HEAD
 #+RESULTS:
 #+begin_example
 [2 3 4 5 6 7 8 9 10 11; 4 5 6 7 8 9 10 11 12 13; 6 7 8 9 10 11 12 13 14 15; 8 9 10 11 12 13 14 15 16 17; 10 11 12 13 14 15 16 17 18 19; 12 13 14 15 16 17 18 19 20 21; 14 15 16 17 18 19 20 21 22 23; 16 17 18 19 20 21 22 23 24 25; 18 19 20 21 22 23 24 25 26 27; 20 21 22 23 24 25 26 27 28 29]
@@ -196,8 +175,6 @@ pt = [(i+j)*t for i=1:2:20, j=1:1:10, t=1:1:20]
 [40 60 80 100 120 140 160 180 200 220; 80 100 120 140 160 180 200 220 240 260; 120 140 160 180 200 220 240 260 280 300; 160 180 200 220 240 260 280 300 320 340; 200 220 240 260 280 300 320 340 360 380; 240 260 280 300 320 340 360 380 400 420; 280 300 320 340 360 380 400 420 440 460; 320 340 360 380 400 420 440 460 480 500; 360 380 400 420 440 460 480 500 520 540; 400 420 440 460 480 500 520 540 560 580]
 #+end_example
 
-=======
->>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
 p = [(i+j) for i=1:2:20, j=1:1:10]
 #+end_src
@@ -220,9 +197,7 @@ dif2(p,4,2)
 #+RESULTS:
 : 0
 
-<<<<<<< HEAD
 ** Initial conditions
-=======
 *** Initial conditions
 ***** Parameters (space)
 #+begin_src julia :session main :result :tangle hand.jl
@@ -249,7 +224,6 @@ dif2(p,4,2)
 
 ***** Contants
 
->>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output :tangle neuralPDE.jl
   m=1;
   μ=1; #choose as we like
@@ -277,11 +251,8 @@ dif2(p,4,2)
 #+end_src
 
 #+RESULTS:
-<<<<<<< HEAD
 : 1.370793129404024e-6 + 0.036972278932846527im
-=======
 : 1.3707931294040239 + 36.97227893284652im
->>>>>>> c079ef6 (Update state of reaserch)
 
 Work out analytically only the real part,
 \begin{equation}
@@ -306,11 +277,8 @@ Work out analytically only the real part,
 #+RESULTS:
 : δvᵣ
 
-<<<<<<< HEAD
 ** Discretization time-forward
-=======
 *** Discretization time-forward
->>>>>>> c079ef6 (Update state of reaserch)
 Time forward one step, given the discretization,
 #+begin_src julia :session main :result output
   v[n, i+1] = v[n,i] + μ*Δt/ρ[n,i](Δx)^2*(diff2(v,n,i)) + (c₀^2*Δt/ρ[n,i]*Δx)*(diff(ρ,n,i)) + (Δt/τ)*(V(ρ[n,i])-v[n,i])
@@ -320,13 +288,10 @@ Time forward one step, given the discretization,
   ρ[n, i+1] = p[n,i] - (Δt/Δx)*(mdif(v,ρ))
 #+end_src
 
-<<<<<<< HEAD
 ** The boundary conditions
 *** From earlier work,
-=======
 *** The boundary conditions
 **** From earlier work,
->>>>>>> c079ef6 (Update state of reaserch)
 #+begin_src julia :session main :result output
   # Initial and boundary conditions
   bcs = [ρ(t,0) ~ ρ(t,L),
@@ -344,11 +309,8 @@ Time forward one step, given the discretization,
   dx = 0.1
 #+end_src
 
-<<<<<<< HEAD
 *** Translation to our discretization scheme
-=======
 **** Translation to our discretization scheme
->>>>>>> c079ef6 (Update state of reaserch)
 
 #+begin_src julia :session main :result output
   ρ[0,i] = ρ[length(ρ),i]
@@ -357,13 +319,11 @@ Time forward one step, given the discretization,
   ρ[n,0] = ρₕ + δρᵣ(n,0)
   ρ[n,0] = vₕ + δvᵣ(n,0)
 #+end_src
-<<<<<<< HEAD
 
 * Function for increasing values in space-time
 =======
  
 ** Function for increasing values in space-time
->>>>>>> c079ef6 (Update state of reaserch)
 
 #+begin_src julia :session main :result output
   v = ones(100,100)
@@ -404,8 +364,6 @@ v[1:10,1:10]
 
 #+RESULTS:
 : [1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0; 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0]
-
-<<<<<<< HEAD
 
 * Function for increasing values in space-time
 

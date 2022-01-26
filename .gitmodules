@@ -1,0 +1,3 @@
+[submodule "Documents/Conclusion/Unixode"]
+	path = Documents/Conclusion/Unixode
+	url = https://github.com/olivierverdier/Unixode.git

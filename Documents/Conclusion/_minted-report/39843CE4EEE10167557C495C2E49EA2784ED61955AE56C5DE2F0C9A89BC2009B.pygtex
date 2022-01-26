@@ -1,0 +1,37 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{function} \PYG{n}{kerner}\PYG{p}{(}\PYG{n}{v}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}\PYG{n}{ρ}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}\PYG{n}{Δx}\PYG{p}{,}\PYG{n}{Δt}\PYG{p}{,}\PYG{n}{params}\PYG{p}{,}\PYG{n}{w}\PYG{o}{=}\PYG{n}{pbc\PYGZus{}derivative}\PYG{p}{(}\PYG{n}{v}\PYG{p}{,}\PYG{n}{Δx}\PYG{p}{),}\PYG{n}{ϕ}\PYG{o}{=}\PYG{n}{pbc\PYGZus{}derivative}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{,}\PYG{n}{Δx}\PYG{p}{))}
+    \PYG{n}{N} \PYG{o}{=} \PYG{n}{length}\PYG{p}{(}\PYG{n}{v}\PYG{p}{)}
+    \PYG{n}{vl}\PYG{o}{=}\PYG{n}{similar}\PYG{p}{(}\PYG{n}{v}\PYG{p}{)}
+    \PYG{n}{ρl}\PYG{o}{=}\PYG{n}{similar}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{)}
+    \PYG{n}{wl}\PYG{o}{=}\PYG{n}{similar}\PYG{p}{(}\PYG{n}{w}\PYG{p}{)}
+    \PYG{n}{ϕl}\PYG{o}{=}\PYG{n}{similar}\PYG{p}{(}\PYG{n}{ϕ}\PYG{p}{)}
+    \PYG{n}{μ}\PYG{p}{,} \PYG{n}{c₀}\PYG{p}{,} \PYG{n}{τ} \PYG{o}{=} \PYG{n}{params}
+    \PYG{n}{N} \PYG{o}{=} \PYG{n}{length}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{)}
+    \PYG{n}{k}\PYG{o}{=}\PYG{l+m+mi}{200}\PYG{n+nb}{π}\PYG{o}{/}\PYG{l+m+mi}{1000}
+    \PYG{n}{δv₀} \PYG{o}{=} \PYG{l+m+mf}{0.01}
+    \PYG{n}{δρ₀} \PYG{o}{=} \PYG{l+m+mf}{0.02}
+
+    \PYG{n}{V}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{)} \PYG{o}{=} \PYG{l+m+mf}{5.0461}\PYG{o}{*}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{o}{+}\PYG{n}{exp}\PYG{p}{((}\PYG{n}{ρ}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.25}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{0.06}\PYG{p}{))}\PYG{o}{\PYGZca{}\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{3.72}\PYG{o}{*}\PYG{l+m+mi}{10}\PYG{o}{\PYGZca{}\PYGZhy{}}\PYG{l+m+mi}{6}\PYG{p}{)}
+
+    \PYG{k}{for} \PYG{n}{n} \PYG{k}{in} \PYG{l+m+mi}{2}\PYG{o}{:}\PYG{n}{N}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Iwl}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{=} \PYG{n}{w}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{+} \PYG{n}{Δx}\PYG{o}{*}\PYG{n}{v}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Iϕl}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{=} \PYG{n}{ϕ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{+} \PYG{n}{Δx}\PYG{o}{*}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Iρl}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{p}{(}\PYG{n}{Δt}\PYG{o}{/}\PYG{n}{Δx}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{dif5\PYGZus{}nt}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{,}\PYG{n}{n}\PYG{p}{)}\PYG{o}{*}\PYG{n}{v}\PYG{p}{[}\PYG{n}{n}\PYG{p}{])} \PYG{o}{+} \PYG{p}{(}\PYG{n}{Δt}\PYG{p}{)}\PYG{o}{*}\PYG{n}{w}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{*}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}
+\PYG{o}{\PYGZca{}\PYGZca{}}\PYG{n}{Ivl}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{=} \PYG{n}{v}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{p}{(}\PYG{n}{Δt}\PYG{o}{/}\PYG{n}{Δx}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{v}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{*}\PYG{n}{w}\PYG{p}{[}\PYG{n}{n}\PYG{p}{])} \PYG{o}{+} \PYG{p}{(}\PYG{n}{μ}\PYG{o}{*}\PYG{n}{Δt}\PYG{o}{/}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{*}\PYG{n}{Δx}\PYG{p}{))}\PYG{o}{*}\PYG{p}{(}\PYG{n}{dif5\PYGZus{}nt}\PYG{p}{(}\PYG{n}{w}\PYG{p}{,}\PYG{n}{n}\PYG{p}{))} \PYG{o}{+} \PYG{p}{(}\PYG{n}{c₀}\PYG{o}{\PYGZca{}}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{Δt}\PYG{o}{/}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{*}\PYG{n}{Δx}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{dif5\PYGZus{}nt}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{,}\PYG{n}{n}\PYG{p}{))} \PYG{o}{+} \PYG{p}{(}\PYG{n}{Δt}\PYG{o}{/}\PYG{n}{τ}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{V}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{])}\PYG{o}{\PYGZhy{}}\PYG{n}{v}\PYG{p}{[}\PYG{n}{n}\PYG{p}{])}
+    \PYG{k}{end}
+
+    \PYG{c}{\PYGZsh{} Bondary condition}
+    \PYG{n}{ρₕ} \PYG{o}{=} \PYG{l+m+mf}{0.168}
+    \PYG{n}{vₕ} \PYG{o}{=} \PYG{l+m+mf}{5.0461}\PYG{o}{*}\PYG{p}{((}\PYG{l+m+mi}{1}\PYG{o}{+}\PYG{n}{exp}\PYG{p}{((}\PYG{n}{ρₕ}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.25}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{0.06}\PYG{p}{))}\PYG{o}{\PYGZca{}\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{3.72}\PYG{o}{*}\PYG{l+m+mi}{10}\PYG{o}{\PYGZca{}\PYGZhy{}}\PYG{l+m+mi}{6}\PYG{p}{)}
+    \PYG{n}{wl}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]} \PYG{o}{=} \PYG{n}{w}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]} \PYG{o}{+} \PYG{n}{Δx} \PYG{o}{*} \PYG{n}{v}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]}
+    \PYG{n}{ϕl}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ϕ}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]} \PYG{o}{+} \PYG{n}{Δx} \PYG{o}{*} \PYG{n}{ρ}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]}
+    \PYG{n}{ρl}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ρ}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{p}{(}\PYG{n}{Δt}\PYG{o}{/}\PYG{n}{Δx}\PYG{p}{)}\PYG{o}{*}\PYG{p}{((}\PYG{n}{ρ}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{N}\PYG{p}{])}\PYG{o}{*}\PYG{n}{v}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]} \PYG{o}{+} \PYG{n}{w}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]}\PYG{o}{*}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{N}\PYG{p}{])}
+    \PYG{n}{vl}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]} \PYG{o}{=} \PYG{n}{v}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{p}{(}\PYG{n}{Δt}\PYG{o}{/}\PYG{n}{Δx}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{v}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]}\PYG{o}{*}\PYG{n}{w}\PYG{p}{[}\PYG{n}{N}\PYG{p}{])} \PYG{o}{+} \PYG{p}{(}\PYG{n}{μ}\PYG{o}{*}\PYG{n}{Δt}\PYG{o}{/}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]}\PYG{o}{*}\PYG{n}{Δx}\PYG{p}{))}\PYG{o}{*}\PYG{p}{(}\PYG{n}{w}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{w}\PYG{p}{[}\PYG{n}{N}\PYG{p}{])} \PYG{o}{+} \PYG{p}{(}\PYG{n}{c₀}\PYG{o}{\PYGZca{}}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{Δt}\PYG{o}{/}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]}\PYG{o}{*}\PYG{n}{Δx}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{N}\PYG{p}{])} \PYG{o}{+} \PYG{p}{(}\PYG{n}{Δt}\PYG{o}{/}\PYG{n}{τ}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{V}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{N}\PYG{p}{])}\PYG{o}{\PYGZhy{}}\PYG{n}{v}\PYG{p}{[}\PYG{n}{N}\PYG{p}{])}
+
+    \PYG{n}{ϕl}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mi}{0}
+    \PYG{n}{ϕl}\PYG{p}{[}\PYG{n}{length}\PYG{p}{(}\PYG{n}{ϕl}\PYG{p}{)]} \PYG{o}{=} \PYG{n}{ρₕ}\PYG{o}{*}\PYG{n}{L}
+    \PYG{n}{ρl}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ρl}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]}
+    \PYG{n}{vl}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{vl}\PYG{p}{[}\PYG{n}{N}\PYG{p}{]}
+    \PYG{k}{return} \PYG{n}{vl}\PYG{p}{,} \PYG{n}{ρl}\PYG{p}{,} \PYG{n}{wl}\PYG{p}{,} \PYG{n}{ϕl}
+\PYG{k}{end}
+\end{Verbatim}

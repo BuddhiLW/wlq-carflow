@@ -95,10 +95,6 @@ y_{n+1} = y_{n} + \dfrac{\Delta{t}}{2}\left( f(y_n,t_n) + f(y_{n+1}, t_{n+1}) \r
 \end{aligned}
 \end{equation}
 
-<<<<<<< HEAD
-
-=======
->>>>>>> c079ef6 (Update state of reaserch)
 * Finding some roots in julia
 
 #+begin_src julia :session main :result output :export both
@@ -237,10 +233,6 @@ f(a,b) = sqrt((a-1)^2 + b^2)
 #+RESULTS:
 [[file:figs/curve2.png]]
 
-<<<<<<< HEAD
-
-=======
->>>>>>> c079ef6 (Update state of reaserch)
 * Notation
 ** Annonymous expressions
 For every expression that do not have a name, but we contextually are

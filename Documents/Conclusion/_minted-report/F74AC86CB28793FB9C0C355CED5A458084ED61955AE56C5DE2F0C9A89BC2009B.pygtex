@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{nx}\PYG{o}{=}\PYG{l+m+mi}{100}\PYG{p}{;}
+\PYG{c}{\PYGZsh{} c=5;}
+\PYG{n}{delta\PYGZus{}x} \PYG{o}{=} \PYG{l+m+mi}{40}\PYG{o}{/}\PYG{p}{(}\PYG{n}{nx} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{)}
+\PYG{n}{x} \PYG{o}{=} \PYG{n}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{stop}\PYG{o}{=}\PYG{n}{delta\PYGZus{}x}\PYG{o}{*}\PYG{p}{(}\PYG{n}{nx}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{),} \PYG{n}{length}\PYG{o}{=}\PYG{n}{nx}\PYG{p}{)} \PYG{c}{\PYGZsh{} full range of spatial steps for wich a solution is desired}
+
+\PYG{n}{endtime} \PYG{o}{=} \PYG{l+m+mi}{20}   \PYG{c}{\PYGZsh{} simulation end time}
+\PYG{n}{nt} \PYG{o}{=} \PYG{l+m+mi}{1000}          \PYG{c}{\PYGZsh{} nt is the number of timesteps we want to calculate}
+\PYG{n}{delta\PYGZus{}t} \PYG{o}{=} \PYG{n}{endtime}\PYG{o}{/}\PYG{n}{nt}  \PYG{c}{\PYGZsh{} δt is the amount of time each timestep covers}
+\PYG{n}{t} \PYG{o}{=} \PYG{n}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{stop}\PYG{o}{=}\PYG{n}{endtime}\PYG{p}{,} \PYG{n}{length}\PYG{o}{=}\PYG{n}{nt}\PYG{p}{)} \PYG{c}{\PYGZsh{} full range of time steps for which a solution is desired}
+\end{Verbatim}

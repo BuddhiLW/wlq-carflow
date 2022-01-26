@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{function} \PYG{n}{γ₂}\PYG{p}{(}\PYG{n}{f}\PYG{p}{,} \PYG{n}{y}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{Δt}\PYG{p}{)}
+    \PYG{n}{yl} \PYG{o}{=} \PYG{n}{copy}\PYG{p}{(}\PYG{n}{y}\PYG{p}{)}
+
+    \PYG{n}{push!}\PYG{p}{(}\PYG{n}{yl}\PYG{p}{,} \PYG{n}{AM}\PYG{p}{(}\PYG{n}{y}\PYG{p}{,}\PYG{n}{f}\PYG{p}{,}\PYG{n}{length}\PYG{p}{(}\PYG{n}{y}\PYG{p}{),}\PYG{n}{Δt}\PYG{p}{))}
+
+    \PYG{k}{return} \PYG{n}{yl}
+\PYG{k}{end}
+\end{Verbatim}

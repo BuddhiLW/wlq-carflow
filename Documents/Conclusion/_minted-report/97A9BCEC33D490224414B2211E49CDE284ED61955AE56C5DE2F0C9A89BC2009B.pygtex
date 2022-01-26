@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{function} \PYG{n}{fv}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{,}\PYG{n}{v}\PYG{p}{,}\PYG{n}{w}\PYG{p}{,}\PYG{n}{Δx}\PYG{p}{,}\PYG{n}{n}\PYG{p}{)}
+    \PYG{k}{return} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{Δx}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{v}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{*}\PYG{n}{w}\PYG{p}{[}\PYG{n}{n}\PYG{p}{])} \PYG{o}{+} \PYG{p}{(}\PYG{n}{μ}\PYG{o}{/}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{*}\PYG{n}{Δx}\PYG{p}{))}\PYG{o}{*}\PYG{p}{(}\PYG{n}{dif5\PYGZus{}nt}\PYG{p}{(}\PYG{n}{w}\PYG{p}{,}\PYG{n}{n}\PYG{p}{))} \PYG{o}{+} \PYG{p}{(}\PYG{n}{c₀}\PYG{o}{\PYGZca{}}\PYG{l+m+mi}{2}\PYG{o}{/}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{*}\PYG{n}{Δx}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{dif5\PYGZus{}nt}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{,}\PYG{n}{n}\PYG{p}{))} \PYG{o}{+} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{τ}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{V}\PYG{p}{(}\PYG{n}{ρ}\PYG{p}{[}\PYG{n}{n}\PYG{p}{])}\PYG{o}{\PYGZhy{}}\PYG{n}{v}\PYG{p}{[}\PYG{n}{n}\PYG{p}{])}
+\PYG{k}{end}
+\end{Verbatim}

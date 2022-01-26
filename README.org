@@ -8,31 +8,34 @@ tree -d -I "ltximg"
 #+end_src
 
 #+RESULTS:
-| .   |              |                             |           |
-| ├── | Documents    |                             |           |
-| │   | ├──          | Conclusion                  |           |
-| │   | │            | └──                         | resources |
-| │   | ├──          | Proposal                    |           |
-| │   | └──          | projecto_estagio_PedroGomes |           |
-| ├── | Papers       |                             |           |
-| ├── | Research     |                             |           |
-| │   | ├──          | Bando                       |           |
-| │   | ├──          | CFD                         |           |
-| │   | ├──          | GeneralNotes                |           |
-| │   | ├──          | IMPA                        |           |
-| │   | │            | └──                         | figs      |
-| │   | ├──          | IntroCompPhysics            |           |
-| │   | │            | └──                         | Chap7     |
-| │   | ├──          | Kerner                      |           |
-| │   | ├──          | NeuralPDE                   |           |
-| │   | ├──          | Pertubations                |           |
-| │   | └──          | wiki                        |           |
-| │   | └──          | img                         |           |
-| └── | Resources    |                             |           |
-| ├── | Bibliography |                             |           |
-| ├── | Books        |                             |           |
-| ├── | Gifs         |                             |           |
-| ├── | Literature   |                             |           |
-| └── | img          |                             |           |
-|     |              |                             |           |
-| 25  | directories  |                             |           |
+| .   |              |                             |                |
+| ├── | Documents    |                             |                |
+| │   | ├──          | Conclusion                  |                |
+| │   | │            | ├──                         | Unixode        |
+| │   | │            | ├──                         | _minted-report |
+| │   | │            | ├──                         | figs           |
+| │   | │            | └──                         | resources      |
+| │   | ├──          | Proposal                    |                |
+| │   | └──          | projecto_estagio_PedroGomes |                |
+| ├── | Papers       |                             |                |
+| ├── | Research     |                             |                |
+| │   | ├──          | Bando                       |                |
+| │   | ├──          | CFD                         |                |
+| │   | ├──          | GeneralNotes                |                |
+| │   | ├──          | IMPA                        |                |
+| │   | │            | └──                         | figs           |
+| │   | ├──          | IntroCompPhysics            |                |
+| │   | │            | └──                         | Chap7          |
+| │   | ├──          | Kerner                      |                |
+| │   | ├──          | NeuralPDE                   |                |
+| │   | ├──          | Pertubations                |                |
+| │   | └──          | wiki                        |                |
+| │   | └──          | img                         |                |
+| └── | Resources    |                             |                |
+| ├── | Bibliography |                             |                |
+| ├── | Books        |                             |                |
+| ├── | Gifs         |                             |                |
+| ├── | Literature   |                             |                |
+| └── | img          |                             |                |
+|     |              |                             |                |
+| 28  | directories  |                             |                |

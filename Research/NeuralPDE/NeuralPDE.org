@@ -1,10 +1,6 @@
 #+STARTUP: latexpreview
 #+STARTUP: inlineimages
 
-<<<<<<< HEAD
-
-=======
->>>>>>> c079ef6 (Update state of reaserch)
 * The equation to solve:
 \begin{equation}
 \begin{aligned}
@@ -42,64 +38,6 @@ From the definition of $q$ and the boundary condition (I),
 ** System of PDEs
 # 
 #+begin_src julia :session main :result output
-<<<<<<< HEAD
-  using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux, Plots
-  using Quadrature,Cubature
-  import ModelingToolkit: Interval, infimum, supremum
-
-  @parameters t, x
-  @variables u1(..), u2(..), u3(..)
-  Dt = Differential(t)
-  Dtt = Differential(t)^2
-  Dx = Differential(x)
-  Dxx = Differential(x)^2
-
-  eqs = [Dtt(u1(t,x)) ~ Dxx(u1(t,x)) + u3(t,x)*sin(pi*x),
-         Dtt(u2(t,x)) ~ Dxx(u2(t,x)) + u3(t,x)*cos(pi*x),
-         0. ~ u1(t,x)*sin(pi*x) + u2(t,x)*cos(pi*x) - exp(-t)]
-
-  bcs = [u1(0,x) ~ sin(pi*x),
-         u2(0,x) ~ cos(pi*x),
-         Dt(u1(0,x)) ~ -sin(pi*x),
-         Dt(u2(0,x)) ~ -cos(pi*x),
-         u1(t,0) ~ 0.,
-         u2(t,0) ~ exp(-t),
-         u1(t,1) ~ 0.,
-         u2(t,1) ~ -exp(-t)]
-
-
-  # Space and time domains
-  domains = [t ∈ Interval(0.0,1.0),
-             x ∈ Interval(0.0,1.0)]
-
-  # Neural network 
-  input_ = length(domains)
-  n = 15
-  chain =[FastChain(FastDense(input_,n,Flux.σ),FastDense(n,n,Flux.σ),FastDense(n,1)) for _ in 1:3]
-  # <(((
-  initθ = map(c -> Float64.(c), DiffEqFlux.initial_params.(chain))
-
-  _strategy = QuadratureTraining()
-  discretization = PhysicsInformedNN(chain, _strategy, init_params= initθ)
-
-  pde_system = PDESystem(eqs,bcs,domains,[t,x],[u1,u2,u3])
-  prob = discretize(pde_system,discretization)
-  sym_prob = symbolic_discretize(pde_system,discretization)
-
-  pde_inner_loss_functions = prob.f.f.loss_function.pde_loss_function.pde_loss_functions.contents
-  bcs_inner_loss_functions = prob.f.f.loss_function.bcs_loss_function.bc_loss_functions.contents
-
-  cb = function (p,l)
-      println("loss: ", l )
-      println("pde_losses: ", map(l_ -> l_(p), pde_inner_loss_functions))
-      println("bcs_losses: ", map(l_ -> l_(p), bcs_inner_loss_functions))
-      return false
-  end
-
-  res = GalacticOptim.solve(prob,BFGS(); cb = cb, maxiters=5000)
-
-  phi = discretization.phi
-=======
 using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux, Plots
 using Quadrature,Cubature
 import ModelingToolkit: Interval, infimum, supremum
@@ -156,26 +94,11 @@ end
 res = GalacticOptim.solve(prob,BFGS(); cb = cb, maxiters=5000)
 
 phi = discretization.phi
->>>>>>> c079ef6 (Update state of reaserch)
 #+end_src
 
 #+RESULTS:
 
 #+begin_src julia :session main :result output
-<<<<<<< HEAD
-  xs,ys = [infimum(domain):dx/10:domain.domain.upper for domain in domains]
-  analytic_sol_func(x,y) = (sin(pi*x)*sin(pi*y))/(2pi^2)
-
-  u_predict = reshape([first(phi([x,y],res.minimizer)) for x in xs for y in ys],(length(xs),length(ys)))
-  u_real = reshape([analytic_sol_func(x,y) for x in xs for y in ys], (length(xs),length(ys)))
-  diff_u = abs.(u_predict .- u_real)
-
-  using Plots
-  p1 = plot(xs, ys, u_real, linetype=:contourf,title = "analytic");
-  p2 = plot(xs, ys, u_predict, linetype=:contourf,title = "predict");
-  p3 = plot(xs, ys, diff_u,linetype=:contourf,title = "error");
-  plot(p1,p2,p3)
-=======
 xs,ys = [infimum(domain):dx/10:domain.domain.upper for domain in domains]
 analytic_sol_func(x,y) = (sin(pi*x)*sin(pi*y))/(2pi^2)
 
@@ -188,30 +111,18 @@ p1 = plot(xs, ys, u_real, linetype=:contourf,title = "analytic");
 p2 = plot(xs, ys, u_predict, linetype=:contourf,title = "predict");
 p3 = plot(xs, ys, diff_u,linetype=:contourf,title = "error");
 plot(p1,p2,p3)
->>>>>>> c079ef6 (Update state of reaserch)
 #+end_src
 
 #+RESULTS:
 
 * Kerner - Car Flow
-<<<<<<< HEAD
-
-=======
 ** Base considerations
->>>>>>> c079ef6 (Update state of reaserch)
-# Let $V(\rho)=1.5*(1-p/\hat{p})^2$, so $p \to \hat{\rho} \implies V(\hat{\rho}) \to 0$.
-# Let, $V(\rho) = v_h * (e^{-\frac{(\rho - \rho_h)}{\tau}}) + \delta{v}$.
+ Let, $V(\rho) = v_h * (e^{-\frac{(\rho - \rho_h)}{\tau}}) + \delta{v}$.
 
 #+begin_src julia :session main :result output :tangle neuralPDE.jl
-<<<<<<< HEAD
-  using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
-  import ModelingToolkit: Interval, infimum, supremum
-  import Flux: flatten, params
-=======
 using NeuralPDE, Flux, ModelingToolkit, GalacticOptim, Optim, DiffEqFlux
 import ModelingToolkit: Interval, infimum, supremum
 import Flux: flatten, params
->>>>>>> c079ef6 (Update state of reaserch)
 #+end_src
 
 #+RESULTS:
@@ -230,40 +141,6 @@ $[-1 -\frac{\rho_h}{c_0}\xi(\rho_h)]\rho_h>(\frac{2\pi{}l}{L})^2$ in which $\xi(
 # \end{equation}
 
 #+begin_src julia :session main :result output :tangle neuralPDE.jl
-<<<<<<< HEAD
-  @parameters t, x, N, L, ρ_hat, μ, c₀, τ, L, l,vₕ, k, m, ω, λ, γ
-  @variables v(..), ρ(..)
-  # ρ_hat=0.89;
-  m=1;
-  μ=1; #choose as we like
-  τ=1; #choose as we like 
-  # l=sqrt(μ*τ/ρ_hat);
-
-  N = 168; 
-  ρₕ = 0.168;
-  L=N/ρₕ; 
-  δρ₀ = 0.02;
-  δv₀ = 0.01;
-  vₕ = 5.0461*((1+exp((ρₕ-0.25)/0.06))^-1 - 3.72*10^-6);
-
-  # vhat(ρ)= 5.0461*((1+exp((ρ-0.25)/0.06))^-1 - 3.72*10^-6);
-  # using Roots
-  # find_zero(vhat, (-5,5))
-  # 1.0001069901803379
-
-  # ρₕ=N/L;
-  k=2π/L;
-
-  c₀= 1.8634; 
-  Dt = Differential(t)
-  Dx = Differential(x)
-  Dxx = Differential(x)^2
-
-  # δρₛ(x) = δρ₀*exp(complex(0,1)*k*x);
-  λ=k^2*c₀^2/100
-  ω=k*(vₕ+c₀)
-  γ=complex(λ,ω)
-=======
 @parameters t, x, N, L, ρ_hat, μ, c₀, τ, L, l,vₕ, k, m, ω, λ, γ
 @variables v(..), ρ(..)
 # ρ_hat=0.89;
@@ -296,7 +173,6 @@ Dxx = Differential(x)^2
 λ=k^2*c₀^2/100
 ω=k*(vₕ+c₀)
 γ=complex(λ,ω)
->>>>>>> c079ef6 (Update state of reaserch)
 #+end_src
 
 #+RESULTS:
@@ -313,21 +189,18 @@ Work out analytically only the real part,
 \end{equation}
 
 #+begin_src julia :session main :result output :tangle neuralPDE.jl
-<<<<<<< HEAD
   # Complete complex term
   δρ(t,x)=δρ₀*exp(complex(0,k*x))*exp(-γ*t)
   δv(t,x)=δv₀*exp(complex(0,k*x))*exp(-γ*t)
   # Only real part
   δρᵣ(t,x)=δρ₀*cos(k*x)*cos(ω*t)exp(-λ*t)
   δvᵣ(t,x)=δv₀*cos(k*x)*cos(ω*t)exp(-λ*t)
-=======
 # Complete complex term
 δρ(t,x)=δρ₀*exp(complex(0,k*x))*exp(-γ*t)
 δv(t,x)=δv₀*exp(complex(0,k*x))*exp(-γ*t)
 # Only real part
 δρᵣ(t,x)=δρ₀*cos(k*x)*cos(ω*t)exp(-λ*t)
 δvᵣ(t,x)=δv₀*cos(k*x)*cos(ω*t)exp(-λ*t)
->>>>>>> c079ef6 (Update state of reaserch)
 #+end_src
 
 #+RESULTS:
@@ -346,15 +219,9 @@ Work out analytically only the real part,
 # $V(\rho) = v_h * (1 + e^{\frac{(\rho - \rho_h)}{\tau}})^{-1} + \delta{v}$
 
 #+begin_src julia :session main :result output :tangle neuralPDE.jl
-<<<<<<< HEAD
-  #2D PDE
-  eqs  = [Dt(v(t,x)) + v(t,x)*Dx(v(t,x)) - (μ/ρ(t,x))*Dxx(v(t,x)) + (c₀^2/ρ(t,x))*Dx(ρ(t,x)) - (5.0461*((1+exp((ρ(t,x)-0.25)/0.06))^-1 - 3.72*10^-6) - v(t,x))/τ ~ 0,
-          Dt(ρ(t,x)) + Dx(ρ(t,x)*v(t,x)) ~ 0]
-=======
 #2D PDE
 eqs  = [Dt(v(t,x)) + v(t,x)*Dx(v(t,x)) - (μ/ρ(t,x))*Dxx(v(t,x)) + (c₀^2/ρ(t,x))*Dx(ρ(t,x)) - (5.0461*((1+exp((ρ(t,x)-0.25)/0.06))^-1 - 3.72*10^-6) - v(t,x))/τ ~ 0,
         Dt(ρ(t,x)) + Dx(ρ(t,x)*v(t,x)) ~ 0]
->>>>>>> c079ef6 (Update state of reaserch)
 #+end_src
 
 #+RESULTS:
